@@ -1,4 +1,9 @@
-# yNodus
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/ynodus-wordmark-dark.png">
+    <img src="docs/assets/ynodus-wordmark.png" alt="yNodus" width="140" height="48">
+  </picture>
+</h1>
 
 A static browser application for exploring aggregate Y-DNA evidence from a local
 HRAS/YSEQ snapshot with an independent YFull reference-tree marker. Analysis runs
