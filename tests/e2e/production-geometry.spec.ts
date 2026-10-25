@@ -76,18 +76,20 @@ test("critical breakpoints keep neighboring controls and research views geometri
       expect(await control.boundingBox(), selector + " focus shift").toEqual(before);
     }
     await page.locator("#result-body .table-profile-action").first().click();
-    await expect(page.locator("#profile-workspace .profile-identity-panel")).toBeVisible();
+    await expect(page.locator("#profile-workspace .profile-compact-header")).toBeVisible();
     await expect(page.locator("main:visible")).toHaveCount(1);
     await expect(page.locator("#time-workspace")).toHaveAttribute("inert", "");
     await expect(page.locator("#profile-workspace .nested-page-breadcrumb")).toBeVisible();
     await expect(page.locator("#profile-lookup")).toBeHidden();
     const profile = await page.evaluate(() => {
-      const actions = [...document.querySelectorAll<HTMLElement>(".profile-actions > *")];
+      const controls = [...document.querySelectorAll<HTMLElement>("#profile-content .profile-compact-controls > *")];
       return {
         scroll: document.documentElement.scrollWidth,
-        clipped: actions.some(el => el.scrollWidth > el.clientWidth + 1),
+        controls: controls.length,
+        clipped: controls.some(el => el.scrollWidth > el.clientWidth + 1),
       };
     });
+    expect(profile.controls, "compact profile controls must actually be inspected").toBeGreaterThanOrEqual(4);
     expect(profile.scroll, "profile at " + width).toBeLessThanOrEqual(width);
     expect(profile.clipped).toBe(false);
     await page.locator('#profile-workspace [data-research-back]').click();

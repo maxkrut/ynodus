@@ -18,7 +18,7 @@ test("audit fixes: minimum samples is explained, applied, and exported consisten
   const minimum = page.locator("#min-result-samples");
   const description = page.locator("#min-result-samples-description");
   await expect(description).toBeVisible();
-  await expect(description).toContainText("во временной выборке");
+  await expect(description).toContainText("минимум в окне таблицы и отдельно в каждом баре");
   await expect(minimum).toHaveAttribute("aria-describedby", "min-result-samples-description");
 
   await minimum.fill("999999");

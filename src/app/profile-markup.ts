@@ -17,6 +17,7 @@ export function createProfileMarkup(
 ): Pick<ResearchMarkup, "profile" | "profileInspector"> {
   function profile(profile: SubcladeProfile): string {
     const detail = options.resultDetail?.();
+    const sameFormedLinks = countSameFormedLinks(profile.evidenceTree);
     const queryRow = detail?.mode === "crossing" ? undefined : options.queryFormedRow?.(profile.node.id);
     const groups = detail && queryRow && !queryRow.crossingChild ? renderProfileFormedGroups(queryRow, revealLimit("profile-formed")) : "";
     const inspector = `<aside class="profile-node-inspector" data-profile-inspector aria-live="polite">${profileInspector(profile.evidenceTree, true)}</aside>`;
@@ -29,7 +30,7 @@ export function createProfileMarkup(
         </section>
       </div>
       ${groups ? `<details class="profile-extra" data-profile-extra="formed"><summary>${escapeHtml(options.t("branchStructureTitle"))}</summary>${groups}</details>` : ""}
-      <details class="profile-extra" data-profile-extra="details"><summary>${escapeHtml(options.t("profileDetails"))}</summary><p>${escapeHtml(options.t("profileDatedDescendants"))}: <strong>${options.formatNumber(profile.datedDescendantCount)}</strong></p><p>${escapeHtml(options.t("profileDatedDescendantsHint"))}</p></details>`;
+      <details class="profile-extra" data-profile-extra="details"><summary>${escapeHtml(options.t("profileDetails"))}</summary><p>${escapeHtml(options.t("profileDatedDescendants"))}: <strong>${options.formatNumber(profile.datedDescendantCount)}</strong></p><p>${escapeHtml(options.t("profileDatedDescendantsHint"))}</p>${sameFormedLinks > 0 ? `<p data-tree-age-pairs>${escapeHtml(options.t("treeSameAgePairs"))}: <strong>${options.formatNumber(sameFormedLinks)}</strong> ${renderAnnotation("tree-age-pairs", options.t)}</p>` : ""}</details>`;
   }
 
   function profileInspector(node: EvidenceTreeNode, isRoot: boolean): string {
@@ -141,4 +142,17 @@ export function createProfileMarkup(
   }
 
   return { profile, profileInspector };
+}
+
+function countSameFormedLinks(root: EvidenceTreeNode): number {
+  let count = 0;
+  const pending = [root];
+  while (pending.length) {
+    const parent = pending.pop()!;
+    for (const child of parent.children) {
+      if (parent.node.formedKnown && child.node.formedKnown && parent.node.formed === child.node.formed) count += 1;
+      pending.push(child);
+    }
+  }
+  return count;
 }

@@ -35,7 +35,9 @@ for (const width of [390, 768, 1440]) test(`compact result header and local insp
     const formattedCount = new Intl.NumberFormat(locale).format(originalCount);
     await page.locator('#locale-switcher').selectOption(locale);
     await expect(content.locator('[data-profile-scope-total]')).toHaveText(formattedCount);
-    await expect(content.locator('.profile-ancestry, [data-tree-age-pairs], .result-detail-age-coverage')).toHaveCount(0);
+    await expect(content.locator('.profile-ancestry, .profile-tree-section [data-tree-age-pairs], .result-detail-age-coverage')).toHaveCount(0);
+    await expect(content.locator('[data-profile-extra="details"]')).not.toHaveAttribute('open', '');
+    await expect(content.locator('[data-tree-age-pairs]')).toBeHidden();
     const geometry = await content.evaluate(el => {
       const header = el.querySelector('.profile-compact-header')!.getBoundingClientRect();
       const controls = el.querySelector('.profile-compact-controls')!.getBoundingClientRect();

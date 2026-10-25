@@ -33,7 +33,7 @@ test("minimum uses temporal country counts and keeps the selected date explicit"
   await page.screenshot({ path: "output/snapshot-country-minimum/flag-help-390.png", fullPage: true });
   await page.keyboard.press("Escape");
   await expect(rows.locator(".table-total strong")).toHaveText("11");
-  await expect(page.locator("#min-result-samples-description")).toHaveText(/0.+все выбранные страны.+порог во временной выборке/);
+  await expect(page.locator("#min-result-samples-description")).toHaveText(/0.+все страны.+больше 0.+в окне таблицы и отдельно в каждом баре/);
   await expect(page.locator('#result-head [data-table-sort="delta"]')).toContainText("От выбранной даты");
   const reference = page.locator("#result-head .table-reference-date");
   await expect(reference).toHaveText(/6[\s,]?651 до н\. э\./);

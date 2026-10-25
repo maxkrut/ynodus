@@ -207,6 +207,7 @@ test('native Forward restores focus to the country filter being edited', async (
   await start(page);
   await page.locator('#result-body [data-open-result-detail="R-SYN-100"]').click();
   await expect(profile(page)).toHaveText('R-SYN-100');
+  await page.locator('[data-profile-inspector-disclosure] > summary').click();
   await page.locator('[data-profile-countries] > summary').click();
   const filter = page.locator('[data-profile-country-search]');
   await filter.fill('RUS');
@@ -215,6 +216,8 @@ test('native Forward restores focus to the country filter being edited', async (
   await expect(page.locator('#time-workspace')).toBeVisible();
   await page.goForward();
   await expect(profile(page)).toHaveText('R-SYN-100');
+  await expect(page.locator('[data-profile-inspector-disclosure]')).toHaveAttribute('open', '');
+  await expect(page.locator('[data-profile-countries]')).toHaveAttribute('open', '');
   await expect(filter).toHaveValue('RUS');
   await expect(filter).toBeFocused();
 });

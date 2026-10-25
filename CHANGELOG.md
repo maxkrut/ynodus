@@ -23,5 +23,7 @@
   across details, subclade profiles and country comparisons.
 - Expanded details and revealed rows survive language changes, navigation and
   reload; the original result remains available when returning from details.
+- Matching parent-child age counts and their explanation remain accessible in
+  the collapsed branch details, including supported nodes not yet revealed.
 
 The bundled HRAS/YSEQ snapshot and its provenance are unchanged in this release.
