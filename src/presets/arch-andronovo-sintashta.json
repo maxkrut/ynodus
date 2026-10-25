@@ -1,0 +1,38 @@
+{
+  "key": "arch-andronovo-sintashta",
+  "label": {
+    "en": "Sintashta / Andronovo",
+    "ru": "Синташта / Андроново"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "RUS",
+    "KAZ",
+    "KGZ",
+    "UZB",
+    "TJK"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Синташта - Петровка: около 2200–1700 до н. э.; андроновские культуры: около 2000–1200 до н. э. Границы зависят от фазы и региона.",
+      "en": "Sintashta–Petrovka: c. 2200–1700 BCE; Andronovo cultures: c. 2000–1200 BCE. Boundaries vary by phase and region."
+    },
+    "region": {
+      "ru": "Южное Зауралье и север Казахстана для Синташты; более широкий степной и лесостепной пояс Казахстана, юга Сибири и прилегающих районов Средней Азии для андроновских групп.",
+      "en": "Sintashta centres on the southern Trans-Urals and northern Kazakhstan; Andronovo groups span a wider steppe and forest-steppe zone of Kazakhstan, southern Siberia and adjoining Central Asia."
+    },
+    "selection": {
+      "ru": "Это две связанные темы, а не одна культура. Кыргызстан, Узбекистан и Таджикистан относятся к расширенному андроновскому контексту; они не обозначают ядро Синташты.",
+      "en": "These are two related themes, not a single culture. Kyrgyzstan, Uzbekistan and Tajikistan represent the wider Andronovo context, not the Sintashta core."
+    },
+    "sources": [
+      {
+        "title": "The Met - Central and North Asia, 2000–1000 BCE",
+        "url": "https://www.metmuseum.org/toah/ht/03/nc.html"
+      }
+    ]
+  }
+}

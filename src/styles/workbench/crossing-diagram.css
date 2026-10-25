@@ -1,0 +1,24 @@
+.crossing-mini-figure { margin: 8px 0; padding: 7px; border: 1px solid var(--line); border-radius: 4px; background: #f7faf9; }
+.crossing-mini-caption { color: var(--muted); font-size: 11px; line-height: 1.3; }
+.crossing-mini-figure svg { display: block; width: 100%; height: auto; margin-block: 5px; overflow: visible; }
+.crossing-mini-figure svg text { fill: #344c56; font-family: var(--app-font); font-size: 12px; }
+.crossing-mini-figure .crossing-mini-target { fill: var(--text); font-size: 11px; font-weight: 600; }
+.crossing-mini-figure .crossing-mini-small { fill: var(--muted); font-size: 10px; }
+.crossing-mini-figure .crossing-mini-row { font-weight: 600; }
+.crossing-mini-window { fill: #087f8610; stroke: #91bfc1; stroke-width: 1; stroke-dasharray: 2 3; }
+.crossing-mini-date { stroke: #263b45; stroke-width: 1.25; }
+.crossing-mini-axis { stroke: #b7c8cb; stroke-width: 1; stroke-dasharray: 3 4; }
+.crossing-mini-edge { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+.crossing-mini-arrow, .crossing-mini-filled { fill: var(--accent); }
+.crossing-mini-filled { stroke: #fff; stroke-width: 1.5; }
+.crossing-mini-hollow { fill: #fff; stroke: var(--accent); stroke-width: 2; }
+.crossing-mini-legend { display: flex; flex-wrap: wrap; gap: 3px 14px; color: var(--muted); font-size: 11px; line-height: 1.35; }
+.crossing-mini-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.crossing-mini-legend > .crossing-point-key { flex-basis: 100%; }
+.crossing-mini-legend i { position: relative; display: inline-block; flex: none; width: 12px; }
+.crossing-mini-legend .crossing-key-date { height: 11px; border-left: 1.5px solid #263b45; margin-left: 5px; width: 7px; }
+.crossing-key-window { height: 10px; background: #087f8610; border: 1px dashed #91bfc1; }
+.crossing-mini-legend .crossing-key-filled, .crossing-mini-legend .crossing-key-hollow { width: 8px; height: 8px; margin-inline: 2px; border: 1.5px solid var(--accent); border-radius: 50%; background: var(--accent); }
+.crossing-mini-legend .crossing-key-hollow { background: #fff; }
+.crossing-key-edge { height: 2px; background: var(--accent); }
+.crossing-key-edge::after { content: ""; position: absolute; right: -2px; top: -2px; border-left: 4px solid var(--accent); border-block: 3px solid transparent; }

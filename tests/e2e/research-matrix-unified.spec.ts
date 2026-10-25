@@ -1,0 +1,144 @@
+import {mkdir} from 'node:fs/promises';
+import {expect,test,type Page} from '@playwright/test';
+import {branchCountriesFixture} from '../fixtures/branch-countries.mjs';
+
+const rows=(p:Page)=>p.locator('.tree-sheet [data-tree-node]');
+const ids=(p:Page)=>rows(p).evaluateAll(els=>els.map(el=>el.getAttribute('data-tree-node')));
+const total=(p:Page)=>p.locator('.country-overview-total > strong');
+const picker=(p:Page)=>p.locator('[data-comparison-dialog]');
+async function add(p:Page,code:string){
+  await p.locator('.country-comparison-open').click();
+  await expect(picker(p)).toBeVisible();
+  await picker(p).locator(`[data-country-code="${code}"]`).check();
+  await picker(p).locator('[data-comparison-apply]').click();
+}
+for(const width of [390,1440]) test(`unified matrix, parent and union comparison at ${width}`,async({page})=>{
+  test.setTimeout(90000);
+  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.setViewportSize({width,height:1000});
+  await page.route('**/data/hras-index.json',route=>route.fulfill({json:branchCountriesFixture()}));
+  await mkdir('output/research-unified-2026-10-23',{recursive:true});
+  for(const lang of ['ru','en']){
+    await page.goto(`/?lang=${lang}&view=profile&clade=R-SYN-A1&countries=RUS&min=0`);
+    await expect(page.locator('[data-profile-parent]')).toHaveText('↑ R-SYN-A');
+    await expect(page.locator('[data-profile-mode],[data-branch-mode]')).toHaveCount(0);
+    await page.locator('[data-profile-parent]').click();
+    await expect(page.locator('.profile-compact-header h3')).toHaveText('R-SYN-A');
+    await expect(page.locator('[data-profile-scope-total]')).toHaveText('8');
+    await expect(rows(page)).toHaveCount(2);
+    await page.locator('#profile-workspace').screenshot({path:`output/research-unified-2026-10-23/profile-parent-${width}-${lang}.png`});
+    await page.locator('[data-profile-parent]').click();
+    await expect(page.locator('.profile-compact-header h3')).toHaveText('R-SYN-ROOT');
+    await expect(page.locator('[data-profile-scope-total]')).toHaveText('20');
+    await expect(page.locator('[data-profile-parent]')).toHaveCount(0);
+    await page.locator('#profile-workspace').screenshot({path:`output/research-unified-2026-10-23/profile-${width}-${lang}.png`});
+    await page.locator('#profile-workspace [data-research-back]').click();
+    await expect(page.locator('.profile-compact-header h3')).toHaveText('R-SYN-A');
+    expect(new URL(page.url()).searchParams.get('countries')).toBe('RUS');
+    expect(new URL(page.url()).searchParams.get('lang')).toBe(lang);
+
+    await page.goto(`/?lang=${lang}&view=country-overview&country=RUS&countries=RUS&min=0`);
+    await expect(total(page)).toHaveText('7');
+    expect(await ids(page)).toEqual(['R-SYN-ROOT','R-SYN-A','R-SYN-A1']);
+    await expect(page.locator('.matrix-country-heading')).toHaveCount(1);
+    await page.locator('.country-comparison-open').click();
+    const pickerLayout=await picker(page).evaluate(el=>{
+      const [header,tools,list,footer]=Array.from(el.children).map(child=>child.getBoundingClientRect());
+      return {headerBottom:header.bottom,toolsTop:tools.top,toolsBottom:tools.bottom,listTop:list.top,listBottom:list.bottom,footerTop:footer.top,overflow:el.scrollWidth-el.clientWidth};
+    });
+    expect(pickerLayout.overflow).toBe(0);expect(pickerLayout.toolsTop).toBeGreaterThanOrEqual(pickerLayout.headerBottom);
+    expect(pickerLayout.listTop).toBeGreaterThanOrEqual(pickerLayout.toolsBottom);expect(pickerLayout.footerTop).toBeGreaterThanOrEqual(pickerLayout.listBottom);
+    if(lang==='ru')await picker(page).screenshot({path:`output/research-unified-2026-10-23/country-picker-${width}.png`});
+    await expect(picker(page).locator('[data-country-code="RUS"]')).toBeDisabled();
+    await expect(picker(page).locator('[data-country-code="RUS"]')).toBeChecked();
+    await picker(page).locator('[data-country-code="POL"]').check();
+    await picker(page).locator('footer [data-comparison-close]').click();
+    await expect(total(page)).toHaveText('7');
+    await add(page,'POL');
+    await expect(total(page)).toHaveText('15');
+    expect(await ids(page)).toEqual(['R-SYN-ROOT','R-SYN-A','R-SYN-A1','R-SYN-B']);
+    expect(new URL(page.url()).searchParams.get('scope')).toBe('POL,RUS');
+    await add(page,'FRA');
+    await expect(total(page)).toHaveText('20');
+    await expect(rows(page)).toHaveCount(5);
+    await expect(page.locator('[data-tree-node="R-SYN-B1"]')).toHaveAttribute('data-tree-parent','R-SYN-B');
+    const root=page.locator('[data-tree-node="R-SYN-ROOT"]');
+    expect(await root.locator('.tree-country-cell').evaluateAll(cells=>cells.map(el=>Number((el as HTMLElement).dataset.count)))).toEqual([8,7,5]);
+    await page.locator('#country-overview-workspace').screenshot({path:`output/research-unified-2026-10-23/country-${width}-${lang}.png`});
+    const scope=new URL(page.url()).searchParams.get('scope');
+    await page.locator('.matrix-country-heading[data-tree-country="FRA"]').click();
+    expect(await ids(page)).toEqual(['R-SYN-ROOT','R-SYN-B','R-SYN-B1']);
+    expect(new URL(page.url()).searchParams.get('scope')).toBe(scope);
+    await expect(page.locator('[data-country-tree-filter]')).toHaveValue('FRA');
+    await page.reload();
+    await expect(page.locator('[data-country-tree-filter]')).toHaveValue('FRA');
+    await page.locator('.profile-country-reset').click();
+    await expect(rows(page)).toHaveCount(5);
+    await page.locator('[data-country-tree-search]').fill('R-SYN-B1');
+    await page.locator('[data-tree-node="R-SYN-B1"] [data-open-profile-subclade]').click();
+    await expect(page.locator('.profile-compact-header h3')).toHaveText('R-SYN-B1');
+    await expect(page.locator('#country-overview-content')).toBeEmpty();
+    await page.locator('#profile-workspace [data-research-back]').click();
+    await expect(total(page)).toHaveText('20');
+    await expect(page.locator('[data-country-tree-search]')).toHaveValue('R-SYN-B1');
+    expect(new URL(page.url()).searchParams.get('scope')).toBe(scope);
+    await page.locator('[data-country-tree-search]').fill('');
+    await page.locator('[data-country-comparison-remove="POL"]').click();
+    await expect(total(page)).toHaveText('12');
+    await expect(rows(page)).toHaveCount(5);
+    expect(new URL(page.url()).searchParams.get('countries')).toBe('RUS');
+    expect(new URL(page.url()).searchParams.get('scope')).toBe('FRA,RUS');
+    await page.locator('#locale-switcher').selectOption(lang==='ru'?'en':'ru');
+    await expect(total(page)).toHaveText('12');
+    await page.reload();
+    await expect(total(page)).toHaveText('12');
+    await expect(page.locator('.tree-sheet-matrix')).toHaveCount(1);
+    await expect(page.locator('[data-profile-mode],[data-branch-mode]')).toHaveCount(0);
+    const geometry=await page.evaluate(()=>{
+      const content=document.querySelector('#country-overview-content')!.getBoundingClientRect(),tree=document.querySelector('.tree-sheet-scroll')!.getBoundingClientRect(),header=document.querySelector('.profile-compact-header')!.getBoundingClientRect();
+      return {overflow:document.documentElement.scrollWidth-innerWidth,content:content.width,tree:tree.width,headerBottom:header.bottom,treeTop:tree.top};
+    });
+    expect(geometry.overflow).toBe(0);expect(Math.abs(geometry.content-geometry.tree)).toBeLessThanOrEqual(1);expect(geometry.headerBottom).toBeLessThan(geometry.treeTop);
+  }
+  expect(errors).toEqual([]);
+});
+
+test('comparison preserves separate source roots and sample-type counts',async({page})=>{
+  const data=branchCountriesFixture();
+  data.nodeIds.push('R-SYN-OTHER-ROOT');data.nodes.push([0,-1,3000]);data.samples.push([5,2,4]);data.countryCounts[2]+=4;
+  data.ancientCounts=[1,0,1,1,1,0,2,1];
+  await page.route('**/data/hras-index.json',route=>route.fulfill({json:data}));
+  await page.goto('/?lang=ru&view=country-overview&country=RUS&scope=FRA,RUS&countries=RUS&min=0');
+  await expect(total(page)).toHaveText('16');
+  await expect(page.locator('[data-tree-node][data-tree-parent=""]')).toHaveCount(2);
+  await expect(page.locator('[data-tree-node="R-SYN-OTHER-ROOT"]')).toHaveAttribute('data-tree-parent','');
+  await page.locator('#overview-sample-scope').selectOption('modern');
+  await expect(total(page)).toHaveText('11');
+  await page.locator('#overview-sample-scope').selectOption('ancient');
+  await expect(total(page)).toHaveText('5');
+  await expect(page.locator('[data-tree-node][data-tree-parent=""]')).toHaveCount(2);
+  await page.locator('.country-comparison-open').click();
+  await picker(page).locator('[data-comparison-preset]').selectOption('slavic');
+  await expect(picker(page).locator('[data-country-code="RUS"]')).toBeChecked();
+  await expect(picker(page).locator('[data-country-code="POL"]')).toBeChecked();
+  await expect(picker(page).locator('[data-country-code="FRA"]')).not.toBeChecked();
+  await page.keyboard.press('Escape');
+  await expect(picker(page)).not.toBeVisible();
+  await expect(total(page)).toHaveText('5');
+  await page.locator('.country-comparison-open').click();
+  await picker(page).locator('[data-comparison-search]').fill('FRA');
+  await expect(picker(page).locator('[data-country-code]')).toHaveCount(1);
+  await page.keyboard.press('Escape');
+});
+
+test('empty sample type keeps a way to return to all records',async({page})=>{
+  const data={...branchCountriesFixture(),ancientCounts:[0,0,0,0,0,0,0]};
+  await page.route('**/data/hras-index.json',route=>route.fulfill({json:data}));
+  await page.goto('/?lang=ru&view=country-overview&country=RUS&scope=FRA,RUS&countries=RUS&min=0');
+  await expect(total(page)).toHaveText('12');
+  await page.locator('#overview-sample-scope').selectOption('ancient');
+  await expect(total(page)).toHaveText('0');
+  await expect(rows(page)).toHaveCount(0);
+  await page.locator('#overview-sample-scope').selectOption('all');
+  await expect(total(page)).toHaveText('12');
+});

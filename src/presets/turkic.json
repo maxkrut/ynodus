@@ -1,0 +1,30 @@
+{
+  "key": "turkic",
+  "label": {
+    "en": "Turkic languages",
+    "ru": "Тюркские языки"
+  },
+  "category": {
+    "en": "Eurasia",
+    "ru": "Евразия"
+  },
+  "countries": [
+    "AZE",
+    "KAZ",
+    "KGZ",
+    "TUR",
+    "TKM",
+    "UZB"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Азербайджан, Казахстан, Кыргызстан, Турция, Туркменистан и Узбекистан - начальный список для темы тюркских языков.",
+      "en": "Azerbaijan, Kazakhstan, Kyrgyzstan, Turkey, Turkmenistan and Uzbekistan form an initial Turkic-language list."
+    },
+    "selection": {
+      "ru": "Список не охватывает все тюркоязычные сообщества, например в России и Китае, и не обозначает ареал древних тюркских объединений.",
+      "en": "The list omits many Turkic-speaking communities, including those in Russia and China, and does not map ancient Turkic polities."
+    },
+    "sources": []
+  }
+}

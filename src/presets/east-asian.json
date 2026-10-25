@@ -1,0 +1,30 @@
+{
+  "key": "eastAsia",
+  "label": {
+    "en": "East Asia: selected countries",
+    "ru": "Восточная Азия: выборочно"
+  },
+  "category": {
+    "en": "Asia",
+    "ru": "Азия"
+  },
+  "countries": [
+    "CHN",
+    "HKG",
+    "JPN",
+    "KOR",
+    "MNG",
+    "TWN"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Выборочный список стран и территорий Восточной Азии.",
+      "en": "Selected East Asian countries and territories."
+    },
+    "selection": {
+      "ru": "Например, КНДР и Макао не включены. Отдельные коды территорий сохранены как в данных источника; это не единая культурная группа.",
+      "en": "North Korea and Macao, for example, are omitted. Separate territorial codes follow the source data; this is not one cultural group."
+    },
+    "sources": []
+  }
+}

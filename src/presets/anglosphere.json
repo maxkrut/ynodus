@@ -1,0 +1,34 @@
+{
+  "key": "anglosphere",
+  "label": {
+    "en": "English language",
+    "ru": "Английский язык"
+  },
+  "category": {
+    "en": "Global",
+    "ru": "Глобальные"
+  },
+  "countries": [
+    "AUS",
+    "CAN",
+    "ENG",
+    "GBR",
+    "IMN",
+    "IRL",
+    "NZL",
+    "SCT",
+    "USA",
+    "WLS"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Выборочный список стран и территорий для поиска по теме английского языка.",
+      "en": "Selected countries and territories for exploring an English-language theme."
+    },
+    "selection": {
+      "ru": "Это не все страны, где говорят по-английски. GBR, ENG, SCT и WLS - отдельные коды источника; выбор GBR сам по себе не включает остальные.",
+      "en": "This is not every country where English is spoken. GBR, ENG, SCT and WLS are separate source codes; selecting GBR does not automatically include the others."
+    },
+    "sources": []
+  }
+}

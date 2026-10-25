@@ -1,0 +1,43 @@
+{
+  "key": "arch-yamnaya",
+  "label": {
+    "en": "Yamnaya horizon",
+    "ru": "Ямная культура"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "RUS",
+    "UKR",
+    "KAZ",
+    "ROU",
+    "BGR",
+    "MDA"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 3300–2500 до н. э.; региональные рамки могут быть шире.",
+      "en": "C. 3300–2500 BCE; regional chronologies may be broader."
+    },
+    "region": {
+      "ru": "Степи к северу от Чёрного и Каспийского морей. В период расширения ямный горизонт достигал районов от Венгрии до Казахстана.",
+      "en": "The steppes north of the Black and Caspian Seas. At its expansion, the Yamnaya horizon reached areas from Hungary to Kazakhstan."
+    },
+    "selection": {
+      "ru": "Выбрана часть степного и западного ареала: Венгрия, например, не включена. Россия и Казахстан учитываются целиком; это не перенос ямной культуры на всю Сибирь и не объединение с афанасьевской культурой.",
+      "en": "This selects part of the steppe and western distribution; Hungary, for example, is omitted. Russia and Kazakhstan are selected in full, without extending Yamnaya across Siberia or merging it with Afanasievo."
+    },
+    "sources": [
+      {
+        "title": "Lazaridis et al., Nature (2025) - The genetic origin of the Indo-Europeans",
+        "url": "https://www.nature.com/articles/s41586-024-08531-5"
+      },
+      {
+        "title": "Wilkin et al., Nature (2021) - Yamnaya steppe expansions",
+        "url": "https://www.nature.com/articles/s41586-021-03798-4"
+      }
+    ]
+  }
+}

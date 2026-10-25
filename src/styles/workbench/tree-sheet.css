@@ -1,0 +1,63 @@
+/* A single hierarchy fills the research workspace in both presentations. */
+#profile-workspace.is-result-detail { max-width: none; margin-inline: 0; }
+#profile-content [data-profile-tree-view] { grid-template-columns: minmax(0,1fr); }
+.profile-explorer > .profile-tree-section { grid-column: 1 / -1; width: 100%; }
+.branch-country-section { display: block; }
+.profile-tree-search { max-width: 340px; margin-block: 8px; }
+.tree-sheet-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 16px; margin-block: 8px; font-size: 11px; color: var(--muted); }
+.tree-sheet-toolbar > p { flex: 1 1 320px; }
+.tree-sheet-toolbar > div { display: flex; align-items: center; justify-content: end; gap: 8px; max-width: 100%; }
+.tree-sheet-toolbar > div > span { max-width: 48ch; overflow-wrap: anywhere; }
+.tree-sheet-scroll { width: 100%; max-height: 72vh; }
+.profile-matrix.tree-sheet { table-layout: fixed; width: 100%; min-width: calc(var(--tree-sheet-min) - var(--tree-sheet-reduction, 0px)); }
+.tree-sheet .tree-age-width { width: 130px; }
+.tree-sheet .tree-country-width { width: 44px; }
+.tree-sheet .tree-selected-width, .tree-sheet .tree-total-width { width: 110px; }
+.profile-matrix.tree-sheet :is(th,td) { min-width: 0; max-width: none; padding: 4px 6px; vertical-align: middle; }
+.profile-matrix.tree-sheet th:first-child { max-width: none; text-align: left; }
+.profile-matrix.tree-sheet th:nth-child(2) { min-width: 0; text-align: left; }
+.profile-matrix.tree-sheet thead th { vertical-align: bottom; }
+.profile-matrix.tree-sheet tr.evidence-tree-node { display: table-row; }
+.tree-sheet .tree-sheet-identity { display: flex; align-items: center; min-width: 0; padding-left: calc(var(--tree-depth) * var(--tree-indent-step,12px)); }
+.tree-sheet .profile-node-links { display: flex; flex-wrap: wrap; gap: 3px; min-width: 0; }
+.tree-sheet .profile-node-links [data-profile-select] { text-align: left; justify-content: start; }
+.tree-sheet .profile-node-links strong { font-size: 12px; color: var(--accent-dark); }
+.profile-matrix.tree-sheet .tree-sheet-toggle, .tree-sheet-leaf { display: inline-flex; flex: none; justify-content: center; align-items: center; width: 28px; min-height: 32px; margin-right: 3px; }
+.tree-sheet .tree-node-col > small { margin-left: 31px; color: var(--muted); font-size: 10px; font-weight: 400; }
+.tree-sheet .tree-node-age-mobile { display: none; }
+.tree-sheet .tree-child-more { margin-left: 31px; font-size: 11px; }
+.profile-matrix.tree-sheet td { text-align: right; }
+.tree-sheet td.tree-age-col { font-size: 11px; color: var(--muted); text-align: left; }
+.tree-sheet .tree-country-cell { text-align: center; }
+.tree-sheet .tree-country-cell.is-muted { color: var(--muted); background-color: var(--surface) !important; }
+.tree-sheet .tree-country-cell.is-muted button { color: var(--muted); }
+.tree-sheet .tree-country-cell button { align-items: center; justify-content: center; text-align: center; min-height: 32px; }
+.tree-sheet .tree-cell-ancient { display: block; font-size: 9px; font-weight: 400; line-height: 1.2; white-space: nowrap; color: var(--muted); }
+.tree-sheet .ancient-count-note { white-space: normal; font-size: 9px; }
+.tree-sheet .tree-total-col { font-weight: 650; }
+.tree-sheet .tree-selected-col { color: var(--accent-dark); }
+.tree-sheet .tree-context-row > th { color: var(--muted); background: var(--surface); }
+.tree-sheet .is-selected > :is(th,td) { box-shadow: inset 0 2px #087f8638, inset 0 -2px #087f8638; }
+.tree-sheet .is-selected > th { background: var(--tint); }
+.profile-matrix.tree-sheet .tree-country-col { padding: 0; }
+.tree-sheet .matrix-country-heading { display: flex; flex-direction: column; justify-content: end; align-items: center; gap: 4px; width: 100%; min-height: 88px; padding: 6px 2px; border-radius: 0; font-size: 11px; background: transparent; }
+.tree-sheet .matrix-country-heading[aria-pressed="true"] { background: #d6eeeb; box-shadow: inset 0 -3px var(--accent); }
+.tree-sheet .matrix-country-name { writing-mode: vertical-rl; transform: rotate(180deg); max-height: 132px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tree-sheet .matrix-country-heading small { font-size: 9px; font-weight: 400; max-width: none; overflow-wrap: normal; }
+.tree-sheet .matrix-country-heading .flag, .tree-sheet .matrix-country-heading .fi { width: 21px; height: 15px; }
+.profile-matrix-footer > div { display: flex; gap: 6px; }
+.branch-country-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 8px 20px; margin-bottom: 10px; }
+.branch-country-toolbar .profile-view-switch { padding: 0; border: 0; }
+.branch-country-toolbar .country-tree-search { width: min(340px,100%); margin: 0; }
+.branch-country-filter-drawer { position: relative; margin-left: auto; }
+.branch-country-filter-drawer > summary { min-height: 36px; display: flex; align-items: center; color: var(--accent-dark); }
+.branch-country-filter-drawer > .branch-country-sidebar { position: absolute; right: 0; top: calc(100% + 6px); z-index: 6; width: min(420px,84vw); max-height: 74vh; overflow: auto; border: 1px solid var(--line-strong); box-shadow: 0 6px 20px #20343c26; background: white; }
+@media(max-width:760px) {
+  .profile-matrix.tree-sheet { --tree-sheet-reduction: 220px; --tree-indent-step: 6px; }
+  .tree-sheet :is(col.tree-age-width,td.tree-age-col,thead th:nth-child(2)) { display: none; }
+  .tree-sheet .tree-node-age-mobile { display: block; }
+  .profile-matrix.tree-sheet .tree-sheet-toggle, .tree-sheet .profile-node-links button, .tree-sheet .tree-country-cell button { min-height: 44px; }
+  .profile-matrix.tree-sheet .tree-sheet-toggle { width: 32px; }
+  .branch-country-toolbar .country-tree-search { order: 3; width: 100%; }
+  .branch-country-filter-drawer > .branch-country-sidebar { width: min(420px,84vw); }
+}

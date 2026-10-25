@@ -1,0 +1,139 @@
+.profile-overview-main { display: grid; gap: 8px; min-width: 0; }
+@media (min-width: 1051px) {
+  #profile-workspace:has(.profile-identity-panel) { display: grid; grid-template-columns: minmax(0,1fr) minmax(320px,420px); align-content: start; gap: 10px 20px; }
+  #profile-workspace:has(.profile-identity-panel) > .nested-page-breadcrumb { grid-column: 1; grid-row: 1; align-self: center; margin: 0; }
+  #profile-workspace:has(.profile-identity-panel) > .research-workspace-heading { grid-column: 2; grid-row: 1; display: block; padding: 0; margin: 0; border: 0; }
+  #profile-content { grid-column: 1 / -1; grid-template-columns: minmax(300px,.95fr) minmax(0,1.85fr); gap: 10px 20px; align-items: start; }
+  #profile-content > * { grid-column: 1 / -1; }
+  #profile-content .profile-overview-main { grid-column: 1; grid-row: 1; }
+  #profile-content .profile-identity-panel { flex-direction: column; align-items: start; gap: 8px; padding: 0; border: 0; }
+  #profile-content .profile-identity-main { flex-wrap: wrap; }
+  #profile-content .profile-actions { justify-content: start; gap: 6px; }
+  #profile-content .profile-scope-note { font-size: 11px; }
+  #profile-content .profile-query-context { max-width: none; padding: 6px 10px; }
+  #profile-content .profile-explorer { display: contents; }
+  #profile-content .profile-node-inspector { grid-column: 2; grid-row: 1; display: grid; grid-template-columns: minmax(200px,.75fr) minmax(0,1.25fr); gap: 16px; padding-left: 16px; align-items: start; }
+  #profile-content .profile-selected-summary { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 10px; padding: 8px 10px; }
+  #profile-content .profile-selected-label { grid-column: 1; margin: 0; }
+  #profile-content .profile-selected-summary > h3 { grid-column: 1; font-size: 16px; }
+  #profile-content .profile-selected-metric { grid-column: 2; grid-row: 1 / span 3; margin: 0; text-align: right; }
+  #profile-content .profile-selected-metric article > span { display: flex; align-items: center; justify-content: end; font-size: 10px; }
+  #profile-content .profile-selected-metric article > strong { font-size: 24px; }
+  #profile-content .profile-selected-direct { grid-column: 1; margin: 0; }
+  #profile-content .profile-selected-age, #profile-content .profile-selected-summary > button { grid-column: 1 / -1; margin-top: 4px; }
+  #profile-content .profile-selected-age br { display: none; }
+  #profile-content .profile-selected-age b { margin-left: 4px; }
+  #profile-content .profile-selected-summary > button { justify-self: start; min-height: 28px; }
+  #profile-content .country-evidence-list { display: grid; gap: 5px; min-width: 0; }
+  #profile-content .country-evidence-list > header { margin: 0; gap: 3px 8px; }
+  #profile-content .country-evidence-list > header h3 { font-size: 13px; }
+  #profile-content .country-evidence-list > header > span { display: inline-flex; align-items: center; }
+  #profile-content .profile-country-search { margin: 0; position: relative; }
+  #profile-content .profile-country-search > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  #profile-content .profile-country-search input { min-height: 30px; font-size: 11px; }
+  #profile-content .profile-node-inspector .evidence-list { grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 12px; max-height: 96px; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+  #profile-content .profile-node-inspector .country-evidence-row { min-height: 30px; padding-block: 3px; }
+  #profile-content .profile-node-inspector .evidence-reveal-button { margin-top: 0; justify-self: start; min-height: 28px; }
+  #profile-content .profile-ancestry { grid-row: 2; min-width: 0; font-size: 12px; }
+  #profile-content .profile-ancestry > header { display: inline-flex; margin: 0 8px 0 0; vertical-align: baseline; }
+  #profile-content .profile-ancestry h3 { font-size: 13px; }
+  #profile-content .profile-ancestry .ancestry-breadcrumb { display: inline; padding: 0; }
+  #profile-content .profile-view-switch { grid-row: 3; padding-bottom: 6px; }
+  #profile-content .profile-tree-section, #profile-content [data-profile-matrix] { grid-column: 1 / -1; grid-row: 4; }
+  #profile-content:has([data-profile-mode="matrix"][aria-pressed="true"]) .profile-overview-main { grid-column: 1 / -1; }
+}
+@media (min-width: 1280px) {
+  #profile-content .country-evidence-list { grid-template-columns: minmax(0,1fr) minmax(150px,190px); }
+  #profile-content .country-evidence-list > header { grid-column: 1; grid-row: 1; }
+  #profile-content .profile-country-search { grid-column: 2; grid-row: 1; }
+  #profile-content .country-evidence-list > .evidence-list, #profile-content .country-evidence-list > [data-profile-country-empty], #profile-content .country-evidence-list > .evidence-reveal-button { grid-column: 1 / -1; }
+}
+
+/* Keep terminal result details together, even on a wide research workspace. */
+#profile-workspace.is-result-detail { max-width: 1180px; margin-inline: auto; }
+#profile-workspace.is-result-detail > .nested-page-breadcrumb { margin-bottom: 8px; }
+#profile-workspace.is-result-detail > .research-workspace-heading { padding: 0; }
+#profile-workspace.is-result-detail .profile-actions:empty { display: none; }
+#profile-workspace.is-result-detail .profile-overview-main { gap: 6px; }
+#profile-workspace.is-result-detail .profile-identity-main { gap: 4px 8px; }
+#profile-workspace.is-result-detail .profile-identity-main h3 { font-size: 22px; }
+#profile-workspace.is-result-detail .profile-formed { flex-basis: 100%; padding: 0; border: 0; gap: 2px; }
+#profile-workspace.is-result-detail .profile-view-switch { justify-content: center; }
+@media (min-width: 1051px) {
+  #profile-workspace.is-result-detail:has(.profile-identity-panel) { grid-template-columns: minmax(0,1fr); gap: 4px; }
+  #profile-workspace.is-result-detail > .nested-page-breadcrumb { grid-column: 1 / -1; }
+  #profile-workspace.is-result-detail > .research-workspace-heading { grid-column: 1; grid-row: 1; justify-self: end; }
+  .is-result-detail #profile-content { grid-template-columns: minmax(0,1fr) minmax(0,2fr); gap: 8px 18px; align-items: center; }
+  .is-result-detail #profile-content .profile-node-inspector { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; padding-left: 18px; align-items: center; }
+  .is-result-detail #profile-content .country-evidence-list { grid-template-columns: minmax(0,1fr); }
+  .is-result-detail #profile-content .profile-country-search { grid-column: 1; grid-row: auto; }
+  .is-result-detail #profile-content .profile-node-inspector .evidence-list { grid-template-columns: minmax(0,1fr); }
+  .is-result-detail #profile-content .profile-selected-age br { display: block; }
+  .is-result-detail #profile-content .profile-selected-age b { margin-left: 0; }
+  .is-result-detail #profile-content .profile-ancestry { text-align: center; }
+}
+#profile-content .profile-selected-summary.is-root { display: grid; grid-template-columns: minmax(0,1fr); gap: 4px; }
+#profile-content .profile-selected-summary.is-root .profile-selected-metric { grid-column: 1; grid-row: auto; margin: 0; text-align: left; }
+#profile-content .profile-selected-summary.is-root article { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+/* Result details: scope first, then a compact view toolbar and the tree. */
+#profile-workspace.is-result-detail .profile-identity-main { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; }
+.is-result-detail .profile-identity-main > .profile-project { grid-column: 1; grid-row: 1; }
+.is-result-detail .profile-identity-main > h3 { grid-column: 2; grid-row: 1; }
+#profile-workspace.is-result-detail .profile-formed { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.is-result-detail .profile-formed > small:first-child { flex-basis: 100%; }
+.is-result-detail .profile-formed > small:last-child { display: inline-flex; align-items: center; }
+.is-result-detail .profile-formed > strong { font-size: 16px; }
+#profile-content .profile-navigation-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; padding-block: 6px; border-block: 1px solid var(--line); grid-column: 1 / -1; }
+#profile-content .profile-navigation-toolbar .profile-view-switch { padding: 0; margin: 0; justify-content: start; }
+#profile-content .profile-navigation-toolbar .profile-ancestry { margin: 0; padding: 0; border: 0; flex: 0 1 auto; text-align: start; }
+#profile-content .profile-navigation-toolbar .profile-ancestry h3 { font-size: 12px; }
+#profile-content .profile-navigation-toolbar .profile-ancestry > header { display: inline-flex; margin-right: 6px; }
+.profile-navigation-toolbar .ancestry-breadcrumb { display: inline; padding: 0; }
+.is-result-detail .profile-explorer { grid-template-columns: minmax(0,1fr); }
+#profile-content .result-country-disclosure { grid-column: 1 / -1; min-width: 0; }
+.result-country-disclosure > summary { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; min-height: 32px; color: var(--accent-dark); cursor: pointer; }
+.result-country-disclosure > summary::before { content: "▸"; }
+.result-country-disclosure[open] > summary::before { content: "▾"; }
+.result-country-preview, .result-country-preview > span { display: inline-flex; align-items: center; gap: 5px; }
+.result-country-preview { flex-wrap: wrap; gap: 8px; font-size: 11px; }
+.result-country-preview .flag { width: 20px; height: 15px; }
+.result-country-disclosure[open] .result-country-preview { display: none; }
+.result-country-body { padding-top: 6px; }
+#profile-content .result-country-disclosure .evidence-list { max-height: none; overflow: visible; scrollbar-gutter: auto; }
+.result-detail-age-coverage { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+@media (min-width: 1051px) {
+  .is-result-detail #profile-content { align-items: start; }
+  .is-result-detail #profile-content .profile-node-inspector { align-items: start; }
+  .is-result-detail #profile-content .result-detail-toolbar { grid-row: 2; }
+  .is-result-detail #profile-content .profile-tree-section, .is-result-detail #profile-content [data-profile-matrix] { grid-row: 3; }
+}
+@media (max-width: 1050px) {
+  .is-result-detail .profile-node-inspector { border: 0; padding: 0; gap: 10px; }
+  .is-result-detail .profile-selected-summary { padding: 8px 10px; }
+}
+@media (min-width: 641px) and (max-width: 1050px) {
+  .is-result-detail .profile-node-inspector { grid-template-columns: minmax(180px,.8fr) minmax(0,1.2fr); align-items: start; gap: 16px; }
+}
+@media (max-width: 760px) {
+  .result-country-disclosure > summary { min-height: 44px; }
+  .is-result-detail .profile-node-inspector .country-evidence-row { min-height: 36px; }
+}
+
+/* Standalone research keeps its summary before the long tree on every viewport. */
+#profile-content .profile-country-search > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+#profile-workspace:not(.is-result-detail) .profile-identity-main { display: flex; align-items: baseline; gap: 6px 10px; }
+#profile-workspace:not(.is-result-detail) .profile-formed { flex-basis: 100%; border: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 10px; }
+#profile-workspace:not(.is-result-detail) .profile-formed > small:first-child { flex-basis: 100%; }
+@media (min-width: 1051px) {
+  #profile-content .profile-navigation-toolbar { grid-row: 2; }
+  #profile-content .profile-tree-section, #profile-content [data-profile-matrix] { grid-row: 3; }
+  #profile-workspace:not(.is-result-detail) .result-country-disclosure .evidence-list { max-height: 96px; overflow: auto; scrollbar-gutter: stable; }
+}
+@media (max-width: 1050px) {
+  #profile-content .profile-explorer { grid-template-columns: minmax(0,1fr); }
+  #profile-content > .profile-node-inspector { border: 0; padding: 0; gap: 10px; }
+}
+@media (min-width: 641px) and (max-width: 1050px) {
+  #profile-content > .profile-node-inspector { grid-template-columns: minmax(180px,.8fr) minmax(0,1.2fr); align-items: start; gap: 16px; }
+}

@@ -1,0 +1,74 @@
+/* Countries → matching condition → time → optional results and chart settings. */
+.query-zone { display: block; padding-block: 12px; }
+.query-parameters { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; gap: 14px; padding: 0; }
+.query-time-group { display: grid; min-width: 0; gap: 10px 16px; align-items: start; }
+.query-zone .sample-scope-control select { width: 100%; min-height: 38px; }
+.query-time-group { grid-template-columns: minmax(220px, 1fr) minmax(140px, .6fr); }
+.query-zone .density-settings { display: grid; grid-template-columns: minmax(110px,.75fr) minmax(150px,1fr); grid-template-rows: auto auto auto; gap: 5px 12px; padding: 0; border: 0; min-width: 0; align-items: start; }
+.query-zone .density-step-control { display: grid; grid-row: 1 / span 2; grid-template-rows: subgrid; min-width: 0; gap: 5px; white-space: normal; }
+.query-zone .density-step-control select { width: 100%; min-height: 38px; }
+.density-step-value { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.density-step-value input { width: 84px; min-width: 0; min-height: 38px; padding: 4px 8px; font-size: 12px; }
+.query-zone .density-sync-control { display: flex; grid-column: 1 / -1; grid-row: 3; align-items: center; gap: 5px; font-size: 11px; }
+.query-zone .density-sync-label { min-height: 24px; }
+.query-zone .query-inline-field, .query-zone .query-scope-row { grid-column: auto; grid-row: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; width: auto; gap: 5px; padding: 0; border: 0; align-items: start; }
+.query-zone .annotated-label { min-height: 28px; align-items: center; align-self: stretch; }
+.query-zone #query-evidence-label { align-items: center; }
+.query-zone .scope-picker { min-width: 0; width: 100%; min-height: 38px; }
+.query-zone .query-inline-value, .query-zone .query-value-switch, .query-zone .query-binary-switch { min-height: 38px; }
+.query-zone .query-min-field input { max-width: 150px; min-height: 38px; }
+.query-zone .delta-stepper { width: 100%; max-width: 210px; }
+.delta-value { display: flex; align-items: center; min-width: 0; gap: 2px; padding-left: 5px; }
+.delta-value > span { color: var(--muted); }
+.query-zone .delta-stepper input { min-width: 0; }
+.query-zone #target-year { min-width: 0; min-height: 38px; height: auto; }
+.query-zone #target-era { padding: 3px; gap: 2px; height: auto; }
+.query-zone .mockup-target-date-control { display: flex; }
+.query-zone #target-era { flex: none; width: auto; }
+.query-zone #target-year { flex: 1; width: 100%; }
+#target-era .query-switch-option { display: flex; align-items: center; justify-content: center; align-self: stretch; padding: 3px 5px; border-radius: 3px; color: var(--muted); }
+#target-era[aria-checked="false"] [data-era="BCE"], #target-era[aria-checked="true"] [data-era="CE"] { color: white; background: var(--accent); font-weight: 600; }
+.query-adjustment-note { margin: 10px 0 0; padding: 8px 10px; border-left: 3px solid var(--accent); background: var(--surface); color: var(--text); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.query-adjustment-note:not([hidden]) { display: flex; align-items: center; justify-content: space-between; gap: 10px 20px; flex-wrap: wrap; border: 1px solid #d69a25; border-left-width: 4px; border-radius: 5px; background: #fff3cc; color: #5d4100; }
+.query-adjustment-note p { flex: 1 1 320px; margin: 0; }
+.query-adjustment-note button { min-height: 44px; max-width: 100%; white-space: normal; background: #865100; color: #fff; border-color: #865100; }
+.query-adjustment-note button:hover { background: #633c00; color: #fff; border-color: #633c00; }
+@media (max-width: 760px) {
+  .query-adjustment-note button { min-height: calc(45px / var(--content-scale)); }
+}
+@media (min-width: 1280px) {
+  .query-parameters { grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.05fr) minmax(0, 1.75fr); gap: 18px; }
+  .query-time-group { grid-template-columns: minmax(210px, 1.5fr) minmax(125px, 1fr); }
+  .query-zone .query-time-group { padding-left: 18px; border-left: 1px solid var(--line); border-top: 0; padding-top: 0; }
+  .query-time-group { grid-template-rows: auto auto auto; }
+  .query-zone .query-time-group > * { grid-row: 1 / span 3; grid-template-rows: subgrid; }
+}
+@media (min-width: 761px) and (max-width: 1279px) {
+  .query-parameters { grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr); }
+  .query-time-group { padding-top: 10px; border-top: 1px solid var(--line); }
+}
+@media (max-width: 760px) {
+  .query-zone { display: flex; flex-direction: column; }
+  .query-results-jump { order: -1; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 10px; padding: 8px 0; text-align: left; border-bottom: 1px solid var(--line); }
+  #query-result-summary { display: grid; gap: 2px; }
+  #query-result-count { font-size: 14px; }
+  #query-result-date { color: var(--muted); font-size: 11px; }
+  .query-results-jump-action { display: inline-flex; align-items: center; gap: 4px; }
+  .query-time-group { grid-template-columns: minmax(0, 1fr); padding-top: 12px; border-top: 1px solid var(--line); }
+  .query-zone .query-min-field { grid-template-columns: minmax(0, 1fr) 85px; align-items: center; }
+  .query-zone .query-min-field small { grid-column: 1 / -1; }
+  .query-zone .query-switch-field { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .query-zone .query-switch-field small { grid-column: 1 / -1; }
+  .query-zone #mode-hint { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .query-zone #query-crossing-control { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .query-zone #include-crossing-description { grid-column: 1 / -1; }
+  .query-zone .density-settings { padding-top: 10px; border-top: 1px solid var(--line); }
+  .query-zone .density-step-control select, .density-step-value input, .query-zone .density-sync-label { min-height: 44px; }
+  .query-zone .density-sync-control { font-size: 12px; }
+  .query-zone .query-inline-field input, .query-zone .scope-picker, .query-zone .query-value-switch, .query-zone .query-binary-switch, .query-zone #target-year { min-height: 44px; }
+  .query-zone .sample-scope-control select { min-height: 44px; }
+  .query-zone .delta-stepper button { min-width: 44px; min-height: 44px; }
+  .query-zone .delta-stepper { grid-template-columns: 44px minmax(0, 1fr) 44px; }
+  .query-zone .query-delta-field { grid-template-columns: minmax(0, 1fr) minmax(145px, .8fr); align-items: center; }
+  .query-zone .query-control-hint, .query-zone .query-min-field small { font-size: 12px; }
+}

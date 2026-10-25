@@ -1,0 +1,26 @@
+{
+  "key": "baltic",
+  "label": {
+    "en": "Latvia and Lithuania",
+    "ru": "Латвия и Литва"
+  },
+  "category": {
+    "en": "Europe",
+    "ru": "Европа"
+  },
+  "countries": [
+    "LTU",
+    "LVA"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Набор ровно из двух стран: Латвии и Литвы.",
+      "en": "A set of exactly two countries: Latvia and Lithuania."
+    },
+    "selection": {
+      "ru": "Эстония не включена, поэтому набор не называется всеми странами Балтии. Он также не обозначает ареал древних балтских культур.",
+      "en": "Estonia is omitted, so this is not labelled as all Baltic states. It also does not represent the range of ancient Baltic cultures."
+    },
+    "sources": []
+  }
+}

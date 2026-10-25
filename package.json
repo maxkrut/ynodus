@@ -1,0 +1,38 @@
+{
+  "name": "ynodus",
+  "version": "1.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "type": "module",
+  "scripts": {
+    "data": "node scripts/build-hras-index.mjs",
+    "data:check": "node scripts/check-upstream-version.mjs",
+    "test": "npm run test:size && npm run test:i18n && npm run test:exports && npm run test:app && npm run test:semantics && npm run test:data-check",
+    "test:exports": "node --test scripts/exports/usage.test.mjs && node scripts/check-exports.mjs",
+    "test:i18n": "node --test scripts/i18n/usage.test.mjs && node scripts/check-i18n.mjs",
+    "test:size": "node scripts/check-source-size.mjs",
+    "test:app": "node scripts/test-app-contracts.mjs",
+    "test:semantics": "node scripts/test-result-invariants.mjs",
+    "test:semantics:exhaustive": "node scripts/test-result-invariants.mjs --exhaustive",
+    "test:data-check": "node scripts/test-upstream-version-check.mjs",
+    "test:e2e": "playwright test",
+    "test:pages": "node scripts/test-pages.mjs",
+    "test:ui-contrast": "playwright test tests/e2e/ui-contrast.spec.ts",
+    "dev": "vite --configLoader native --host 127.0.0.1",
+    "build": "tsc && vite build --configLoader native",
+    "preview": "vite preview --configLoader native --host 127.0.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@typescript/typescript6": "^6.0.2",
+    "sass": "^1.104.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.4"
+  },
+  "dependencies": {
+    "flag-icons": "^7.5.0"
+  }
+}

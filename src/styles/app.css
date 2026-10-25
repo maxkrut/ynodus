@@ -1,0 +1,35 @@
+@import "./workbench/base.css";
+@import "./workbench/query.css";
+@import "./workbench/timeline.css";
+@import "./workbench/results.css";
+@import "./workbench/result-countries.css";
+@import "./workbench/dialogs.css";
+@import "./workbench/countries.css";
+@import "./workbench/preset-info.css";
+@import "./workbench/research.css";
+@import "./workbench/responsive.css";
+@import "./workbench/ledger-layout.css";
+@import "./workbench/profile-report.css";
+@import "./workbench/profile-explorer.css";
+@import "./workbench/country-tree.css";
+@import "./workbench/country-overview.css";
+@import "./workbench/annotations.css";
+@import "./workbench/branch-countries.css";
+@import "./workbench/branch-country-workspace.css";
+@import "./workbench/density-reading.css";
+@import "./workbench/density-measure.css";
+@import "./workbench/period-labels.css";
+@import "./workbench/query-reading.css";
+
+@import "./workbench/query-groups.css";
+@import "./workbench/popup-timeline.css";
+@import "./workbench/crossing-diagram.css";
+@import "./workbench/profile-summary.css";
+@import "./workbench/query-two-rows.css";
+@import "./workbench/setting-switch.css";
+@import "./workbench/tree-sheet.css";
+@import "./workbench/profile-compact.css";
+@import "./workbench/country-comparison.css";
+
+/* The complete header component follows shared and workspace styles. */
+@import "./workbench/header.css";

@@ -1,0 +1,29 @@
+{
+  "key": "southAsia",
+  "label": {
+    "en": "South Asia: selected countries",
+    "ru": "Южная Азия: выборочно"
+  },
+  "category": {
+    "en": "Asia",
+    "ru": "Азия"
+  },
+  "countries": [
+    "BGD",
+    "IND",
+    "LKA",
+    "NPL",
+    "PAK"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Бангладеш, Индия, Шри-Ланка, Непал и Пакистан - выборочный южноазиатский набор.",
+      "en": "Bangladesh, India, Sri Lanka, Nepal and Pakistan: a selected South Asian set."
+    },
+    "selection": {
+      "ru": "Это не полный перечень региона: например, Бутан, Мальдивы и Афганистан не включены. Состав можно дополнить вручную.",
+      "en": "This is not the whole region: Bhutan, Maldives and Afghanistan, for example, are omitted. Countries can be added manually."
+    },
+    "sources": []
+  }
+}

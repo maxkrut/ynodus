@@ -1,0 +1,27 @@
+{
+  "key": "finnoUgric",
+  "label": {
+    "en": "Finno-Ugric languages",
+    "ru": "Финно-угорские языки"
+  },
+  "category": {
+    "en": "Europe",
+    "ru": "Европа"
+  },
+  "countries": [
+    "FIN",
+    "EST",
+    "HUN"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Финляндия, Эстония и Венгрия - узкий стартовый список для темы финно-угорских языков.",
+      "en": "Finland, Estonia and Hungary form a narrow starting list for a Finno-Ugric language theme."
+    },
+    "selection": {
+      "ru": "Другие сообщества, в том числе в России и Скандинавии, не охвачены этим списком. Языковое родство не означает единого генетического происхождения.",
+      "en": "Other communities, including those in Russia and Scandinavia, are outside this list. Language relationship does not imply one shared genetic origin."
+    },
+    "sources": []
+  }
+}

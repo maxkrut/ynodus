@@ -1,0 +1,32 @@
+{
+  "key": "caucasus",
+  "label": {
+    "en": "South Caucasus",
+    "ru": "Южный Кавказ"
+  },
+  "category": {
+    "en": "Eurasia",
+    "ru": "Евразия"
+  },
+  "countries": [
+    "ARM",
+    "AZE",
+    "GEO"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Армения, Азербайджан и Грузия - три страны Южного Кавказа.",
+      "en": "Armenia, Azerbaijan and Georgia: the three South Caucasus countries."
+    },
+    "selection": {
+      "ru": "Северный Кавказ в этот набор не входит. Страновой отбор не разделяет горные, равнинные и приграничные районы.",
+      "en": "The North Caucasus is outside this set. Country-level filtering does not distinguish mountain, lowland or border areas."
+    },
+    "sources": [
+      {
+        "title": "Council of the European Union - South Caucasus",
+        "url": "https://www.consilium.europa.eu/uedocs/cms_data/docs/pressdata/en/gena/09008.EN9.htm"
+      }
+    ]
+  }
+}

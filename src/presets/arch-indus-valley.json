@@ -1,0 +1,40 @@
+{
+  "key": "arch-indus-valley",
+  "label": {
+    "en": "Indus Valley",
+    "ru": "Индская цивилизация"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "PAK",
+    "IND",
+    "AFG"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 2600–1900 до н. э.: зрелая городская фаза. Ранние и поздние хараппские этапы выходят за эти рамки.",
+      "en": "C. 2600–1900 BCE: the mature urban phase. Early and Late Harappan phases extend beyond it."
+    },
+    "region": {
+      "ru": "Основное распространение - территория современного Пакистана и северо-западной Индии. В северном Афганистане известно отдельное поселение Шортугай.",
+      "en": "The main distribution lies in present-day Pakistan and northwestern India. Shortughai is an outlying settlement in northern Afghanistan."
+    },
+    "selection": {
+      "ru": "Афганистан включён из-за Шортугая; он не обозначает сплошное распространение цивилизации по стране. Индия также включается целиком, хотя её археологический ареал гораздо уже.",
+      "en": "Afghanistan is included for Shortughai, not continuous coverage across the country. India is also selected in full although its archaeological area is much smaller."
+    },
+    "sources": [
+      {
+        "title": "The Met - South Asia, 2000–1000 BCE",
+        "url": "https://www.metmuseum.org/toah/ht/03/ssa.html"
+      },
+      {
+        "title": "Randall Law - Inter-regional Interaction and Urbanism in the Ancient Indus Valley",
+        "url": "https://www.harappa.com/content/inter-regional-interaction-and-urbanism-ancient-indus-valley"
+      }
+    ]
+  }
+}

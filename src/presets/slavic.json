@@ -1,0 +1,37 @@
+{
+  "key": "slavic",
+  "label": {
+    "en": "Slavic languages",
+    "ru": "Славянские языки"
+  },
+  "category": {
+    "en": "Europe",
+    "ru": "Европа"
+  },
+  "countries": [
+    "BLR",
+    "BIH",
+    "BGR",
+    "HRV",
+    "CZE",
+    "MKD",
+    "MNE",
+    "POL",
+    "RUS",
+    "SRB",
+    "SVK",
+    "SVN",
+    "UKR"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Выборочный набор современных стран для темы славянских языков.",
+      "en": "Selected modern countries for a Slavic-language theme."
+    },
+    "selection": {
+      "ru": "В странах есть разные языковые сообщества, а славянские языки распространены и за их пределами. Список не реконструирует расселение ранних славян.",
+      "en": "These countries contain diverse language communities, and Slavic languages also occur elsewhere. The list does not reconstruct early Slavic settlement."
+    },
+    "sources": []
+  }
+}

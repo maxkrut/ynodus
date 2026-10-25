@@ -1,0 +1,36 @@
+{
+  "key": "arch-cucuteni-trypillia",
+  "label": {
+    "en": "Cucuteni-Trypillia",
+    "ru": "Кукутень-Триполье"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "UKR",
+    "MDA",
+    "ROU"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 5100–2800 до н. э. в широкой хронологии комплекса с ранними фазами.",
+      "en": "C. 5100–2800 BCE in a broad chronology including early phases."
+    },
+    "region": {
+      "ru": "Восточная Румыния, Молдова, западная и центральная Украина.",
+      "en": "Eastern Romania, Moldova, and western and central Ukraine."
+    },
+    "selection": {
+      "ru": "Название объединяет связанные культурные традиции и несколько фаз. Три современных страны передают общую географию, но не границы поселений и не одновременный ареал всех фаз.",
+      "en": "The name covers related traditions and several phases. Three modern countries approximate the geography, not settlement boundaries or the simultaneous extent of every phase."
+    },
+    "sources": [
+      {
+        "title": "Immel et al., Scientific Reports (2020)",
+        "url": "https://www.nature.com/articles/s41598-020-61190-0"
+      }
+    ]
+  }
+}

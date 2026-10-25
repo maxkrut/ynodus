@@ -1,0 +1,34 @@
+{
+  "key": "balkan",
+  "label": {
+    "en": "Balkans",
+    "ru": "Балканы"
+  },
+  "category": {
+    "en": "Europe",
+    "ru": "Европа"
+  },
+  "countries": [
+    "ALB",
+    "BIH",
+    "BGR",
+    "GRC",
+    "HRV",
+    "MKD",
+    "MNE",
+    "ROU",
+    "SRB",
+    "SVN"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Десять стран Юго-Восточной Европы, выбранных для широкого балканского контекста.",
+      "en": "Ten southeastern European countries selected for a broad Balkan context."
+    },
+    "selection": {
+      "ru": "Определения Балкан различаются. Включены страны, лишь частично относимые к региону; Турция в этот вариант набора не входит.",
+      "en": "Definitions of the Balkans vary. Some selected countries are only partly within the region; Turkey is omitted from this version."
+    },
+    "sources": []
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "key": "arch-corded-ware",
+  "label": {
+    "en": "Corded Ware",
+    "ru": "Шнуровая керамика"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "DEU",
+    "DNK",
+    "NOR",
+    "SWE",
+    "FIN",
+    "POL",
+    "CZE",
+    "SVK",
+    "AUT",
+    "LTU",
+    "LVA",
+    "EST",
+    "BLR",
+    "UKR",
+    "RUS",
+    "NLD"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 2900–2300 до н. э.; отдельные региональные группы имеют другую хронологию.",
+      "en": "C. 2900–2300 BCE; individual regional groups have different chronologies."
+    },
+    "region": {
+      "ru": "Широкий пояс Центральной, Северной и Восточной Европы, включая южную Скандинавию, Балтику и часть Восточно-Европейской равнины.",
+      "en": "A broad belt of central, northern and eastern Europe, including southern Scandinavia, the Baltic and part of the East European Plain."
+    },
+    "selection": {
+      "ru": "Объединены родственные региональные группы. Коды России и других крупных стран намного шире археологического ареала; набор не является полной картой всех групп шнуровой керамики.",
+      "en": "Related regional groups are combined. Russia and other large country codes greatly exceed the archaeological area; this is not a complete map of all Corded Ware groups."
+    },
+    "sources": [
+      {
+        "title": "Kristiansen et al., Antiquity (2017) - Corded Ware mobility",
+        "url": "https://www.cambridge.org/core/journals/antiquity/article/retheorising-mobility-and-the-formation-of-culture-and-language-among-the-corded-ware-culture-in-europe/E35E6057F48118AFAC191BDFBB1EB30E"
+      },
+      {
+        "title": "Linderholm et al., Scientific Reports (2020)",
+        "url": "https://www.nature.com/articles/s41598-020-63138-w"
+      }
+    ]
+  }
+}

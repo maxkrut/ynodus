@@ -1,0 +1,31 @@
+@use "../../node_modules/flag-icons/sass/flag-icons" with (
+  $flag-icons-path: "../../node_modules/flag-icons/flags",
+  $flag-icons-use-square: false,
+  $flag-icons-included-countries: (
+    "ad", "ae", "af", "al", "am", "ao", "ar", "at", "au", "ax", "az",
+    "ba", "bb", "bd", "be", "bf", "bg", "bh", "bi", "bj", "bm", "bo", "br", "bw", "by",
+    "ca", "cd", "cf", "ch", "cl", "cm", "cn", "co", "cr", "cu", "cv", "cy", "cz",
+    "de", "dj", "dk", "dm", "do", "dz",
+    "ec", "ee", "eg", "eh", "er", "es", "et",
+    "fi", "fo", "fr",
+    "ga", "gb", "gb-eng", "gb-sct", "gb-wls", "gd", "ge", "gg", "gh", "gi", "gl", "gm", "gn", "gr", "gt", "gu", "gw", "gy",
+    "hk", "hn", "hr", "ht", "hu",
+    "id", "ie", "il", "im", "in", "iq", "ir", "is", "it",
+    "je", "jm", "jo", "jp",
+    "ke", "kg", "kh", "kp", "kr", "kw", "kz",
+    "la", "lb", "lk", "lr", "lt", "lu", "lv", "ly",
+    "ma", "md", "me", "mg", "mk", "ml", "mm", "mn", "mo", "mq", "mr", "ms", "mt", "mx", "my",
+    "na", "ne", "ng", "ni", "nl", "no", "np", "nz",
+    "om",
+    "pa", "pe", "pf", "pg", "ph", "pk", "pl", "pr", "ps", "pt", "py",
+    "qa",
+    "ro", "rs", "ru", "rw",
+    "sa", "sd", "se", "sg", "si", "sk", "sl", "sn", "so", "sr", "ss", "sv", "sy", "sz",
+    "td", "th", "tj", "tm", "tn", "tr", "tt", "tw",
+    "ua", "ug", "us", "uy", "uz",
+    "vc", "ve", "vg", "vn",
+    "ws",
+    "ye",
+    "za", "zw"
+  )
+);

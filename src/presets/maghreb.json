@@ -1,0 +1,29 @@
+{
+  "key": "maghreb",
+  "label": {
+    "en": "Maghreb",
+    "ru": "Магриб"
+  },
+  "category": {
+    "en": "Africa",
+    "ru": "Африка"
+  },
+  "countries": [
+    "DZA",
+    "LBY",
+    "MAR",
+    "MRT",
+    "TUN"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Алжир, Ливия, Марокко, Мавритания и Тунис - выбранный набор для Магриба.",
+      "en": "Algeria, Libya, Morocco, Mauritania and Tunisia form the selected Maghreb set."
+    },
+    "selection": {
+      "ru": "Западная Сахара отдельным кодом не включена. Список не претендует на единственное определение региона или его исторических границ.",
+      "en": "Western Sahara is not included as a separate code. The list is not a definitive description of the region or its historical borders."
+    },
+    "sources": []
+  }
+}

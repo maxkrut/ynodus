@@ -1,0 +1,45 @@
+{
+  "key": "arabic",
+  "label": {
+    "en": "Arabic language",
+    "ru": "Арабский язык"
+  },
+  "category": {
+    "en": "West Asia / Africa",
+    "ru": "Западная Азия / Африка"
+  },
+  "countries": [
+    "DZA",
+    "BHR",
+    "DJI",
+    "EGY",
+    "IRQ",
+    "JOR",
+    "KWT",
+    "LBN",
+    "LBY",
+    "MAR",
+    "MRT",
+    "OMN",
+    "PSE",
+    "QAT",
+    "SAU",
+    "SDN",
+    "SOM",
+    "SYR",
+    "TUN",
+    "UAE",
+    "YEM"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Выборочный список стран для поиска по теме арабского языка.",
+      "en": "Selected countries for exploring an Arabic-language theme."
+    },
+    "selection": {
+      "ru": "Не все жители выбранных стран говорят по-арабски. Набор не равен полному списку арабоязычных сообществ или членству в международной организации.",
+      "en": "Not every resident speaks Arabic. The set is neither a complete list of Arabic-speaking communities nor a membership list of an international organisation."
+    },
+    "sources": []
+  }
+}

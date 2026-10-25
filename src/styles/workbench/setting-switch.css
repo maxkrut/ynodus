@@ -1,0 +1,20 @@
+/* Native inputs keep keyboard and restored checked state; text mirrors that state. */
+.query-zone .setting-switch { display: flex; align-items: center; gap: 8px; min-height: var(--query-control-height); cursor: pointer; }
+.query-zone .setting-switch > input {
+  appearance: none; position: relative; flex: none; width: 36px; height: 22px;
+  min-height: 22px; margin: 0; padding: 0; border: 1px solid #9aadb3;
+  border-radius: 12px; background: #e4ebed; cursor: pointer;
+}
+.query-zone .setting-switch > input::before {
+  content: ""; position: absolute; left: 3px; top: 3px;
+  width: 14px; height: 14px; border-radius: 50%; background: var(--muted);
+}
+.query-zone .setting-switch > input:checked { background: var(--accent); border-color: var(--accent); }
+.query-zone .setting-switch > input:checked::before { left: 17px; background: white; }
+.setting-switch-copy { display: grid; gap: 1px; min-width: 0; line-height: 1.25; }
+.setting-switch-state { font-size: 11px; font-weight: 400; color: var(--muted); }
+.setting-switch-on { display: none; }
+.setting-switch:has(> input:checked) .setting-switch-off { display: none; }
+.setting-switch:has(> input:checked) .setting-switch-on { display: inline; color: var(--accent-dark); font-weight: 600; }
+.query-zone .setting-switch > input:disabled { opacity: .48; cursor: not-allowed; }
+.setting-switch:has(> input:disabled) .setting-switch-copy { opacity: .48; }

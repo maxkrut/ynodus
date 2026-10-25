@@ -1,0 +1,45 @@
+{
+  "key": "arch-funnelbeaker",
+  "label": {
+    "en": "Funnelbeaker",
+    "ru": "Воронковидные кубки"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "DNK",
+    "SWE",
+    "NOR",
+    "DEU",
+    "NLD",
+    "POL",
+    "CZE",
+    "UKR"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 4000–2800 до н. э. для скандинавских групп; в других областях рамки отличаются.",
+      "en": "C. 4000–2800 BCE for Scandinavian groups; dates differ elsewhere."
+    },
+    "region": {
+      "ru": "Южная Скандинавия и север Центральной Европы; восточные группы известны в западной Украине, в районе верховьев Буга и Днестра.",
+      "en": "Southern Scandinavia and northern central Europe; eastern groups occur in western Ukraine around the upper Bug and Dniester."
+    },
+    "selection": {
+      "ru": "Объединены несколько региональных групп TRB. Норвегия, Швеция и Украина включены из-за отдельных частей их территории; датировка скандинавских групп не переносится на все памятники набора.",
+      "en": "Several TRB regional groups are combined. Norway, Sweden and Ukraine are included for parts of their territories; Scandinavian dates do not apply to every site in the set."
+    },
+    "sources": [
+      {
+        "title": "Communications Biology (2026) - Neolithic Gotland",
+        "url": "https://www.nature.com/articles/s42003-026-10498-0"
+      },
+      {
+        "title": "Rybicka, Archaeologia Polona (2019) - Western Ukraine",
+        "url": "https://journals.iaepan.pl/apolona/article/download/762/2039/3354"
+      }
+    ]
+  }
+}

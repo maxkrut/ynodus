@@ -1,0 +1,41 @@
+{
+  "key": "latinAmerica",
+  "label": {
+    "en": "Latin America: selected countries",
+    "ru": "Латинская Америка: выборочно"
+  },
+  "category": {
+    "en": "Americas",
+    "ru": "Америка"
+  },
+  "countries": [
+    "ARG",
+    "BOL",
+    "BRA",
+    "CHL",
+    "COL",
+    "CRI",
+    "CUB",
+    "DOM",
+    "ECU",
+    "MEX",
+    "PAN",
+    "PER",
+    "PRI",
+    "PRY",
+    "SLV",
+    "URY",
+    "VEN"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Выборочный список стран Латинской Америки и Пуэрто-Рико.",
+      "en": "Selected Latin American countries and Puerto Rico."
+    },
+    "selection": {
+      "ru": "Список не исчерпывающий: например, Гватемала, Гондурас, Никарагуа и Гаити не включены. Он не объединяет население региона в одну культуру.",
+      "en": "The list is not exhaustive: Guatemala, Honduras, Nicaragua and Haiti, for example, are omitted. It does not treat the region’s population as one culture."
+    },
+    "sources": []
+  }
+}

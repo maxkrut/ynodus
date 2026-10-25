@@ -1,0 +1,41 @@
+{
+  "key": "arch-lbk",
+  "label": {
+    "en": "Linear Pottery (LBK)",
+    "ru": "Линейно-ленточная керамика"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "DEU",
+    "AUT",
+    "CZE",
+    "SVK",
+    "POL",
+    "HUN",
+    "FRA",
+    "NLD"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 5500–4900 до н. э.; региональные фазы различаются.",
+      "en": "C. 5500–4900 BCE; regional phases differ."
+    },
+    "region": {
+      "ru": "Земледельческие поселения преимущественно в лёссовых областях Центральной Европы; общий ареал тянулся от Парижского бассейна до Украины.",
+      "en": "Farming settlements mainly in central European loess zones; the overall distribution extended from the Paris Basin to Ukraine."
+    },
+    "selection": {
+      "ru": "Выбрана центральная часть более широкого ареала. Например, Бельгия и Украина в этот набор не включены. LBK не означает, что всё население выбранных стран имело одну культуру.",
+      "en": "The set selects the central part of a wider distribution; Belgium and Ukraine, for example, are omitted. LBK does not describe all inhabitants of the selected countries."
+    },
+    "sources": [
+      {
+        "title": "Archaeological Dialogues (2025) - Ethnicity in European archaeology",
+        "url": "https://www.cambridge.org/core/journals/archaeological-dialogues/article/ethnicity-in-european-archaeology-revitalizing-a-concept-with-the-study-of-migration/64E6D3CFAE32024C0B343B282C46800C"
+      }
+    ]
+  }
+}

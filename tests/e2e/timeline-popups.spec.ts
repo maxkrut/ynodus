@@ -1,0 +1,91 @@
+import { expect, test } from "@playwright/test";
+import { layoutFixture, layoutQuery } from "../fixtures/layout.mjs";
+
+for (const width of [390, 1440]) {
+  test(`shared timeline explanations, outside dismissal and boundary at ${width}`, async ({ page }) => {
+    test.setTimeout(60_000);
+    const errors: string[] = [];
+    page.on("pageerror", error => errors.push(error.message));
+    await page.setViewportSize({ width, height: 1000 });
+    await page.route("**/data/hras-index.json", route => route.fulfill({ json: layoutFixture() }));
+    await page.goto(layoutQuery);
+    await expect(page.locator('#result-body tr[data-result-role="formed"]')).toHaveCount(15);
+    const panel = page.locator("#context-annotation");
+    const periods = page.locator('[data-annotation="periods"]');
+    const column = page.locator("button.density-cell").first();
+    await column.hover();
+    await expect(panel).toBeVisible();
+    await expect(panel).toContainText("Состав интервала");
+    await expect(panel.locator(".annotation-facts")).toContainText("Субкладов");
+    await expect(panel.locator(".popup-action")).toContainText(await column.getAttribute("data-target-label") || "");
+    await expect(column).not.toHaveAttribute("title");
+    expect(await panel.evaluate(el => getComputedStyle(el).backgroundColor)).toBe("rgb(255, 255, 255)");
+    const dateLayout = await panel.locator(".popup-date").evaluateAll(elements => elements.map(el => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      return range.getClientRects().length;
+    }));
+    expect(dateLayout.length).toBeGreaterThan(0);
+    expect(dateLayout.every(lines => lines === 1)).toBe(true);
+    expect(await panel.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+    await panel.screenshot({ path: `output/timeline-popups/bar-${width}.png` });
+    await page.keyboard.press("Escape");
+    const target = await column.getAttribute("data-target-ybp");
+    await column.click();
+    await expect(page).toHaveURL(new RegExp(`target=${target}(?:&|$)`));
+    await expect(panel).toBeHidden();
+    await periods.click();
+    await expect(panel.locator(".period-guide-sources a")).toHaveCount(5);
+    await panel.screenshot({ path: `output/timeline-popups/periods-${width}.png` });
+    await page.locator("#timeline-zone-title").click();
+    await expect(panel).toBeHidden();
+    await expect(periods).toHaveAttribute("aria-expanded", "false");
+    await periods.click();
+    await page.keyboard.press("Escape");
+    await expect(periods).toBeFocused();
+    await expect(panel).toBeHidden();
+    await page.locator('[data-annotation="log-scale"]').click();
+    await expect(panel).toContainText("10 000 до н. э.");
+    await expect(panel).toContainText("логарифмическая");
+    await page.keyboard.press("Escape");
+    await page.locator(".timeline-zone").scrollIntoViewIfNeeded();
+    const ticks = await page.evaluate(() => {
+      const tick = document.querySelector(".time-axis-log-boundary")!.getBoundingClientRect();
+      const zero = document.querySelector(".time-axis-zero")!.getBoundingClientRect();
+      const band = document.querySelector('[data-period-band="mesolithic"]')!.getBoundingClientRect();
+      const log = document.querySelector(".time-axis-log-track")!.getBoundingClientRect();
+      const linear = document.querySelector(".time-axis-track")!.getBoundingClientRect();
+      const caption = document.querySelector(".scale-note-caption")!.getBoundingClientRect();
+      const date = document.querySelector("#stat-target")!.getBoundingClientRect();
+      return { difference: Math.abs(tick.left - band.left), top: Math.abs(tick.top - zero.top), height: Math.abs(tick.height - zero.height),
+        join: Math.abs(log.right - linear.left), baseline: Math.abs(log.top - linear.top),
+        captionAbove: caption.bottom <= log.top, separateLabels: date.bottom <= caption.top };
+    });
+    expect(ticks.difference).toBeLessThanOrEqual(1);
+    expect(ticks.top).toBeLessThanOrEqual(1);
+    expect(ticks.height).toBeLessThanOrEqual(1);
+    expect(ticks.join).toBeLessThanOrEqual(1);
+    expect(ticks.baseline).toBeLessThanOrEqual(1);
+    expect(ticks.captionAbove).toBe(true);
+    expect(ticks.separateLabels).toBe(true);
+    await expect(page.locator(".time-axis-scale-rule")).toHaveCount(0);
+    await expect(page.locator(".time-axis-eras")).toHaveCount(0);
+    await page.mouse.move(0, 0);
+    await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
+    await page.locator(".timeline-zone").screenshot({ path: `output/timeline-popups/timeline-${width}.png` });
+    await page.locator("#selection-panel-toggle").click();
+    const countrySearch = page.locator("#country-search");
+    await countrySearch.hover();
+    await expect(countrySearch).not.toHaveAttribute("data-tooltip", /./);
+    await expect(countrySearch).not.toHaveAttribute("title", /./);
+    await expect(panel).toBeHidden();
+    const selectAll = page.locator('[data-country-action="all"]');
+    await selectAll.hover();
+    await expect(panel).toBeVisible();
+    await expect(panel).toContainText(await selectAll.getAttribute("data-tooltip") || "");
+    expect(await panel.evaluate(el => Boolean(el.closest("dialog[open]")))).toBe(true);
+    await page.keyboard.press("Escape");
+    await expect(panel).toBeHidden();
+    expect(errors).toEqual([]);
+  });
+}

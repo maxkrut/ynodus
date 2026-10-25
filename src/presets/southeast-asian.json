@@ -1,0 +1,33 @@
+{
+  "key": "southeastAsia",
+  "label": {
+    "en": "Southeast Asia: selected countries",
+    "ru": "Юго-Восточная Азия: выборочно"
+  },
+  "category": {
+    "en": "Asia",
+    "ru": "Азия"
+  },
+  "countries": [
+    "IDN",
+    "KHM",
+    "LAO",
+    "MMR",
+    "MYS",
+    "PHL",
+    "SGP",
+    "THA",
+    "VNM"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Девять стран для начального поиска по Юго-Восточной Азии.",
+      "en": "Nine countries as a starting point for Southeast Asia."
+    },
+    "selection": {
+      "ru": "Бруней и Тимор-Лешти в этот вариант не включены. Название описывает географическую тему, а не общее происхождение населения.",
+      "en": "Brunei and Timor-Leste are omitted from this version. The title describes a geographic theme, not a shared population origin."
+    },
+    "sources": []
+  }
+}

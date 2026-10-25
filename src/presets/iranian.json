@@ -1,0 +1,27 @@
+{
+  "key": "iranian",
+  "label": {
+    "en": "Iranian languages",
+    "ru": "Иранские языки"
+  },
+  "category": {
+    "en": "Eurasia",
+    "ru": "Евразия"
+  },
+  "countries": [
+    "AFG",
+    "IRN",
+    "TJK"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Иран, Афганистан и Таджикистан как начальный список для темы иранских языков.",
+      "en": "Iran, Afghanistan and Tajikistan as an initial list for an Iranian-language theme."
+    },
+    "selection": {
+      "ru": "Это языковая тема, а не границы исторического Ирана. Например, многие курдоязычные области за пределами этих стран в набор не входят.",
+      "en": "This is a language theme, not the borders of historical Iran. Many Kurdish-speaking areas outside these countries are omitted, for example."
+    },
+    "sources": []
+  }
+}

@@ -1,0 +1,80 @@
+.research-workspace { padding-top: 12px; }
+.nested-page-breadcrumb { margin-bottom: 8px; }
+.research-workspace-heading { gap: 12px; margin-bottom: 12px; padding-bottom: 10px; }
+#profile-workspace:has(.profile-identity-panel) .research-workspace-heading { display: flex; justify-content: flex-end; border: 0; margin: 0; padding: 0 0 8px; }
+#profile-workspace:has(.profile-identity-panel) .research-workspace-heading > div:first-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+#profile-workspace:has(.profile-identity-panel) .profile-lookup { width: min(100%, 420px); }
+#profile-workspace:has(.profile-identity-panel) #profile-lookup-hint { display: none; }
+.research-content { gap: 12px; }
+.profile-identity-panel { padding-bottom: 8px; }
+.profile-identity-main h3 { font-size: 25px; }
+.profile-ledger { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto auto; max-width: 680px; border: 0; gap: 3px 24px; }
+.profile-ledger article { display: grid; grid-template-rows: subgrid; grid-row: span 3; gap: 3px; padding: 0; border: 0; max-width: 48ch; }
+.profile-ledger article + article { border: 0; }
+.profile-ledger article > strong { font-size: 23px; }
+.profile-ledger article > small { font-size: 11px; }
+.profile-formed-context { border: 1px solid var(--line); border-radius: 5px; padding: 12px 14px; background: #f8fbfa; }
+.profile-formed-context > header > span { color: var(--accent-dark); font-weight: 600; }
+.profile-formed-groups { display: grid; gap: 6px; max-height: min(52vh, 560px); overflow: auto; overscroll-behavior: contain; }
+.profile-formed-group { padding: 9px 11px; border: 1px solid var(--line); border-left: 3px solid #b9c9ca; border-radius: 4px; background: #fff; }
+.profile-formed-group.has-same-formed { border-left-color: var(--accent); background: #f2f9f7; }
+.profile-formed-group-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px 14px; font-size: 12px; }
+.profile-formed-group-head strong { color: var(--accent-dark); font-size: 13px; }
+.profile-formed-group-head time { font-variant-numeric: tabular-nums; }
+.profile-formed-group-head > span { margin-left: auto; color: var(--muted); }
+.profile-formed-group > small { display: block; margin-top: 3px; color: var(--muted); }
+.profile-same-formed-members { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin-top: 6px; font-size: 11px; }
+.profile-same-formed-members > span:first-child { font-weight: 600; color: var(--accent-dark); }
+.profile-formed-countries { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 7px; margin-top: 7px; }
+.profile-formed-countries > span { display: inline-flex; align-items: center; gap: 3px; padding: 2px 4px; border-radius: 3px; background: var(--surface); font-size: 10px; }
+.profile-formed-countries .flag { width: 17px; height: 12px; }
+.evidence-tree-node.same-formed { background: #f2f9f7; }
+.same-formed-marker { display: inline-block; margin-left: 5px; padding: 0 3px; border-radius: 3px; background: #d5efea; color: var(--accent-dark); font-weight: 700; }
+.profile-columns { gap: 24px; align-items: start; }
+.profile-columns > .profile-tree-section { border-left: 1px solid var(--line); padding-left: 20px; }
+.profile-ledger { padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.profile-ledger article + article { border-left: 1px solid var(--line); padding-left: 20px; }
+.country-overview-groups article { padding: 12px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); }
+.country-overview-groups { gap: 8px 14px; }
+.section-reading-note { margin-bottom: 8px; }
+.profile-country-search { display: grid; gap: 3px; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.profile-country-search input { min-height: 34px; width: 100%; }
+.country-evidence-row { min-height: 38px; }
+.evidence-list > [hidden] { display: none; }
+.ancestry-breadcrumb { padding: 2px 0; }
+/* Expanded ancestors share the same text flow as the final nodes. */
+.ancestry-breadcrumb, .country-branch-path { display: block; line-height: 2; overflow-wrap: anywhere; }
+.ancestry-earlier, .ancestry-earlier::details-content, .ancestry-earlier > div { display: contents; }
+.ancestry-earlier:not([open])::details-content { display: none; }
+.ancestry-earlier > summary { display: inline; cursor: pointer; color: var(--accent-dark); white-space: nowrap; margin-inline-end: 6px; }
+.ancestry-earlier > summary::before { content: "▸"; margin-inline-end: 4px; }
+.ancestry-earlier[open] > summary::before { content: "▾"; }
+.ancestry-breadcrumb a, .country-branch-path [data-country-evidence-anchor] { display: inline-block; max-width: 100%; vertical-align: baseline; }
+.ancestry-breadcrumb > span[aria-hidden], .country-branch-path > span[aria-hidden],
+.ancestry-earlier > div > span[aria-hidden] { margin-inline: 5px; }
+.profile-extra { font-size: 12px; color: var(--muted); }
+.profile-extra p { margin-top: 6px; }
+.country-branch-path { font-size: 12px; }
+.country-branch-path button { border: 0; padding: 3px; color: var(--accent-dark); font-size: 12px; }
+.country-branch-path [aria-current="page"] { font-weight: 600; color: var(--text); }
+#profile-content .profile-identity-main { justify-content: start; align-items: center; }
+#profile-content .profile-actions { justify-content: start; }
+@media (max-width: 1050px) {
+  .profile-columns > .profile-tree-section { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 14px; }
+  #profile-content .profile-identity-panel { display: flex; flex-direction: column; align-items: start; text-align: left; }
+}
+#country-evidence-workspace .research-workspace-heading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); padding: 0; margin: 0; }
+@media (max-width: 760px) {
+  .profile-columns { grid-template-columns: 1fr; }
+  .profile-columns > .profile-tree-section { border-top: 0; padding-top: 0; }
+  .profile-columns > .country-evidence-list { border-top: 1px solid var(--line-strong); padding-top: 14px; }
+  .profile-ledger article + article { padding-left: 10px; }
+  .profile-columns .country-evidence-list { order: 2; }
+  .profile-lookup-controls { width: 100%; }
+  .profile-actions { justify-content: start; max-width: none; }
+  #profile-content .profile-identity-main { display: grid; justify-items: start; gap: 4px; }
+  #profile-content .profile-formed { padding-left: 0; border-left: 0; }
+  .profile-ledger { gap: 10px; }
+  .country-evidence-row, .profile-country-search input { min-height: 44px; }
+  .profile-country-search input { font-size: 16px; }
+}

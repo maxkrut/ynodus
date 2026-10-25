@@ -1,0 +1,52 @@
+{
+  "key": "arch-la-tene",
+  "label": {
+    "en": "La Tene",
+    "ru": "Латенская культура"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "FRA",
+    "BEL",
+    "CHE",
+    "AUT",
+    "ENG",
+    "DEU",
+    "CZE",
+    "ITA",
+    "SVN",
+    "HUN",
+    "NLD",
+    "SVK",
+    "SRB",
+    "HRV",
+    "ROU"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 450–50 до н. э.; завершение зависит от региона.",
+      "en": "C. 450–50 BCE; the end varies by region."
+    },
+    "region": {
+      "ru": "Центральная и Западная Европа, с распространением связанных форм материальной культуры в другие области, включая Британские острова.",
+      "en": "Central and western Europe, with related material forms spreading to other areas, including the British Isles."
+    },
+    "selection": {
+      "ru": "Выбраны отдельные страны континентального ареала и Англия. Набор не охватывает все латенские находки или все кельтские языки; распространение художественного стиля шире некоторых локальных культурных групп.",
+      "en": "Selected continental countries and England are included. This does not cover all La Tène finds or Celtic languages; the artistic style extended beyond some local cultural groups."
+    },
+    "sources": [
+      {
+        "title": "Laténium - Celtes, un millénaire d’images (2023)",
+        "url": "https://latenium.ch/wp-content/uploads/2023/12/Livret-Celtes.-Un-millenaire-dimages.pdf"
+      },
+      {
+        "title": "British Museum - Roman Britain, background",
+        "url": "https://www.britishmuseum.org/sites/default/files/2019-09/Visit_Roman_Britain_KS2b.pdf"
+      }
+    ]
+  }
+}

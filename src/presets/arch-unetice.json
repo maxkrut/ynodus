@@ -1,0 +1,43 @@
+{
+  "key": "arch-unetice",
+  "label": {
+    "en": "Unetice",
+    "ru": "Унетицкая культура"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "CZE",
+    "SVK",
+    "POL",
+    "DEU",
+    "AUT",
+    "UKR"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 2300–1600 до н. э., с различиями между ранними и классическими фазами.",
+      "en": "C. 2300–1600 BCE, with differences between early and classical phases."
+    },
+    "region": {
+      "ru": "Центральная Европа: прежде всего Чехия, части Словакии, Германии, Польши и Австрии. В верхнем Поднестровье описаны памятники прото- и раннеунетицкого типа.",
+      "en": "Central Europe, especially Czechia and parts of Slovakia, Germany, Poland and Austria. Proto- and Early Únětice-type sites are described in the upper Dniester region."
+    },
+    "selection": {
+      "ru": "Украина включена для этого западного пограничного контекста, а не как часть всего центрального ареала. Ранние типы и контакты не приравниваются ко всей классической унетицкой культуре.",
+      "en": "Ukraine is included for this western peripheral context, not as a whole part of the central distribution. Early types and contacts are not equated with the entire classical culture."
+    },
+    "sources": [
+      {
+        "title": "Archeologické rozhledy 76 (2024) - Early Bronze Age chronology",
+        "url": "https://archeologickerozhledy.cz/index.php/ar/article/download/223/252/3903"
+      },
+      {
+        "title": "Bandrivskyi - Proto- and Early Únětice in the upper Dniester",
+        "url": "https://www.inst-ukr.lviv.ua/files/24/010Bandrivskyi.pdf"
+      }
+    ]
+  }
+}

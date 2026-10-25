@@ -1,0 +1,29 @@
+{
+  "key": "celtic",
+  "label": {
+    "en": "Celtic languages",
+    "ru": "Кельтские языки"
+  },
+  "category": {
+    "en": "Europe",
+    "ru": "Европа"
+  },
+  "countries": [
+    "GBR",
+    "IMN",
+    "IRL",
+    "SCT",
+    "WLS"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Британские острова и Ирландия как отправная точка для темы кельтских языков.",
+      "en": "Britain, Ireland and nearby islands as a starting point for a Celtic-language theme."
+    },
+    "selection": {
+      "ru": "Список неполный: Бретань и Корнуолл отдельно не представлены. Современные языки не задают границы древних кельтских культур; это другая тема, чем латенский набор.",
+      "en": "The list is incomplete: Brittany and Cornwall are not represented separately. Modern languages do not define ancient Celtic cultural boundaries; this differs from the La Tène theme."
+    },
+    "sources": []
+  }
+}

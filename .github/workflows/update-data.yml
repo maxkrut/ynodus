@@ -1,0 +1,118 @@
+name: Update Data Index
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-data-index
+  cancel-in-progress: false
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    env:
+      BASE_BRANCH: ${{ github.event.repository.default_branch }}
+      UPDATE_BRANCH: automation/update-hras-index
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check upstream HRAS manifest
+        id: upstream
+        run: npm run data:check
+
+      - name: Stop when upstream is unchanged
+        if: steps.upstream.outputs.changed != 'true' && steps.upstream.outputs.degraded != 'true'
+        run: echo "No known upstream update detected."
+
+      - name: Report degraded provenance check
+        if: steps.upstream.outputs.degraded == 'true'
+        run: echo "::warning::Upstream manifest or reference provenance was unavailable or invalid; the generated index rebuild was skipped to preserve reproducibility."
+
+      - name: Rebuild data index
+        if: steps.upstream.outputs.changed == 'true' && steps.upstream.outputs.degraded != 'true'
+        run: npm run data
+
+      - name: Validate generated data and contracts
+        if: steps.upstream.outputs.changed == 'true' && steps.upstream.outputs.degraded != 'true'
+        run: npm test
+
+      - name: Validate production build
+        if: steps.upstream.outputs.changed == 'true' && steps.upstream.outputs.degraded != 'true'
+        run: npm run build
+
+      - name: Check generated diff
+        if: steps.upstream.outputs.changed == 'true' && steps.upstream.outputs.degraded != 'true'
+        id: diff
+        run: |
+          if git diff --quiet -- public/data/hras-index.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create or update pull request
+        if: steps.upstream.outputs.changed == 'true' && steps.upstream.outputs.degraded != 'true' && steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_TITLE: Update HRAS/reference tree data index
+          TREE_VERSION: ${{ steps.upstream.outputs.tree_version }}
+          COMPUTED_DATE: ${{ steps.upstream.outputs.computed_date }}
+          MANIFEST_SAMPLE_COUNT: ${{ steps.upstream.outputs.manifest_sample_count }}
+          OFFICIAL_TREE_VERSION: ${{ steps.upstream.outputs.official_tree_version }}
+          VERSION_SUMMARY: ${{ steps.upstream.outputs.summary }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git checkout -B "$UPDATE_BRANCH"
+          git add public/data/hras-index.json
+          git commit -m "Update HRAS/reference tree data index"
+          git fetch origin "$UPDATE_BRANCH:refs/remotes/origin/$UPDATE_BRANCH" || true
+          git push --force-with-lease origin "$UPDATE_BRANCH:$UPDATE_BRANCH"
+
+          cat > pr-body.md <<EOF
+          Automated weekly HRAS/reference tree data index update.
+
+          Source check:
+
+          \`\`\`text
+          $VERSION_SUMMARY
+          \`\`\`
+
+          Generated from:
+
+          - HRAS/YSEQ manifest: https://hras.yseq.net/data/manifest
+          - HRAS/YSEQ Y haplogroup text data: https://hras.yseq.net/data/haplogroups/y/
+          - Official reference tree version marker
+
+          Validation:
+
+          - \`npm run data\`
+          - \`npm run build\`
+          EOF
+
+          existing_pr="$(gh pr list --head "$UPDATE_BRANCH" --base "$BASE_BRANCH" --state open --json number --jq '.[0].number // empty')"
+
+          if [ -n "$existing_pr" ]; then
+            gh pr edit "$existing_pr" --title "$PR_TITLE" --body-file pr-body.md
+          else
+            gh pr create --base "$BASE_BRANCH" --head "$UPDATE_BRANCH" --title "$PR_TITLE" --body-file pr-body.md
+          fi

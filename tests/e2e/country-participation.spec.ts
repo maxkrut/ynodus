@@ -1,0 +1,32 @@
+import fs from "node:fs/promises";
+import { expect, test } from "@playwright/test";
+import { compact } from "../../scripts/semantic-audit/fixtures.mjs";
+
+test("mixed country pools retain sample evidence without a participation notice", async ({ page }) => {
+  const data = compact([-1, -1], [6600, null], [[0, 0, 8], [0, 1, 2], [1, 2, 4]]);
+  data.countryCodes = ["PNG", "AUS", "NZL"];
+  data.projectIds = ["R"];
+  data.nodeIds = ["R-SYN-PARTICIPATION-0", "R-SYN-PARTICIPATION-1"];
+  await page.route("**/data/hras-index.json", route => route.fulfill({ json: data }));
+  await page.goto("/?lang=ru&countries=PNG,AUS,NZL&presence=all&target=6600&window=0&min=5");
+  await expect(page.locator("#export-csv")).toBeEnabled();
+  await expect(page.locator("#country-participation-note")).toHaveCount(0);
+  await expect(page.locator("#presence-mode-toggle")).toHaveAttribute("aria-checked", "true");
+  await expect(page.locator("#country-minimum-reset-note")).toBeHidden();
+  await expect(page.locator("#result-body tr[data-result-role]")).toHaveCount(1);
+  await expect(page.locator("#result-body")).toContainText("PNG 8");
+  await expect(page.locator("#result-body")).toContainText("AUS 2");
+  const download = page.waitForEvent("download");
+  await page.locator("#export-csv").click();
+  const csv = await fs.readFile((await (await download).path())!, "utf8");
+  expect(csv).toContain("per_selected_country_in_temporal_candidate_pool");
+  expect(csv).toContain('""AUS"":2');
+  await page.screenshot({path:"output/minimum-reset/without-participation-note.png",fullPage:true});
+  await page.locator("#min-result-samples").fill("20");
+  await expect(page.locator("#country-minimum-reset-note")).toBeVisible();
+  await expect(page.locator("#presence-mode-toggle")).toHaveAttribute("aria-checked", "true");
+  await page.locator("[data-accept-country-minimum]").click();
+  await expect(page.locator("#presence-mode-toggle")).toHaveAttribute("aria-checked", "false");
+  await expect(page.locator("#country-minimum-reset-note")).toBeHidden();
+  await expect(page.locator("#country-participation-note")).toHaveCount(0);
+});

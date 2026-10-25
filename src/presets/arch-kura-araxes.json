@@ -1,0 +1,42 @@
+{
+  "key": "arch-kura-araxes",
+  "label": {
+    "en": "Kura-Araxes",
+    "ru": "Кура-Аракс"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "ARM",
+    "AZE",
+    "GEO",
+    "TUR",
+    "IRN"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 3500–2500 до н. э.; начальную границу также проводят около 3300 до н. э.",
+      "en": "C. 3500–2500 BCE; some chronologies place the beginning around 3300 BCE."
+    },
+    "region": {
+      "ru": "Южный Кавказ, восточная Анатолия и северо-западный Иран. Связанные материалы известны и дальше к югу, в Леванте.",
+      "en": "The South Caucasus, eastern Anatolia and northwestern Iran. Related material also occurs farther south in the Levant."
+    },
+    "selection": {
+      "ru": "Набор ограничен кавказско-анатолийским и иранским контекстом. Левантийское распространение не включено; совпадение форм керамики не означает единую территорию или население.",
+      "en": "The set focuses on the Caucasian, Anatolian and Iranian context. Levantine occurrences are omitted; similar ceramics do not establish a single territory or population."
+    },
+    "sources": [
+      {
+        "title": "Diverse dietary practices in the Kura–Araxes culture (2022)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9770345/"
+      },
+      {
+        "title": "British Museum - Kura Araks",
+        "url": "https://www.britishmuseum.org/collection/term/x324802"
+      }
+    ]
+  }
+}

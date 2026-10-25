@@ -1,0 +1,80 @@
+import { test, expect } from '@playwright/test';
+import { compact } from '../../scripts/semantic-audit/fixtures.mjs';
+
+function fixture() {
+  const data = compact([-1, 0, 0], [6000, 5000, 3000], [[0, 0, 5], [1, 0, 4], [1, 1, 6], [2, 1, 5]]);
+  data.nodeIds = ['R-SYN-ROOT', 'R-SYN-A', 'R-SYN-B'];
+  data.projectIds = ['R'];
+  data.countryCodes = ['RUS', 'FRA', 'DEU'];
+  return { ...data, referenceRelease: { date: "2026-09-22", sourceUrl: "https://example.invalid/release" }, ancientCounts: [1, 2, 3, 1] };
+}
+const query = '/?lang=ru&view=time&target=6000&window=0&min=0&presence=all&countries=RUS,FRA&samples=all';
+
+for (const width of [1440, 390]) test(`sample scopes, subset counts and navigation at ${width}`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 900 });
+  await page.route('**/data/hras-index.json', route => route.fulfill({ json: fixture() }));
+  async function checkCsv(tail: string) {
+    await expect(page.locator('#export-csv')).toBeEnabled();
+    const event = page.waitForEvent('download');
+    await page.locator('#export-csv').click();
+    const stream = await (await event).createReadStream();
+    let csv = '';
+    for await (const chunk of stream!) csv += chunk.toString();
+    expect(csv).toContain('sample_scope,ancient_selected');
+    expect(csv.trim().split('\n').at(-1)!.endsWith(tail)).toBe(true);
+  }
+  await page.goto(query);
+  const total = page.locator('#result-body .table-total strong').first();
+  await expect(total).toHaveText('20');
+  await expect(page.locator('#result-body .ancient-count-note')).toHaveCount(0);
+  await checkCsv(',all,7');
+  await page.screenshot({ path: `output/ancient-scope/all-${width}.png` });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  const details = page.locator('#result-body [data-open-result-detail="R-SYN-ROOT"]');
+  const back = page.locator('#profile-workspace [data-research-back]');
+  await expect(details).toHaveText('Подробнее');
+  await details.click();
+  await expect(page.locator('#profile-content .profile-selected-metric .ancient-count-note')).toHaveText('из них древних - 7');
+  await page.screenshot({ path: `output/ancient-scope/details-${width}.png` });
+  await expect(page.locator('#sample-scope')).toBeHidden();
+  await expect(page.locator('#profile-lookup')).toBeHidden();
+  await back.click();
+  await expect(page.locator('#time-workspace')).toBeVisible();
+  await expect(details).toBeFocused();
+  await page.locator('#sample-scope').selectOption('ancient');
+  await expect(page.locator('#sample-scope')).toBeEnabled();
+  await expect(total).toHaveText('7');
+  await details.click();
+  await expect(page.locator('#sample-scope')).toBeHidden();
+  await expect(page.locator('#profile-workspace .research-sample-note')).toContainText('Только древние');
+  await expect(page.locator('#profile-content .profile-selected-metric article > strong')).toHaveText('7');
+  expect(new URL(page.url()).searchParams.get('samples')).toBe('ancient');
+  await expect(page.locator('#profile-content .profile-ledger .ancient-count-note')).toHaveCount(0);
+  await page.locator('#locale-switcher').selectOption('en');
+  await expect(page.locator('#sample-scope')).toHaveValue('ancient');
+  await back.click();
+  await expect(page.locator('#time-workspace')).toBeVisible();
+  await expect(details).toBeFocused();
+  await expect(total).toHaveText('7');
+  await page.locator('#sample-scope').selectOption('modern');
+  await expect(total).toHaveText('13');
+  await checkCsv(',modern,0');
+  await expect(page.locator('#sample-scope')).toHaveValue('modern');
+  await page.goBack();
+  await expect(page.locator('#sample-scope')).toHaveValue('ancient');
+  await expect(total).toHaveText('7');
+  await expect(page.locator('#export-csv')).toBeEnabled();
+  await checkCsv(',ancient,7');
+  await page.goto(query.replace('view=time', 'view=country-overview&country=RUS'));
+  await expect(page.locator('.country-overview-total > strong')).toHaveText('9');
+  await expect(page.locator('#country-overview-content .ancient-count-note')).toHaveCount(0);
+  await page.locator('#overview-sample-scope').selectOption('ancient');
+  await expect(page.locator('.country-overview-total > strong')).toHaveText('3');
+  await page.screenshot({ path: `output/ancient-scope/country-${width}.png` });
+  await page.goto(query.replace('view=time', 'view=country&country=RUS&clade=R-SYN-ROOT&scope=RUS,FRA'));
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('[data-branch-scope-selected] .ancient-count-note')).toHaveText('of which ancient - 7');
+  await expect(page.locator('[data-branch-tree-node="R-SYN-ROOT"] .ancient-count-note')).toHaveCount(2);
+  await page.screenshot({ path: `output/ancient-scope/branch-${width}.png` });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+});

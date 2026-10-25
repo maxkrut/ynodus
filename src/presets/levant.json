@@ -1,0 +1,29 @@
+{
+  "key": "levant",
+  "label": {
+    "en": "Levant",
+    "ru": "Левант"
+  },
+  "category": {
+    "en": "West Asia / Africa",
+    "ru": "Западная Азия / Африка"
+  },
+  "countries": [
+    "ISR",
+    "JOR",
+    "LBN",
+    "PSE",
+    "SYR"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Израиль, Палестина, Иордания, Ливан и Сирия - выбранная географическая рамка Леванта.",
+      "en": "Israel, Palestine, Jordan, Lebanon and Syria form the selected geographic frame for the Levant."
+    },
+    "selection": {
+      "ru": "Определения региона бывают шире. Этот список совпадает с археологической темой «Натуфийская культура / неолит Леванта»; различается пояснение, а не отбор стран.",
+      "en": "Some definitions are broader. This list matches the Natufian / Levant Neolithic theme: the explanation differs, not the country selection."
+    },
+    "sources": []
+  }
+}

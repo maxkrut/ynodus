@@ -1,0 +1,53 @@
+{
+  "key": "arch-bell-beaker",
+  "label": {
+    "en": "Bell Beaker",
+    "ru": "Колоколовидные кубки"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "ESP",
+    "PRT",
+    "FRA",
+    "GBR",
+    "ENG",
+    "SCT",
+    "WLS",
+    "IRL",
+    "DEU",
+    "NLD",
+    "BEL",
+    "CHE",
+    "AUT",
+    "CZE",
+    "HUN",
+    "ITA"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 2750–1800 до н. э.; время появления и завершения различается по регионам.",
+      "en": "C. 2750–1800 BCE; onset and end vary regionally."
+    },
+    "region": {
+      "ru": "Разрозненные области Западной и Центральной Европы: от Иберии и Британских островов до Центральной Европы и частей Италии. Находки известны и за пределами этого набора.",
+      "en": "Discontinuous areas of western and central Europe, from Iberia and the British Isles to central Europe and parts of Italy. Finds also occur beyond this set."
+    },
+    "selection": {
+      "ru": "Выбрана часть стран распространения. Колоколовидные кубки - широкий археологический феномен; сходство вещей не означает единого происхождения населения. Коды GBR, ENG, SCT и WLS учитываются отдельно, как у источника.",
+      "en": "This selects part of the distribution. Beaker material is a broad archaeological phenomenon, not evidence of one shared population origin. GBR, ENG, SCT and WLS are separate source codes."
+    },
+    "sources": [
+      {
+        "title": "Olalde et al., Nature (2018) - The Beaker phenomenon",
+        "url": "https://www.nature.com/articles/nature25738"
+      },
+      {
+        "title": "Cambridge - The Bell Beaker Phenomenon in Europe",
+        "url": "https://www.cambridge.org/core/elements/bell-beaker-phenomenon-in-europe/6CE35EF669A4A6A910AAB12FDA3C370C"
+      }
+    ]
+  }
+}

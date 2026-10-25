@@ -1,0 +1,44 @@
+{
+  "key": "arch-aegean-bronze-age",
+  "label": {
+    "en": "Aegean and Cyprus: Bronze Age",
+    "ru": "Эгеида и Кипр: бронзовый век"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "GRC",
+    "TUR",
+    "CYP"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Эгеида: около 3200–1100 до н. э.; Кипр: около 2500–1050 до н. э.",
+      "en": "Aegean: c. 3200–1100 BCE; Cyprus: c. 2500–1050 BCE."
+    },
+    "region": {
+      "ru": "Крит, Киклады, материковая Греция и западное побережье Анатолии; Кипр добавлен как отдельная связанная область.",
+      "en": "Crete, the Cyclades, mainland Greece and western coastal Anatolia; Cyprus is included as a separate connected area."
+    },
+    "selection": {
+      "ru": "Объединены несколько культур и региональных хронологий. Турция включена из-за западной Анатолии; весь её современный ареал к Эгеиде не относится.",
+      "en": "This combines several cultures and regional chronologies. Turkey is included for western Anatolia, not because the entire country belongs to the Aegean area."
+    },
+    "sources": [
+      {
+        "title": "Ashmolean Museum - Aegean World",
+        "url": "https://www.ashmolean.org/aegean-world-gallery"
+      },
+      {
+        "title": "The Met - Prehistoric Cypriot Art and Culture",
+        "url": "https://www.metmuseum.org/toah/hd/pcyp/ho_74.51.1329.htm"
+      },
+      {
+        "title": "Cambridge - The Aegean Bronze Age",
+        "url": "https://doi.org/10.1017/CHOL9780521780537.008"
+      }
+    ]
+  }
+}

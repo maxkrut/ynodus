@@ -1,0 +1,27 @@
+@font-face {
+  font-family: "Roboto Condensed Epochs";
+  src: url("/fonts/roboto-condensed-epochs-600.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+.period-band-label {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; justify-content: center; width: max-content;
+  height: calc(var(--period-band-height) - 4px); font-family: "Roboto Condensed Epochs", "Arial Narrow", sans-serif;
+  font-size: 14px; font-weight: 600; line-height: 18px; letter-spacing: .015em;
+  white-space: nowrap; padding-inline: 2px; pointer-events: none; z-index: 2;
+}
+.has-period-inset > .period-band-label {
+  width: 100%; padding-inline: 2px; white-space: normal; text-align: center; text-wrap: balance;
+  font-size: var(--period-label-size); line-height: 1.05;
+}
+.has-period-vertical > .period-band-label {
+  writing-mode: vertical-rl; white-space: nowrap; padding: 0; text-wrap: nowrap;
+}
+.has-period-callout > .period-band-label {
+  transform: none; height: auto; min-height: 20px; background: #fff;
+  white-space: normal; overflow-wrap: anywhere;
+}
+.time-axis-periods > .has-period-callout::after {
+  content: ""; position: absolute; top: var(--period-band-height); left: 50%;
+  height: var(--period-leader-height); border-left: 1px solid #83aaa8; pointer-events: none;
+}

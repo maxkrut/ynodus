@@ -1,0 +1,37 @@
+{
+  "key": "nordic",
+  "label": {
+    "en": "Nordic",
+    "ru": "Северные страны"
+  },
+  "category": {
+    "en": "Europe",
+    "ru": "Европа"
+  },
+  "countries": [
+    "DNK",
+    "FIN",
+    "FRO",
+    "GRL",
+    "ISL",
+    "NOR",
+    "SWE",
+    "ALA"
+  ],
+  "guide": {
+    "region": {
+      "ru": "Пять североевропейских стран, а также Фарерские острова, Гренландия и Аландские острова.",
+      "en": "Five Nordic countries, plus the Faroe Islands, Greenland and Åland."
+    },
+    "selection": {
+      "ru": "Здесь используется состав Северного региона в современном сотрудничестве. Это шире Скандинавии и не совпадает с ареалом викингов; территории учитываются отдельными кодами.",
+      "en": "This follows the contemporary Nordic cooperation region. It is broader than Scandinavia and does not map the Viking world; territories use separate codes."
+    },
+    "sources": [
+      {
+        "title": "Nordic Co-operation - Facts about the Nordic countries",
+        "url": "https://www.norden.org/en/information/facts-about-nordic-countries"
+      }
+    ]
+  }
+}

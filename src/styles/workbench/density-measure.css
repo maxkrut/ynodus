@@ -1,0 +1,15 @@
+.density-measure-control { display: inline-flex; align-items: center; gap: 5px; }
+.density-measure-switch { display: inline-flex; border: 1px solid #acc6ca; border-radius: 4px; overflow: clip; }
+.density-measure-switch button { min-height: 28px; padding: 4px 9px; font-size: 11px; line-height: 16px; border: 0; border-radius: 0; background: white; color: var(--accent-dark); white-space: nowrap; }
+.density-measure-switch button + button { border-left: 1px solid #acc6ca; }
+.density-measure-switch button[aria-pressed="true"] { background: #087f86; color: white; }
+.density-measure-switch button:focus-visible { outline: 2px solid var(--accent-dark); outline-offset: -3px; }
+.time-axis-density.density-per1000 .density-bar { min-height: 1px; }
+.time-axis-density.density-per1000 .density-count { bottom: calc(max(1px, var(--density-height)) + 3px); }
+.time-axis-density.density-per1000 .density-cell.empty .density-bar { height: 0; min-height: 0; }
+@media (max-width: 760px), (pointer: coarse) {
+  .density-measure-switch button { min-height: 44px; }
+}
+@media (forced-colors: active) {
+  .density-measure-switch button[aria-pressed="true"] { background: Highlight; color: HighlightText; }
+}

@@ -1,0 +1,60 @@
+@font-face {
+  font-family: "Geologica Wordmark";
+  src: url("/fonts/geologica-ynodus-600.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+:root {
+  --content-scale: .8;
+  --desktop-density: 1;
+  zoom: calc(var(--content-scale) * var(--desktop-density));
+  color-scheme: light;
+  --app-font: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --text: #202e35; --muted: #596b73; --accent: #087f86; --accent-dark: #08666d;
+  --line: #dce3e5; --line-strong: #bac8cc; --surface: #f5f7f7; --tint: #edf7f6;
+  --panel-accent: var(--accent); --panel-muted: var(--muted); --panel-line: var(--line);
+  font-family: var(--app-font); font-size: 14px; line-height: 1.45;
+  color: var(--text); background: #fff;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+/* Keep the existing desktop density and make content another 20% smaller. */
+@media screen and (min-width: 1280px) {
+  :root { --desktop-density: .8; }
+}
+#app { width: 100%; max-width: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button, input, select { border: 1px solid var(--line-strong); border-radius: 5px; }
+button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; width: auto; min-height: 36px; padding: 6px 11px; background: #fff; cursor: pointer; transition: background-color 140ms, color 140ms; }
+button:hover:not(:disabled) { background: var(--tint); color: var(--accent-dark); }
+button:disabled { opacity: .48; cursor: not-allowed; }
+input, select { min-width: 0; min-height: 38px; max-width: 100%; padding: 7px 10px; background: #fff; }
+input[type="number"] { font-variant-numeric: tabular-nums; appearance: textfield; }
+input[type="number"]::-webkit-inner-spin-button { appearance: none; }
+input[type="checkbox"] { width: 16px; height: 16px; min-height: 0; accent-color: var(--accent); }
+input[type="search"] { width: 100%; }
+a { color: var(--accent-dark); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+h1, h2, h3, p { margin: 0; }
+h2 { font-size: 21px; line-height: 1.25; font-weight: 650; letter-spacing: -.025em; }
+h3 { font-size: 15px; font-weight: 650; }
+small { font-size: 12px; }
+label, .query-inline-label { font-size: 12px; color: var(--muted); }
+svg { width: 18px; height: 18px; flex: none; }
+code { font: inherit; font-variant-numeric: tabular-nums; }
+[hidden], dialog:not([open]) { display: none !important; }
+.visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important; }
+.accent-button { background: var(--accent-dark); color: #fff; border-color: var(--accent-dark); }
+.accent-button:hover:not(:disabled) { background: #054e54; color: #fff; }
+.small-button, .compact-action { font-size: 12px; min-height: 32px; padding: 5px 10px; }
+.muted-block, .hint { color: var(--muted); }
+.flag { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 21px; height: 15px; line-height: 1; }
+.flag .fi { display: block; flex: none; width: 21px; height: 15px; line-height: 15px; background-size: cover; border-radius: 1px; box-shadow: 0 0 0 1px #00000013; }
+.empty-state, .research-empty-panel { padding: 28px; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; }
+.empty-state p, .research-empty-panel p { margin-top: 8px; color: var(--muted); }
+.empty-title { font-size: 18px; font-weight: 650; }
+.error-diagnostics { margin-top: 12px; overflow-wrap: anywhere; }
+summary { cursor: pointer; }
+.is-error, [role="alert"] { border-color: #bb766b; }
+details > summary > .disclosure-less, details[open] > summary > .disclosure-more { display: none; }
+details[open] > summary > .disclosure-less { display: inline; }

@@ -1,0 +1,45 @@
+{
+  "key": "arch-vinca",
+  "label": {
+    "en": "Vinca",
+    "ru": "Винча"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "SRB",
+    "ROU",
+    "BGR",
+    "BIH",
+    "HRV",
+    "MKD",
+    "MNE",
+    "HUN"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Около 5300–4500 до н. э.; фазы и местные традиции различаются.",
+      "en": "C. 5300–4500 BCE; phases and local traditions vary."
+    },
+    "region": {
+      "ru": "Центральные и северные Балканы с ядром в Сербии и распространением в отдельных районах соседних стран.",
+      "en": "The central and northern Balkans, centred on Serbia and extending into parts of neighbouring countries."
+    },
+    "selection": {
+      "ru": "Список следует широкому региональному контексту, включая периферийные связи. Включение Черногории, Венгрии или Болгарии не означает, что культура занимала всю их территорию.",
+      "en": "The list follows a broad regional context, including peripheral connections. Inclusion of Montenegro, Hungary or Bulgaria does not imply coverage of their entire territories."
+    },
+    "sources": [
+      {
+        "title": "National Museum Kraljevo - Vinča culture",
+        "url": "https://nmkv.rs/vinca-culture/?lang=en"
+      },
+      {
+        "title": "Belgrade City Museum / Vinča site - virtual exhibition",
+        "url": "https://vrallart.com/vr-exhibitions/em/expo_vinca_new/"
+      }
+    ]
+  }
+}

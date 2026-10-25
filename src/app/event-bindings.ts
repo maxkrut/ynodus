@@ -1,0 +1,38 @@
+import type { ResearchView, SliceMode, TableSortKey } from "../shared/types";
+import type { AppElements } from "./elements";
+import type { TextKey } from "./i18n";
+import type { AppState } from "./state";
+import type { EvidenceRevealKind } from "./research-controller";
+
+export type AppEventBindings = {
+  state: AppState;
+  elements: AppElements;
+  t: (key: TextKey) => string;
+  formatCalendar: (ybp: number) => string;
+  subcladeUrl: (id: string) => string;
+  applyLocale: () => void;
+  queueAnalysis: () => void;
+  setTableSort: (key: TableSortKey, mode: SliceMode) => void;
+  handleTargetChange: (source: "fields" | "slider") => void;
+  previewTargetChange: (source: "fields" | "slider") => void;
+  targetYbp: () => number;
+  setTargetFromYbp: (ybp: number) => void;
+  renderCountries: () => void;
+  renderCountryPresets: () => void;
+  renderSelectedSummary: () => void;
+  renderStats: () => void;
+  renderResults: () => void;
+  renderResultTable: (focusAfterRender?: boolean, mode?: SliceMode) => void;
+  renderTarget: () => void;
+  renderSliceMode: () => void;
+  renderPresenceMode: () => void;
+  showResearchView: (view: ResearchView) => void;
+  loadProfile: (clade: string) => Promise<boolean>;
+  loadResultDetail: (id: string, mode: SliceMode, child?: string) => Promise<boolean>;
+  loadCountryEvidence: (country: string, anchorId: string) => Promise<void>;
+  loadCountryOverview: (country: string) => Promise<void>;
+  backFromCountryEvidence: () => void;
+  backResearchView: () => void;
+  searchNearProfileFormation: () => void;
+  revealEvidence: (kind: EvidenceRevealKind) => void;
+};

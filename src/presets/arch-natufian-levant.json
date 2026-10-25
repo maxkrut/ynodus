@@ -1,0 +1,42 @@
+{
+  "key": "arch-natufian-levant",
+  "label": {
+    "en": "Natufian / Levant Neolithic",
+    "ru": "Натуфийская культура / неолит Леванта"
+  },
+  "category": {
+    "en": "Archaeological cultures",
+    "ru": "Археологические культуры"
+  },
+  "countries": [
+    "ISR",
+    "PSE",
+    "JOR",
+    "LBN",
+    "SYR"
+  ],
+  "guide": {
+    "period": {
+      "ru": "Натуфийская культура: примерно 12 650–9550 до н. э.; неолит Леванта: около 10 000–5500 до н. э.",
+      "en": "Natufian: approximately 12,650–9550 BCE; Levantine Neolithic: c. 10,000–5500 BCE."
+    },
+    "region": {
+      "ru": "Левант: восточное побережье Средиземного моря и прилегающие внутренние области. Натуфийская культура и последующие неолитические общества имели разные, менявшиеся ареалы.",
+      "en": "The Levant: the eastern Mediterranean coast and adjoining inland areas. Natufian and later Neolithic societies had distinct, changing distributions."
+    },
+    "selection": {
+      "ru": "Это общая географическая рамка для двух тем, а не одна культура на всём протяжении периода. Список стран совпадает с набором «Левант»; без иных настроек результаты будут одинаковыми.",
+      "en": "This is a common geographic frame for two themes, not one culture throughout the period. Its countries match the Levant set; identical search settings give identical results."
+    },
+    "sources": [
+      {
+        "title": "Richter et al., Scientific Reports (2017) - Natufian chronology",
+        "url": "https://www.nature.com/articles/s41598-017-17096-5"
+      },
+      {
+        "title": "The Met - Eastern Mediterranean and Syria, Neolithic chronology",
+        "url": "https://www.metmuseum.org/toah/ht/02/wae.html"
+      }
+    ]
+  }
+}

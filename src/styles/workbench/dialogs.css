@@ -1,0 +1,10 @@
+dialog { width: min(800px, calc(100% - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 0; border: 1px solid var(--line-strong); border-radius: 10px; color: var(--text); background: #fff; box-shadow: 0 22px 80px #20333d30; }
+dialog::backdrop { background: #172c3a66; }
+dialog > header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--line); background: #fff; }
+dialog header > div { display: grid; gap: 3px; }
+dialog header strong, dialog header h2, dialog header h3 { font-size: 20px; font-weight: 600; }
+dialog header > button { flex: none; width: 36px; min-height: 36px; padding: 0; font-size: 24px; border: 0; }
+.dialog-kicker { font-size: 11px; color: var(--muted); }
+.mockup-inline-selection-content { padding: 16px 20px; }
+.picker-dialog-footer { display: flex; justify-content: flex-end; padding: 10px 20px; background: #fff; border-top: 1px solid var(--line); }
+.picker-dialog-footer button { background: var(--accent-dark); border-color: var(--accent-dark); color: #fff; }
