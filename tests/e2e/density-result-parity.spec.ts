@@ -14,6 +14,10 @@ async function observeWorker(page: Page) {
         this.addEventListener('message',event=>{
           const reply=event.data;
           if(reply.type==='load')(window as any).parityMax=reply.index.maxFormedYbp;
+          if(reply.type==='density') {
+            densities.set(reply.densityKey,reply.densityRows);
+            if((window as any).parityModel)(window as any).parityModel.density=reply.densityRows;
+          }
           if(reply.type!=='analyze')return;
           const formed=reply.result.formed;
           if(formed.densityRows)densities.set(formed.densityKey,formed.densityRows);
@@ -91,7 +95,7 @@ async function checkUI(page:Page) {
     }
   }
   expect(snapshot.cells.reduce((sum,cell)=>sum+cell.count,0)).toBe(snapshot.density.length);
-  expect(snapshot.cells.reduce((sum,cell)=>sum+cell.current,0)).toBe(members.size);
+  expect(snapshot.cells.reduce((sum,cell)=>sum+cell.current,0)).toBe(snapshot.density.filter(node=>members.has(node.id)).length);
   const expectedRows=snapshot.formed.filter(row=>!snapshot.filter||row.group===snapshot.filter);
   expect(snapshot.rows.map(row=>({id:row.ids[0],group:row.group,total:row.total})).sort((a,b)=>a.id!.localeCompare(b.id!)))
     .toEqual(expectedRows.sort((a,b)=>a.id.localeCompare(b.id)));

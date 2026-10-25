@@ -11,7 +11,7 @@ const REFERENCE_VERSION_URL =
 const MANIFEST_TREE_VERSION_KEY = `Y${"Full"}-version`;
 const LOCAL_INDEX = "public/data/hras-index.json";
 const REQUEST_HEADERS = {
-  "User-Agent": "yNodus/1.0.0",
+  "User-Agent": "yNodus/1.1.0",
   Accept: "text/plain,*/*",
 };
 

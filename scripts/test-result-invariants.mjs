@@ -10,6 +10,7 @@ import { assertCrossingNoveltyOnDefaultQuery } from "./result-invariants/crossin
 import { assertSyntheticSemantics } from "./result-invariants/synthetic-contracts.mjs";
 import { assertCountryMinimum, eligibleCountries } from "./result-invariants/country-minimum-contracts.mjs";
 import { assertResultNeighbors } from "./result-invariants/neighbor-contracts.mjs";
+import { assertIntervalDensity } from "./result-invariants/density-interval-contracts.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TEMP_ROOT = path.join(ROOT, "tmp", `.result-semantics-test-${process.pid}-${Date.now()}`);
 const EXHAUSTIVE = process.argv.includes("--exhaustive");
@@ -49,6 +50,11 @@ try {
 
   try {
     assertCountryMinimum(buildIndex, collectRowsAtTarget, collectTimeMatchResults);
+    const { densityIntervals } = await import(pathToFileURL(path.join(TEMP_ROOT, "shared/density-intervals.js")).href);
+    const scale = { fullRange: true, maxFormedYbp: index.maxFormedYbp };
+    assertIntervalDensity(buildIndex, collectRowsAtTarget, resetSliceAnalysisCaches, index,
+      [densityIntervals(300, 20000, scale), densityIntervals(600, 20000, scale),
+        densityIntervals(600, 20000, scale, 15900)]);
     assertResultNeighbors(buildIndex, collectRowsAtTarget, resetSliceAnalysisCaches);
     assertSyntheticSemantics(
       buildIndex,

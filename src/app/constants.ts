@@ -1,13 +1,9 @@
-import { calendarYearToYbp } from "../shared/time";
+export { DEFAULT_SLIDER_MAX_YBP, FULL_RANGE_SLIDER_MAX, LOG_RANGE_START_BCE, LOG_RANGE_START_YBP } from "../shared/time-axis-constants";
 import type { Locale } from "../shared/types";
 
 export const DATA_URL = "./data/hras-index.json";
-export const APP_VERSION = "v1.0.0";
+export const APP_VERSION = "v1.1.0";
 export const DEFAULT_LOCALE: Locale = "en";
-export const DEFAULT_SLIDER_MAX_YBP = 12000;
-export const FULL_RANGE_SLIDER_MAX = 20000;
-export const LOG_RANGE_START_BCE = 10_000;
-export const LOG_RANGE_START_YBP = calendarYearToYbp(-LOG_RANGE_START_BCE);
 /**
  * The quiet table leads with the strongest country evidence and moves the tail
  * into an explicit disclosure, so a broad row stays one readable line.

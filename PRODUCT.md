@@ -134,7 +134,10 @@ actions, another-clade lookup or workspace tabs. Its only internal exit returns 
 the time results. YFull endpoints remain explicit actions in the originating row.
 Reload/history/locale retain detail scope; incomplete detail links fail closed to
 time search and never become full profiles. Details does not replace the separately
-saved standalone profile workspace. Show Formed event/member structure progressively.
+saved standalone profile workspace. Reuse the standalone compact header, path,
+country chips/selector/reset, local node search and clean full-width matrix. Sample
+type is fixed to the originating result. Keep the selected-node inspector and
+Formed event/member structure in disclosures, not separate permanent summary panels.
 
 ## 3.2. Country research
 
@@ -169,12 +172,24 @@ Every adjacent path pair is a real source edge; null roots do not authorize link
 countries, the optional minimum offer, neighbor suggestions and density cache key.
 `densityRows: null` means the main thread already holds that exact key, not empty data.
 
-Density is navigation context, never table/counter/CSV input. Its key includes index
-provenance, sample scope, countries and presence; Common also includes minimum,
-date, Formed window and result kind. Minimum 0 and 1 differ. All-branches density
-ignores date/window/minimum. Crossing has its own pre-coverage-removal pool and does
-not alter Formed context. Raw scope cache holds one scope; density cache is bounded
-to 16 keys / 100,000 rows and invalidated when index/evidence scope changes.
+Density is navigation context, never table/counter/CSV input. Each chart interval
+independently counts unique selected samples supporting known Formed nodes inside
+its own bounds, before matching. A sample supporting several nested nodes counts
+once per interval. In Common mode a positive minimum selects mandatory countries
+from that interval's pool; zero requires all selected countries. Apply those
+requirements to canonical connected same-age groups. Retain each included node,
+its selected-country total and the interval's mandatory countries for the tooltip.
+The table still uses its exact search window, so membership can differ from a bar.
+Outlines count only current result members actually present in the displayed bar.
+
+Density keys include index provenance, sample scope, countries and presence.
+Common keys also include minimum and, above zero, the actual interval boundaries.
+With unchanged interval bounds, the selected date/window and Crossing pool do not
+affect density. Changing the window can change the bins when step sync is enabled.
+All-branches density ignores minimum; strict zero and Any do not depend on binning.
+Raw scope cache holds one scope; density cache is bounded to 16 keys / 100,000 rows
+and invalidated when index/evidence scope changes. Chart-only interval requests run
+in the Worker with latest-only commits, independently of table queries and export.
 
 The shared axis is linear from 1950 CE to 10,000 BCE (11,949 YBP), logarithmic
 earlier. Dates, periods, slider, window and bars use that same transformation.
@@ -187,8 +202,8 @@ Chart interval defaults to 300 linear years on every width. Whole-timeline grid 
 anchored at 10,000 BCE; date-centered grid centers the selected date in shared
 axis coordinates and moves the entire grid. **Use window for step** sets interval
 to twice the window (±300 → 600); log bins need not coincide with the search window.
-Disabling sync restores manual step. Persist settings locally; do not send Worker
-requests or change tables/CSV. Explain zero synced window or an excessively fine
+Disabling sync restores manual step. Persist settings locally; interval changes may
+request chart-only aggregation but never reclassify tables/CSV. Explain zero synced window or an excessively fine
 grid instead of drawing it; cap bins at 8192. Tooltips begin with bounds, actual
 YBP duration and scale segment, then counts/composition.
 
@@ -304,7 +319,7 @@ Verify applicable clauses, not merely the presence of matching text.
 | 8 | Time search has no hidden branch restriction. |
 | 9 | Always-primary Formed and optional separate Crossing share one committed query. |
 | 10 | Complete, formula-safe CSV with event/member structure and both edge endpoints. |
-| 11 | Secondary density, equal screen bins, valid Formed outline and direct bar activation. |
+| 11 | Secondary density, independent per-bin unique country pools, equal screen bins, valid Formed outline and direct bar activation. |
 | 12 | Immediate export invalidation and rejection of stale replies. |
 | 13 | No mixing old CSV rows with new provenance/query metadata. |
 | 14 | Visible/announced states survive locale changes. |
@@ -336,6 +351,6 @@ Verify applicable clauses, not merely the presence of matching text.
 | 40 | Persistent chart-only step/grid/sync, exact search window and unique bin ownership. |
 | 41 | No separate mixed-pool notice; retain country rules, faded flags and explicit recovery. |
 | 42 | Compact filter grouping, adjacent date/window and no cumulative sample chart. |
-| 43 | Terminal scoped details, separate external actions and independent full-profile workspace. |
+| 43 | Terminal scoped details reuse the compact profile header/matrix; scope, returns and standalone workspace remain independent. |
 | 44 | Persistent duration-normalized density with valid labels, fills and interpretation. |
 | 45 | Strict zero minimum, including missing countries, neighbors and 0 → 1 → 0 cache isolation. |

@@ -1,6 +1,7 @@
 import {mkdir} from 'node:fs/promises';
 import {expect,test,type Page} from '@playwright/test';
 import {branchCountriesFixture} from '../fixtures/branch-countries.mjs';
+import {layoutFixture} from '../fixtures/layout.mjs';
 
 const rows=(p:Page)=>p.locator('.tree-sheet [data-tree-node]');
 const ids=(p:Page)=>rows(p).evaluateAll(els=>els.map(el=>el.getAttribute('data-tree-node')));
@@ -66,7 +67,10 @@ for(const width of [390,1440]) test(`unified matrix, parent and union comparison
     expect(await root.locator('.tree-country-cell').evaluateAll(cells=>cells.map(el=>Number((el as HTMLElement).dataset.count)))).toEqual([8,7,5]);
     await page.locator('#country-overview-workspace').screenshot({path:`output/research-unified-2026-10-23/country-${width}-${lang}.png`});
     const scope=new URL(page.url()).searchParams.get('scope');
+    await page.locator('[data-profile-select="R-SYN-A1"]').click();
+    await expect(page.locator('[data-profile-inspector] .profile-selected-summary h3')).toHaveText('R-SYN-A1');
     await page.locator('.matrix-country-heading[data-tree-country="FRA"]').click();
+    await expect(page.locator('[data-profile-inspector] .profile-selected-summary h3')).toHaveText('R-SYN-ROOT');
     expect(await ids(page)).toEqual(['R-SYN-ROOT','R-SYN-B','R-SYN-B1']);
     expect(new URL(page.url()).searchParams.get('scope')).toBe(scope);
     await expect(page.locator('[data-country-tree-filter]')).toHaveValue('FRA');
@@ -101,6 +105,27 @@ for(const width of [390,1440]) test(`unified matrix, parent and union comparison
     expect(geometry.overflow).toBe(0);expect(Math.abs(geometry.content-geometry.tree)).toBeLessThanOrEqual(1);expect(geometry.headerBottom).toBeLessThan(geometry.treeTop);
   }
   expect(errors).toEqual([]);
+});
+
+test('country overview inspector search filters a comparison union',async({page})=>{
+  const data=layoutFixture();
+  await page.route('**/data/hras-index.json',route=>route.fulfill({json:data}));
+  await page.goto('/?lang=ru&view=country-overview&country=RUS&scope=RUS,POL,UKR,DEU,FIN&countries=RUS&min=0');
+  await page.locator('[data-profile-select="R-SYN-ROOT"]').click();
+  const inspector=page.locator('#country-overview-content [data-profile-inspector]');
+  await inspector.locator('[data-profile-countries] > summary').click();
+  await expect(inspector.locator('.country-evidence-row:visible')).toHaveCount(5);
+  await inspector.locator('[data-profile-country-search]').fill('RUS');
+  await expect(inspector.locator('.country-evidence-row:visible')).toHaveCount(1);
+  await expect(inspector.locator('.country-evidence-row:visible')).toContainText('RUS');
+  await inspector.locator('[data-profile-country-search]').fill('ZZZ');
+  await expect(inspector.locator('[data-profile-country-empty]')).toBeVisible();
+  await inspector.locator('[data-profile-country-search]').fill('');
+  await expect(inspector.locator('.country-evidence-row:visible')).toHaveCount(5);
+  await page.locator('#locale-switcher').selectOption('en');
+  await expect(inspector.locator('[data-profile-countries]')).toHaveAttribute('open','');
+  await page.reload();
+  await expect(inspector.locator('[data-profile-countries]')).toHaveAttribute('open','');
 });
 
 test('comparison preserves separate source roots and sample-type counts',async({page})=>{

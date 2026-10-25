@@ -2,6 +2,10 @@ import type { AppState } from "./state";
 import type { TextKey } from "./i18n";
 import type { Locale } from "../shared/types";
 import { createDensitySettings } from "./density-settings";
+import { createDensityController } from "./density-controller";
+import { densityIntervals as chartIntervals } from "./density-intervals";
+import { sliderRangeMax } from "./time-slider";
+import type { WorkerClient } from "./worker-client";
 import {
   renderTargetControls,
   setTargetControlsFromYbp,
@@ -16,6 +20,7 @@ type TargetControllerDeps = TargetControlElements & {
   locale: () => Locale;
   t: (key: TextKey) => string;
   formatNumber: (value: number) => string;
+  workerClient: () => WorkerClient;
 };
 
 export function createTargetController(deps: TargetControllerDeps) {
@@ -25,6 +30,13 @@ export function createTargetController(deps: TargetControllerDeps) {
   const queryFields = [deps.targetYear, root?.querySelector<HTMLInputElement>("#max-delta-ybp"),
     root?.querySelector<HTMLInputElement>("#min-result-samples")];
   const chartSettings = createDensitySettings(deps.targetYear.closest("#time-workspace"), () => renderTarget());
+  const ensureDensity = createDensityController(deps.state, deps.workerClient, () => renderTarget());
+  function densityIntervals() {
+    const settings = chartSettings(deps.state.maxDeltaYbp);
+    return chartIntervals(settings.densityStep, sliderRangeMax(true),
+      { fullRange: true, maxFormedYbp: deps.state.index?.maxFormedYbp ?? 0 },
+      settings.densityAnchor === "target" ? targetYbpFromControls(elements()) : undefined);
+  }
   if (typeof window !== "undefined") {
     window.addEventListener("resize", () => {
       window.cancelAnimationFrame(resizeFrame);
@@ -70,18 +82,20 @@ export function createTargetController(deps: TargetControllerDeps) {
     // Crossing is a separate table. An unchanged Formed query remains valid
     // while that table loads, including during chart-only settings changes.
     const formedReady = !draft && state.analysisBusy && settled?.key === key && settled.density === state.densityRows;
+    const density = ensureDensity(densityIntervals());
     return {
       locale: deps.locale(),
       ...chartSettings(deps.state.maxDeltaYbp),
       densityRows: deps.state.densityRows,
+      densityGrid: density.intervals,
       resultRows: formedReady ? settled!.rows : state.results,
       maxDeltaYbp: deps.state.maxDeltaYbp,
       maxFormedYbp: deps.state.index?.maxFormedYbp ?? 0,
       // The timeline is always the Formed context map. Optional Crossing rows
       // are a separate result set and must not replace its Hit-window overlay.
       sliceMode: "formed",
-      densityStatus: state.loading || (state.analysisBusy && !formedReady) ? "pending"
-        : deps.state.loadErrorDetail || deps.state.emptyErrorMessage ? "error"
+      densityStatus: state.loading || density.pending || (state.analysisBusy && !formedReady) ? "pending"
+        : density.error || deps.state.loadErrorDetail || deps.state.emptyErrorMessage ? "error"
         : deps.state.index && !deps.state.selectedCountries.size ? "no-selection"
         : state.committedQuery || formedReady ? "ready" : "pending",
       t: deps.t,
@@ -102,6 +116,7 @@ export function createTargetController(deps: TargetControllerDeps) {
   }
 
   return {
+    densityIntervals,
     renderTarget,
     setTargetFromYbp,
     previewTargetFromYbp,

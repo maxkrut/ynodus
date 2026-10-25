@@ -12,20 +12,20 @@ export function bindResearchEvents(bindings: AppEventBindings): void {
     );
     opener?.focus({ preventScroll: true });
   }, true);
-  elements.profileWorkspace.addEventListener("input", (event) => {
+  for (const workspace of [elements.profileWorkspace, elements.countryOverviewWorkspace]) workspace.addEventListener("input", (event) => {
     const input = event.target as HTMLInputElement;
     if (!input.matches("[data-profile-country-search]")) return;
     const query = input.value.trim().toLocaleLowerCase();
-    const rows = [...elements.profileWorkspace.querySelectorAll<HTMLElement>("[data-country-search-text]")];
+    const rows = [...workspace.querySelectorAll<HTMLElement>("[data-country-search-text]")];
     const exactCode = rows.some(row => row.dataset.countrySearchText?.split(" ")[0] === query);
     rows.forEach(row => {
       const text = row.dataset.countrySearchText ?? "";
       row.hidden = query ? !(exactCode ? text.split(" ")[0] === query : text.includes(query)) : row.dataset.countryCollapsed === "true";
     });
-    const reveal = elements.profileWorkspace.querySelector<HTMLElement>('[data-reveal-evidence="profile-countries"]');
+    const reveal = workspace.querySelector<HTMLElement>('[data-reveal-evidence="profile-countries"]');
     if (reveal) reveal.hidden = Boolean(query);
-    const empty = elements.profileWorkspace.querySelector<HTMLElement>("[data-profile-country-empty]");
-    if (empty) empty.hidden = Boolean(elements.profileWorkspace.querySelector('[data-country-search-text]:not([hidden])'));
+    const empty = workspace.querySelector<HTMLElement>("[data-profile-country-empty]");
+    if (empty) empty.hidden = Boolean(workspace.querySelector('[data-country-search-text]:not([hidden])'));
   });
 
   elements.researchViewButtons.forEach((button) => {

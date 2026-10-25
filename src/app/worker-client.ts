@@ -79,9 +79,9 @@ function supersedePendingRequests(
   type: WorkerRequestPayload["type"],
 ): void {
   const supersede = type === "load"
-    ? (pendingType: WorkerRequestPayload["type"]) => pendingType === "load" || pendingType === "analyze"
-    : type === "analyze"
-      ? (pendingType: WorkerRequestPayload["type"]) => pendingType === "analyze"
+    ? (pendingType: WorkerRequestPayload["type"]) => pendingType === "load" || pendingType === "analyze" || pendingType === "density"
+    : type === "analyze" || type === "density"
+      ? (pendingType: WorkerRequestPayload["type"]) => pendingType === type
       : () => false;
   for (const [id, request] of requests) {
     if (!supersede(request.type)) continue;

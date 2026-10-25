@@ -24,7 +24,9 @@ for (const width of [390,1440]) test(`zero requires all selected countries in re
   await minimum.fill("1");
   await expect(rows).toHaveCount(1);
   await expect(rows).toContainText("R-SYN-PNG-ONLY");
-  await expect(page.locator("#target-density-summary")).toContainText("3");
+  // The chart's wider intervals contain both countries, even though the ±0
+  // table pool only contains PNG. Each surface applies its own temporal bounds.
+  await expect(page.locator("#target-density-summary")).toContainText("2");
   await minimum.fill("0");
   await expect(page.locator("[data-suggest-ybp]")).toHaveCount(2);
   await expect(rows).toHaveCount(0);

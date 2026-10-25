@@ -48,8 +48,8 @@ export function assertCountryMinimum(buildIndex, collect, combined) {
   assert.equal(result.densityRows.length, 3, "same-age members use their canonical group's evidence");
   const cached = collect(index, { ...query, minSamples: 2 });
   assert.notEqual(collect(index, { ...query, minSamples: 3, knownDensityKey: cached.densityKey }).densityRows, null);
-  assert.notEqual(collect(index, { ...query, target: 8500, minSamples: 2, knownDensityKey: cached.densityKey }).densityRows, null,
-    "date changes may change the participating country set");
+  assert.equal(collect(index, { ...query, target: 8500, minSamples: 2, knownDensityKey: cached.densityKey }).densityRows, null,
+    "date changes do not invalidate independent chart intervals");
   const allBranches = collect(index, { ...query, presenceMode: "any", minSamples: 2 });
   assert.equal(collect(index, { ...query, presenceMode: "any", minSamples: 999, knownDensityKey: allBranches.densityKey }).densityRows, null,
     "the ignored minimum cannot invalidate the all-branches context");

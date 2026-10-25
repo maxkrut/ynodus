@@ -1,4 +1,6 @@
-import type { PresenceMode, TreeIndexSummary, SliceMode } from "./types";
+import type { PresenceMode, TreeIndexSummary } from "./types";
+
+export type DensityBin = { older: number; younger: number };
 
 type DensityIndexIdentity = Pick<
   TreeIndexSummary,
@@ -14,7 +16,7 @@ type DensityIndexIdentity = Pick<
 
 /**
  * All-branches context is independent of the time query. Common-branches context
- * requires all selected countries at zero, or temporal-pool qualifiers above zero.
+ * requires all selected countries at zero, or each interval's own pool above zero.
  */
 export function densityScopeIdentity(
   index: DensityIndexIdentity,
@@ -22,9 +24,7 @@ export function densityScopeIdentity(
   presenceMode: PresenceMode,
   anchorId: string | null,
   minSamples = 0,
-  target = 0,
-  maxDeltaYbp = 0,
-  sliceMode: SliceMode = "formed",
+  intervals: readonly DensityBin[] = [],
 ): string {
   return [
     index.sampleScope ?? "all",
@@ -39,6 +39,6 @@ export function densityScopeIdentity(
     anchorId ?? "",
     [...selectedCodes].sort().join(","),
     presenceMode === "any" ? 1 : Math.max(0, Math.round(minSamples)),
-    ...(presenceMode === "all" ? [sliceMode, target, sliceMode === "formed" ? maxDeltaYbp : 0] : []),
+    ...(presenceMode === "all" && minSamples > 0 ? [intervals.map(bin => `${bin.older}:${bin.younger}`).join(",")] : []),
   ].join("|");
 }

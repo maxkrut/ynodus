@@ -24,6 +24,7 @@ type AnalysisControllerOptions = {
   emptyState: HTMLDivElement;
   captureCommittedQuery: () => CommittedQuerySnapshot;
   hasQueryDraft?: () => boolean;
+  densityIntervals?: () => readonly import("../shared/density-identity").DensityBin[];
   t: (key: TextKey) => string;
   setEmpty: (message: string) => void;
   renderTarget: (renderDensity?: boolean) => void;
@@ -41,6 +42,7 @@ export function createAnalysisController({
   emptyState,
   captureCommittedQuery,
   hasQueryDraft = () => false,
+  densityIntervals,
   t,
   setEmpty,
   renderTarget,
@@ -177,6 +179,7 @@ export function createAnalysisController({
       maxDeltaYbp: query.maxDeltaYbp,
       anchorId: null,
       knownDensityKey: state.densityKey,
+      densityIntervals: densityIntervals?.(),
     });
     if (response.type !== "analyze") throw new Error("Unexpected worker response.");
     return response.result;

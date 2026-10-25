@@ -108,7 +108,10 @@ export type WorkerRequestPayload =
       anchorId: string | null;
       scopeAllCountries: boolean;
       knownDensityKey?: string | null;
+      densityIntervals?: readonly import("../shared/density-identity").DensityBin[];
     }
+  | { type: "density"; selectedCountries: string[]; presenceMode: PresenceMode; minSamples: number;
+      intervals: readonly import("../shared/density-identity").DensityBin[] }
   | { type: "signatureOptions"; query: string }
   | { type: "subcladeProfile"; clade: string; countries?: string[] }
   | { type: "countryEvidence"; country: string; anchorId: string }
@@ -125,6 +128,7 @@ export type WorkerResponse =
       index: IndexSummary;
     }
   | { id: number; type: "analyze"; result: TimeAnalysisResult }
+  | { id: number; type: "density"; densityRows: DensityRow[]; densityKey: string }
   | { id: number; type: "signatureOptions"; options: SignatureRow[] }
   | { id: number; type: "subcladeProfile"; profile: SubcladeProfile | null }
   | { id: number; type: "countryEvidence"; evidence: CountryEvidence | null; profile?: SubcladeProfile | null }

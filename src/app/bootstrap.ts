@@ -79,6 +79,7 @@ export function startApp(): void {
   const moreItemsLabel = countryController.moreItemsLabel;
   const targetController = createTargetController({
     state,
+    workerClient: () => workerClient,
     locale: () => state.locale,
     targetYear,
     targetEra,
@@ -151,6 +152,7 @@ export function startApp(): void {
   const workerClient = createWorkerClient(analysisWorker, WORKER_REQUEST_TIMEOUT_MS);
   const analysisController = createAnalysisController({
     state,
+    densityIntervals: targetController.densityIntervals,
     workerClient,
     exportButton,
     resultsRoot,
@@ -179,7 +181,10 @@ export function startApp(): void {
     renderStats,
     renderLiveStatus,
     renderPendingResults,
-    renderResults,
+    renderResults: () => {
+      renderResults();
+      if (state.researchView === "profile" && state.resultDetail) researchController.render();
+    },
   });
   const queueAnalysis = (): void => {
     workspaceUrl.persist(targetYbp());

@@ -66,6 +66,7 @@ export function readNavigationSnapshot(value: unknown): NavigationSnapshot | und
       closed: Array.isArray(tree.closed) ? tree.closed.slice(0,2048).map(safeClade).filter((id): id is string => !!id) : [],
       countries: Array.isArray(tree.countries) ? tree.countries.filter((code): code is string => typeof code === "string" && /^[A-Z]{3}$/.test(code)).slice(0,300) : [],
       offset: count(tree.offset), treeScrollLeft: count(tree.treeScrollLeft), selected: safeClade(tree.selected) ?? undefined, inspectorOpen: tree.inspectorOpen === true,
+      countriesOpen: tree.countriesOpen === true,
     } : undefined,
     branchTree: safeClade(branch.anchor) ? {
       offset: count(branch.offset),
@@ -81,6 +82,7 @@ export function readNavigationSnapshot(value: unknown): NavigationSnapshot | und
       countryScroll: count(explorer.countryScroll),
       countriesOpen: explorer.countriesOpen === true,
       inspectorOpen: explorer.inspectorOpen === true,
+      extrasOpen: Array.isArray(explorer.extrasOpen) ? explorer.extrasOpen.filter(key => key === "formed" || key === "details") : [],
       treeScrollLeft: count(explorer.treeScrollLeft),
       countries: Array.isArray(explorer.countries) ? [...new Set(explorer.countries.filter(code => typeof code === "string" && /^[A-Z]{3}$/.test(code)))].slice(0, 300) as string[] : [],
       query: text(explorer.query, 100),
@@ -147,7 +149,11 @@ export function restoreNavigationInputs(route: ResearchHistoryRoute, snapshot: N
 export function restoreNavigationPosition(route: ResearchHistoryRoute, snapshot?: NavigationSnapshot): void {
   const root = document.querySelector<HTMLElement>(panelSelector(route));
   const focus = snapshot?.focus;
-  root?.querySelectorAll<HTMLDetailsElement>("details").forEach((node, index) => { node.open = snapshot?.details.includes(index) ?? node.open; });
+  root?.querySelectorAll<HTMLDetailsElement>("details").forEach((node, index) => {
+    // Optional Formed content can arrive after the profile. Its stable keys belong
+    // to the explorer, rather than positions in a changing list of disclosures.
+    if (!node.hasAttribute("data-profile-extra")) node.open = snapshot?.details.includes(index) ?? node.open;
+  });
   const containers = root?.querySelectorAll<HTMLElement>(SCROLL_CONTAINERS);
   snapshot?.innerScroll.forEach(([index, top, left]) => { const node = containers?.[index]; if (node) { node.scrollTop = top; node.scrollLeft = left; } });
   const target = focus ? root?.querySelectorAll<HTMLElement>(focusSelector(focus))[focus.occurrence ?? 0] : null;

@@ -48,33 +48,9 @@ export function renderAxisDensity(
     context.sliceMode === "formed" && context.resultRows.length > 0,
   );
 
-  if (rows.length === 0) {
-    pendingDensityFocus.delete(elements.targetDensity);
-    axis?.classList.remove("has-density", "has-hit-window");
-    elements.targetDensity.innerHTML = "";
-    delete elements.targetDensity.dataset.densityResultRanges;
-    elements.targetDensitySummary.textContent = context.t(context.densityStatus === "ready"
-      ? "densityNoDatedSubclades" : context.densityStatus === "error" ? "densityUnavailable"
-        : context.densityStatus === "no-selection" ? "emptySelectCountry" : "densityAwaitingResults");
-    return;
-  }
-
   const sliderMax = parseInteger(elements.targetSlider.max, DEFAULT_SLIDER_MAX_YBP);
   const scale = sliderScale(context);
-  const visibleMaxYbp = Math.max(
-    sliderValueToYbp(0, scale),
-    sliderValueToYbp(sliderMax, scale),
-  );
-  const visibleRows = rows.filter((row) => row.node.formed <= visibleMaxYbp);
-  const currentResultNodes = !pending && context.sliceMode === "formed"
-    ? new Map(context.resultRows.flatMap((row) =>
-        row.formedEvents?.flatMap((event) =>
-          event.formedMembers.map((member) => [member.node.id, member.node.formed] as const))
-        ?? row.formedMembers?.map((member) => [member.node.id, member.node.formed] as const)
-        ?? [[row.node.id, row.node.formed] as const]))
-    : new Map<string, number>();
-  const currentResultIds = new Set(currentResultNodes.keys());
-  const intervals = densityIntervals(context.densityStep ?? 300, sliderMax, scale,
+  const intervals = context.densityGrid ?? densityIntervals(context.densityStep ?? 300, sliderMax, scale,
     context.densityAnchor === "target" ? ybp : undefined);
   const message = timelineZone?.querySelector<HTMLElement>("#density-settings-status");
   if (message) {
@@ -89,6 +65,33 @@ export function renderAxisDensity(
     elements.targetDensitySummary.textContent = "";
     return;
   }
+
+  if (rows.length === 0) {
+    pendingDensityFocus.delete(elements.targetDensity);
+    axis?.classList.remove("has-density", "has-hit-window");
+    elements.targetDensity.innerHTML = "";
+    delete elements.targetDensity.dataset.densityResultRanges;
+    delete elements.targetDensity.dataset.densityGridKey;
+    elements.targetDensitySummary.textContent = context.t(context.densityStatus === "ready"
+      ? "densityNoDatedSubclades" : context.densityStatus === "error" ? "densityUnavailable"
+        : context.densityStatus === "no-selection" ? "emptySelectCountry" : "densityAwaitingResults");
+    return;
+  }
+
+  const visibleMaxYbp = Math.max(
+    sliderValueToYbp(0, scale),
+    sliderValueToYbp(sliderMax, scale),
+  );
+  const visibleRows = rows.filter((row) => row.node.formed <= visibleMaxYbp);
+  const visibleIds = new Set(visibleRows.map(row => row.node.id));
+  const currentResultNodes = !pending && context.sliceMode === "formed"
+    ? new Map(context.resultRows.flatMap((row) =>
+        row.formedEvents?.flatMap((event) =>
+          event.formedMembers.map((member) => [member.node.id, member.node.formed] as const))
+        ?? row.formedMembers?.map((member) => [member.node.id, member.node.formed] as const)
+        ?? [[row.node.id, row.node.formed] as const]).filter(([id]) => visibleIds.has(id)))
+    : new Map<string, number>();
+  const currentResultIds = new Set(currentResultNodes.keys());
   elements.targetDensity.style.gridTemplateColumns = intervals.map(item => `minmax(0, ${item.end - item.start}fr)`).join(" ");
   axis?.classList.toggle("has-density", visibleRows.length > 0);
   axis?.classList.toggle(
@@ -96,7 +99,7 @@ export function renderAxisDensity(
     context.sliceMode === "formed" && visibleRows.length > 0 && context.maxDeltaYbp > 0,
   );
   const gridKey = densityGridKey(rows, visibleMaxYbp, sliderMax, scale,
-    `${context.densityStep ?? 300}|${context.densityAnchor ?? "axis"}|${context.densityAnchor === "target" ? ybp : ""}|${context.densityMeasure ?? "count"}`, context.locale);
+    `${intervals.map(bin => `${bin.start}:${bin.end}`).join(",")}|${context.densityMeasure ?? "count"}`, context.locale);
   if (elements.targetDensity.dataset.densityGridKey !== gridKey) {
     const active = document.activeElement instanceof HTMLElement && elements.targetDensity.contains(document.activeElement)
       ? document.activeElement.closest<HTMLElement>("button[data-target-ybp]") : null;

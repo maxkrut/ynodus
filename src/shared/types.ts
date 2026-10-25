@@ -105,6 +105,8 @@ export type DensityRow = {
   /** Real source parent used only to group connected same-date nodes in the context map. */
   parentId: string | null;
   total: number;
+  /** Common-country requirements calculated independently for this row's chart interval. */
+  participatingCountries?: string[];
 };
 
 export type SignatureRow = AncientEvidence & {

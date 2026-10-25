@@ -58,7 +58,7 @@ export function renderEvidenceForestTable(profile: { roots: readonly EvidenceTre
   const rows = visible.filter(entry => included.has(entry));
   const maximum = Math.max(1, ...profile.countryCounts.values());
   const showAncient = o.ancientBreakdown?.() !== false;
-  const cleanTree = forest || (!state.branch && !o.terminal?.());
+  const cleanTree = forest || !state.branch;
   const nodeWidth = cleanTree ? Math.max(310, 200 + rows.reduce((max,entry) => Math.max(max,entry.depth),0) * 24) : 310;
   const lastShownChild = new Map<Entry | null,Entry>();
   if (cleanTree) for (const entry of rows) lastShownChild.set(entry.parent,entry);
@@ -74,7 +74,7 @@ export function renderEvidenceForestTable(profile: { roots: readonly EvidenceTre
   };
   const columns = 3 + codes.length + (filtered || state.branch ? 1 : 0);
   const compactAncient = (count: number | undefined) => !showAncient || count === undefined ? "" : `<small class="tree-cell-ancient" aria-label="${h(`${t("ancientSubset")} ${n(count)}`)}">${h(t("matrixAncientShort"))} ${n(count)}</small>`;
-  const countryHeader = (code: string) => `<th scope="col" class="tree-country-col"><button type="button" class="matrix-country-heading" data-tree-country="${h(code)}" aria-pressed="${filtered && selected.includes(code)}" aria-label="${h(`${o.countryName(code)} (${code})`)}" data-tooltip="${h(`${o.countryName(code)} · ${t(state.branch || o.terminal?.() ? "matrixCountryFilterHint" : "profileCountryFilterHint")}`)}"><span class="matrix-country-name">${h(o.countryName(code))}</span><span class="flag" aria-hidden="true">${o.countryFlag(code)}</span><small>${h(code)}</small></button></th>`;
+  const countryHeader = (code: string) => `<th scope="col" class="tree-country-col"><button type="button" class="matrix-country-heading" data-tree-country="${h(code)}" aria-pressed="${selected.includes(code)}" aria-label="${h(`${o.countryName(code)} (${code})`)}" data-tooltip="${h(`${o.countryName(code)} · ${t(state.branch || o.terminal?.() ? "matrixCountryFilterHint" : "profileCountryFilterHint")}`)}"><span class="matrix-country-name">${h(o.countryName(code))}</span><span class="flag" aria-hidden="true">${o.countryFlag(code)}</span><small>${h(code)}</small></button></th>`;
   const countryCell = (entry: Entry, code: string) => {
     const value = entry.node.countryCounts.get(code) ?? 0;
     const ancient = showAncient && entry.node.ancientCountryCounts ? entry.node.ancientCountryCounts.get(code) ?? 0 : undefined;

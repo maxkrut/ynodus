@@ -1,10 +1,12 @@
 import type { EvidenceTreeNode, SubcladeProfile } from "../shared/types";
 import { MATRIX_ROWS, renderProfileMatrix, type ProfileMatrixOptions } from "./profile-matrix";
 import { bindEvidenceTreeKeys } from "./evidence-tree-table";
+import { ancientNote, selectedAncient } from "./sample-scope";
 
 export type ProfileExplorerState = {
   anchor: string; selected: string; rows: number; offset: number; countryScroll?: number; countriesOpen?: boolean;
   countries?: string[]; closed?: string[]; limits?: Array<[string, number]>; query?: string; treeScrollLeft?: number; inspectorOpen?: boolean;
+  extrasOpen?: string[];
 };
 type Options = ProfileMatrixOptions & {
   root: HTMLElement;
@@ -38,6 +40,14 @@ export function createProfileExplorer(o: Options) {
   o.root.addEventListener("toggle", event => {
     const details = event.target;
     if (!state || !(details instanceof HTMLDetailsElement)) return;
+    if (details.dataset.profileExtra) {
+      const open = new Set(state.extrasOpen), key = details.dataset.profileExtra;
+      if (open.has(key) !== details.open) {
+        if (details.open) open.add(key); else open.delete(key);
+        state.extrasOpen = [...open]; o.onChange();
+      }
+      return;
+    }
     if (details.matches("[data-profile-inspector-disclosure]")) { if (state.inspectorOpen !== details.open) { state.inspectorOpen = details.open; o.onChange(); } return; }
     if (!details.matches("[data-profile-countries]")) return;
     if (state.countriesOpen !== details.open) { state.countriesOpen = details.open; o.onChange(); }
@@ -52,20 +62,35 @@ export function createProfileExplorer(o: Options) {
     if (summary) summary.hidden = false;
     const countries = state.countries ?? [];
     const select = element("[data-profile-country-filter]") as HTMLSelectElement | null;
-    if (select) select.value = countries.length === 1 ? countries[0] : "";
+    if (select) {
+      select.querySelector('[data-profile-multiple-countries]')?.remove();
+      if (countries.length > 1 && countries.length < profile.countryCounts.size) {
+        const option = new Option(`${o.t("selectedCountries")}: ${o.formatNumber(countries.length)}`, "multiple");
+        option.disabled = true; option.dataset.profileMultipleCountries = "";
+        select.add(option); select.value = option.value;
+      } else select.value = countries.length === 1 ? countries[0] : "";
+    }
     o.root.querySelectorAll<HTMLButtonElement>(".profile-country-chip").forEach(button => button.setAttribute("aria-pressed",String(countries.includes(button.dataset.profileCountry!))));
     const reset = element(".profile-country-reset") as HTMLButtonElement | null;
     if (reset) reset.disabled = !countries.length;
     const total = element("[data-profile-scope-total]"), label = element("[data-profile-total-label]");
     if (total) total.textContent = o.formatNumber(countries.length ? countries.reduce((sum,code) => sum+(profile!.countryCounts.get(code)??0),0) : profile.total);
+    const ancient = element("[data-profile-scope-ancient]");
+    if (ancient) ancient.innerHTML = ancientNote(countries.length ? selectedAncient(profile.ancientCountryCounts, countries) : profile.ancientTotal, o.t, o.formatNumber);
     if (label) label.textContent = o.t(countries.length ? "branchCountriesSelectedColumn" : "profileSubtreeEvidence");
   };
   const selectCountry = (code: string) => {
     if (!state || !profile) return;
     state.countries = code && profile.countryCounts.has(code) ? [code] : [];
-    state.offset = 0; if (!o.terminal?.()) state.closed = [];
+    state.offset = 0; state.closed = [];
+    reconcileSelection();
+  };
+  const reconcileSelection = () => {
+    if (!state || !profile || !state.countries?.length) return;
     const node = nodes.get(state.selected);
-    if (code && node && !(node.countryCounts.get(code)??0)) { state.selected = profile.node.id; inspector(); }
+    if (node && !state.countries.some(code => (node.countryCounts.get(code) ?? 0) > 0)) {
+      state.selected = profile.node.id; state.countriesOpen = false; state.countryScroll = 0; inspector();
+    }
   };
   o.root.addEventListener("change", event => {
     const select = event.target as HTMLSelectElement;
@@ -118,10 +143,10 @@ export function createProfileExplorer(o: Options) {
     if (button.dataset.treeCountry || button.dataset.profileCountry) {
       const code = (button.dataset.treeCountry || button.dataset.profileCountry)!;
       if (o.terminal?.()) {
-        const all = [...profile.countryCounts.keys()];
-        const countries = new Set(all.every(item => state!.countries?.includes(item)) ? [] : state.countries);
+        const countries = new Set(state.countries);
         if (countries.has(code)) countries.delete(code); else countries.add(code);
-        state.countries = [...countries]; state.offset = 0;
+        state.countries = [...countries]; state.offset = 0; state.closed = [];
+        reconcileSelection();
       } else selectCountry(code);
       focus = button.classList.contains("profile-country-chip") ? `.profile-country-chip[data-profile-country="${code}"]` : `.matrix-country-heading[data-tree-country="${code}"]`;
     }
@@ -149,8 +174,12 @@ export function createProfileExplorer(o: Options) {
       if (state?.anchor !== value.node.id) state = {anchor:value.node.id,selected:value.node.id,rows:MATRIX_ROWS,offset:0,countries:[],closed:[],limits:[]};
       if (!nodes.has(state.selected)) state.selected = value.node.id;
       state.countries = state.countries?.filter(code => value.countryCounts.has(code)) ?? [];
+      reconcileSelection();
       const search = element("[data-profile-tree-search]") as HTMLInputElement | null;
       if (search) search.value = state.query ?? "";
+      o.root.querySelectorAll<HTMLDetailsElement>("[data-profile-extra]").forEach(details => {
+        details.open = state?.extrasOpen?.includes(details.dataset.profileExtra!) === true;
+      });
       inspector(); renderTable();
     },
   };

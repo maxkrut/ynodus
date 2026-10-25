@@ -1,6 +1,5 @@
 import { ancientNote } from "./sample-scope";
 import { escapeHtml } from "../shared/html";
-import { nodeMacroGroup } from "../shared/haplogroups";
 import { pluralLabel } from "../shared/plural";
 import type { EvidenceTreeNode, Locale, ResultRow, SubcladeProfile, TreeNodeRef } from "../shared/types";
 import { formedBranchDetails } from "../results/formed-branch-model";
@@ -17,55 +16,20 @@ export function createProfileMarkup(
   revealLimit: (kind: EvidenceRevealKind) => number,
 ): Pick<ResearchMarkup, "profile" | "profileInspector"> {
   function profile(profile: SubcladeProfile): string {
-    const formed = profile.node.formedKnown
-      ? `~${options.formatCalendar(profile.node.formed)}`
-      : options.t("dateUnknown");
     const detail = options.resultDetail?.();
-    const url = detail ? null : options.subcladeUrl(profile.node.id);
-    const queryCount = detail ? undefined : options.queryMatchCount?.(profile.node.id);
     const queryRow = detail?.mode === "crossing" ? undefined : options.queryFormedRow?.(profile.node.id);
-    const sameFormedLinks = countSameFormedLinks(profile.evidenceTree);
-    const ancestors = profile.path.slice(0, -1);
-    const ancestryInTitle = ancestors.length === 1 && ancestors[0].id === detail?.parentId;
-    const ancestry = ancestors.length && !ancestryInTitle ? `<section class="profile-section profile-ancestry">
-      <header><h3>${escapeHtml(options.t(detail ? "resultDetailAncestors" : "profileAncestry"))}</h3>${renderAnnotation("research-sources", options.t)}</header>
-      <nav class="ancestry-breadcrumb" aria-label="${escapeHtml(options.t("profileAncestry"))}">${renderPath(ancestors)}</nav>
-    </section>` : "";
+    const groups = detail && queryRow && !queryRow.crossingChild ? renderProfileFormedGroups(queryRow, revealLimit("profile-formed")) : "";
     const inspector = `<aside class="profile-node-inspector" data-profile-inspector aria-live="polite">${profileInspector(profile.evidenceTree, true)}</aside>`;
-    const compactHeader = detail ? "" : renderProfileHeader(profile, renderPath(profile.path, true), options);
-    return `${compactHeader}${detail ? `
-      <div class="profile-overview-main">
-      <section class="profile-identity-panel">
-        <div class="profile-identity-main">
-          <span class="profile-project">${escapeHtml(nodeMacroGroup(profile.node))}</span>
-          <h3>${escapeHtml(detail?.parentId ? `${detail.parentId} → ${profile.node.id}` : profile.node.id)}</h3>
-          <span class="profile-formed"><small>${escapeHtml(options.t("sourceFormationEstimate"))} ${renderAnnotation("source-age", options.t)}</small><strong>${escapeHtml(formed)}</strong><small>${profile.node.formedKnown ? `${options.formatNumber(profile.node.formed)} YBP ${renderAnnotation("calendar", options.t)}` : ""}</small></span>
-        </div>
-        <div class="profile-actions" aria-label="${escapeHtml(options.t("profileScopeActions"))}">
-          ${url ? `<a class="small-button" href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(options.t("openInYfull"))}</a>` : ""}
-          ${profile.node.formedKnown && !detail ? `<button class="small-button compact-action" type="button" data-search-profile-formed title="${escapeHtml(options.t("profileTimeSearchHint"))}">${escapeHtml(options.t("searchNearFormed"))}</button>` : ""}
-        </div>
-      </section>
-
-      ${detail ? "" : `<p class="profile-scope-note">${escapeHtml(options.t("profileAllCountries"))}</p>`}
-      <section class="profile-ledger profile-query-context" aria-label="${escapeHtml(options.t("profileEvidenceSummary"))}"${queryCount === undefined ? " hidden" : ""}>
-        ${queryCount === undefined ? "" : metric(options.t("profileQueryContext"), queryCount, options.t("profileQuerySubset"))}
-      </section>
-      </div>
-
-
-      ${inspector}<div class="profile-navigation-toolbar result-detail-toolbar">${ancestry}</div>` : `<details class="profile-inspector-disclosure" data-profile-inspector-disclosure><summary title="${escapeHtml(options.t("profileSelectHint"))}">${escapeHtml(options.t("profileNodeDetails"))}</summary>${inspector}</details>`}
+    return `${renderProfileHeader(profile, renderPath(profile.path, true), options)}
+      <details class="profile-inspector-disclosure" data-profile-inspector-disclosure><summary title="${escapeHtml(options.t("profileSelectHint"))}">${escapeHtml(options.t("profileNodeDetails"))}</summary>${inspector}</details>
       <div class="profile-columns profile-explorer" data-profile-tree-view>
         <section class="profile-section profile-tree-section">
-          <header><h3>${escapeHtml(options.t(detail ? "resultDetailTree" : "profileFullTree"))}</h3>${sameFormedLinks > 0 ? `<span data-tree-age-pairs>${escapeHtml(options.t(detail ? "resultDetailAgePairs" : "treeSameAgePairs"))}: ${options.formatNumber(sameFormedLinks)} ${renderAnnotation("tree-age-pairs", options.t)}</span>` : ""}</header>
-          ${detail ? `<p class="section-reading-note">${escapeHtml(options.t("resultDetailSelectHint"))} ${renderAnnotation("sample-counts", options.t)}</p><label class="country-tree-search profile-tree-search">${escapeHtml(options.t("countryTreeSearch"))}<input id="profile-tree-search" type="search" data-profile-tree-search autocomplete="off" spellcheck="false" /></label>` : ""}
-          <div data-profile-tree-table>${renderProfileMatrix(profile, 100, 0, { ...options, terminal: () => !!options.resultDetail?.(), ancientBreakdown: () => !!detail })}</div>
+          <header><h3>${escapeHtml(options.t("profileFullTree"))}</h3></header>
+          <div data-profile-tree-table>${renderProfileMatrix(profile, 100, 0, { ...options, terminal: () => !!detail, ancientBreakdown: () => false })}</div>
         </section>
       </div>
-      ${detail && queryRow && !queryRow.crossingChild ? renderProfileFormedGroups(queryRow, revealLimit("profile-formed")) : ""}
-
-      ${detail ? (profile.datedDescendantCount < profile.supportedDescendantCount ? `<p class="result-detail-age-coverage">${escapeHtml(options.t("resultDetailAgeCoverage").replace("{known}", options.formatNumber(profile.datedDescendantCount)).replace("{total}", options.formatNumber(profile.supportedDescendantCount)))} ${renderAnnotation("source-age", options.t)}</p>` : "") : `<details class="profile-extra"><summary>${escapeHtml(options.t("profileDetails"))}</summary><p>${escapeHtml(options.t("profileDatedDescendants"))}: <strong>${options.formatNumber(profile.datedDescendantCount)}</strong></p><p>${escapeHtml(options.t("profileDatedDescendantsHint"))}</p></details>`}
-      `;
+      ${groups ? `<details class="profile-extra" data-profile-extra="formed"><summary>${escapeHtml(options.t("branchStructureTitle"))}</summary>${groups}</details>` : ""}
+      <details class="profile-extra" data-profile-extra="details"><summary>${escapeHtml(options.t("profileDetails"))}</summary><p>${escapeHtml(options.t("profileDatedDescendants"))}: <strong>${options.formatNumber(profile.datedDescendantCount)}</strong></p><p>${escapeHtml(options.t("profileDatedDescendantsHint"))}</p></details>`;
   }
 
   function profileInspector(node: EvidenceTreeNode, isRoot: boolean): string {
@@ -109,7 +73,7 @@ export function createProfileMarkup(
     return `<section class="profile-section profile-formed-context">
       <header><h3>${escapeHtml(options.t("branchStructureTitle"))}</h3><span>${escapeHtml(options.t("profileSameAgeCount").replace("{members}", options.formatNumber(sameAgeDescendants)).replace("{groups}", options.formatNumber(sameAgeGroups.length)))}</span></header>
       <p class="section-reading-note">${escapeHtml(options.t("branchStructureHint"))}</p>
-      <div class="profile-formed-groups" data-evidence-list="profile-formed">${shown}</div>
+      <div class="profile-formed-groups" data-evidence-list="profile-formed" data-evidence-progress="profile-formed" tabindex="-1">${shown}</div>
       ${revealButton("profile-formed", events.length, limit)}
     </section>`;
   }
@@ -177,17 +141,4 @@ export function createProfileMarkup(
   }
 
   return { profile, profileInspector };
-}
-
-function countSameFormedLinks(root: EvidenceTreeNode): number {
-  let count = 0;
-  const pending: EvidenceTreeNode[] = [root];
-  while (pending.length) {
-    const parent = pending.pop()!;
-    for (const child of parent.children) {
-      if (parent.node.formedKnown && child.node.formedKnown && parent.node.formed === child.node.formed) count += 1;
-      pending.push(child);
-    }
-  }
-  return count;
 }

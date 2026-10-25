@@ -18,6 +18,7 @@ import { assertModuleLoaderContracts } from "./app-contracts/module-loader-contr
 import { assertHierarchyMacrogroups } from "./app-contracts/macrogroup-contracts.mjs";
 import { assertHistoryNamespaceMigration } from "./app-contracts/history-namespace-contracts.mjs";
 import { assertLocalePreferences } from "./app-contracts/locale-preference-contracts.mjs";
+import { assertDensityController } from "./app-contracts/density-controller-contracts.mjs";
 
 
 try {
@@ -35,6 +36,7 @@ try {
     export const COUNTRY_PRESET_MAP = new Map(COUNTRY_PRESETS.map((preset) => [preset.key, preset]));
   `);
 
+  await assertDensityController();
   await assertHistoryNamespaceMigration();
   await assertLocalePreferences();
   await assertHierarchyMacrogroups();

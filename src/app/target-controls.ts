@@ -32,6 +32,7 @@ export type TargetControlElements = {
 };
 
 export type TargetControlContext = {
+  densityGrid?: import("./density-intervals").DensityInterval[];
   densityMeasure?: DensityMeasure;
   densityStep?: number;
   densityAnchor?: "axis" | "target";

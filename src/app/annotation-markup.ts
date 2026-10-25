@@ -36,7 +36,8 @@ export const ANNOTATIONS = {
   date: { title: "target", label: "annotationDate", copy: ["annotationDateCopy"], details: "calendarEpochCaveat",
     source: { url: "https://www.yfull.com/faq/definitions/", label: "ageDefinitionSource" } },
   window: { title: "maxDelta", label: "annotationWindow", copy: ["tooltipMaxDelta"] },
-  minimum: { title: "minResultSamples", label: "annotationMinimum", copy: ["tooltipMinResultSamples"] },
+  minimum: { title: "minResultSamples", label: "annotationMinimum", copy: ["tooltipMinResultSamples", "densityCountryMinimumHint"] },
+  "result-detail": { title: "resultDetailTitle", label: "resultDetailTitle", copy: ["resultDetailHint"] },
   "country-minimum": { title: "countryBelowMinimumTitle", label: "countryBelowMinimum", copy: ["countryBelowMinimumHint"] },
   presence: { title: "presence", label: "annotationPresence", copy: ["modeAnyHint", "modeAllHint"] },
   formed: { title: "formedResults", label: "annotationFormed", copy: ["annotationFormedCopy"],
@@ -44,7 +45,7 @@ export const ANNOTATIONS = {
   crossing: { title: "crossingResults", label: "annotationCrossing", copy: ["crossingReadingCopy"] },
   "tree-age-pairs": { title: "treeSameAgePairs", label: "annotationTreeAgePairs", copy: ["treeSameAgePairsHint", "branchSameAgeHint"] },
   density: { title: "densityMap", label: "annotationDensity", copy: ["densityPositionHint", "annotationTimelineCopy"] },
-  "density-counts": { title: "densityNumbersMeaning", label: "annotationDensityCounts", copy: ["densityCountsHint", "densityMinimumHeightHint"] },
+  "density-counts": { title: "densityNumbersMeaning", label: "annotationDensityCounts", copy: ["densityCountsHint", "densityCountryMinimumHint", "densityMinimumHeightHint"] },
   "density-groups": { title: "densityContextLegend", label: "annotationDensityGroups", copy: ["densityGroupsHint", "densityGroupAgeHint", "densityContextScope"], source: { url: "https://www.yfull.com/tree/", label: "sourceLinkShort" } },
   "density-results": { title: "densityResultLegend", label: "annotationDensityResults", copy: ["densityResultsHint"] },
 } satisfies Record<string, Subject>;

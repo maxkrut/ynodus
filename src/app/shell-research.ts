@@ -15,7 +15,7 @@ export function renderResearchWorkspaces(t: (key: TextKey) => string): string {
       <div><h2 id="profile-workspace-title" tabindex="-1" data-i18n="profileQuestion">${t("profileQuestion")}</h2><p data-i18n="profileWorkspaceCopy">${t("profileWorkspaceCopy")}</p></div>
       <form id="profile-lookup" class="profile-lookup">
         <label for="profile-clade-search" data-i18n="signatureSubclade">${t("signatureSubclade")}</label>
-        <div class="profile-lookup-controls"><input id="profile-clade-search" type="search" name="clade" placeholder="R-Z645" required maxlength="80" autocomplete="off" spellcheck="false" aria-describedby="profile-lookup-hint profile-lookup-status" aria-controls="profile-lookup-options" /><button type="submit" class="accent-button" data-i18n="profileOpen">${t("profileOpen")}</button></div>
+        <div class="profile-lookup-controls"><input id="profile-clade-search" type="search" name="clade" placeholder="${t("profileSearchPlaceholder")}" data-i18n-placeholder="profileSearchPlaceholder" required maxlength="80" autocomplete="off" spellcheck="false" aria-describedby="profile-lookup-hint profile-lookup-status" aria-controls="profile-lookup-options" /><button type="submit" class="accent-button" data-i18n="profileOpen">${t("profileOpen")}</button></div>
         <small id="profile-lookup-hint" data-i18n="profileSearchHint">${t("profileSearchHint")}</small>
         <p id="profile-lookup-status" role="status" aria-live="polite"></p>
         <div id="profile-lookup-options" class="profile-lookup-options" role="group" hidden></div>

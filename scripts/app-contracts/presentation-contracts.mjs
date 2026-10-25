@@ -106,8 +106,14 @@ export function assertHeaderAndLanguageContracts(renderAppShell, en) {
     "source and license information must live in the header instead of an About dialog");
   assert.match(markup.slice(0, mainStart), /data-i18n="workbenchTagline"/,
     "the brand header must explain what the product does");
-  assert.match(markup.slice(0, mainStart), /class="version-pill"[^>]*>1\.0<\/span>/,
-    "the visible product version must use the compact 1.0 form");
+  const { version } = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"));
+  const lock = JSON.parse(fs.readFileSync(path.join(ROOT, "package-lock.json"), "utf8"));
+  assert.equal(lock.version, version, "the lockfile root must match the application version");
+  assert.equal(lock.packages[""].version, version, "the locked package must match the application version");
+  assert.equal(constantsSource.match(/APP_VERSION\s*=\s*"v([^"]+)"/)?.[1], version,
+    "the runtime and CSV version must match the package version");
+  assert.equal(markup.slice(0, mainStart).match(/class="version-pill"[^>]*>([^<]+)<\/span>/)?.[1],
+    version.split(".").slice(0, 2).join("."), "the header must show the current major.minor version");
   assert.doesNotMatch(markup, /class="mockup-page-stats"|id="stat-samples"|id="stat-result-support"/,
     "the redundant cohort/result/support counter strip must not compete with the canonical table");
   assert.match(markup, /id="live-status" class="visually-hidden"/,

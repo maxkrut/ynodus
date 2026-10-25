@@ -34,6 +34,16 @@ for (const width of [390, 1440]) test(`terminal result details preserve scope an
   await row.screenshot({path:`output/result-details/row-${width}.png`});
   await opener.click();
   const content = page.locator('#profile-content');
+  await expect(content.locator('.profile-compact-header')).toBeVisible();
+  await expect(content.locator('.tree-sheet-clean')).toBeVisible();
+  await expect(content.locator('[data-profile-scope-total]')).toHaveText('7');
+  await expect(content.locator('#profile-sample-scope')).toBeDisabled();
+  await expect(content.locator('#profile-country-filter option')).toHaveCount(2);
+  await content.locator('#profile-country-filter').selectOption('RUS');
+  await expect(content.locator('[data-profile-country-reset]')).toBeEnabled();
+  await content.locator('[data-profile-country-reset]').click();
+  await expect(content.locator('[data-profile-country-reset]')).toBeDisabled();
+  await expect(content.locator('.tree-direct-label, .same-formed-marker')).toHaveCount(0);
   await expect(content.locator('.profile-scope-note')).toHaveCount(0);
   await expect(content.locator('.profile-formed-context')).toHaveCount(0);
   await expect(content.locator('.profile-selected-summary h3')).toHaveCount(0);

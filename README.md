@@ -52,6 +52,7 @@ for publication and update details.
 | [PRODUCT.md](PRODUCT.md) | Authoritative behavior, result semantics, UI/state invariants and acceptance criteria |
 | [DEVELOPMENT.md](DEVELOPMENT.md) | Architecture, tests, data generation/provenance, compatibility and automation |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution and PR rules for people and agents |
+| [CHANGELOG.md](CHANGELOG.md) | User-facing changes by application version |
 
 Human and agent-assisted contributions are welcome; start with the contribution guide.
 

@@ -18,7 +18,6 @@ export type ResearchMarkupOptions = {
   countryName: (code: string) => string;
   countryFlag: (code: string) => string;
   subcladeUrl: (id: string) => string;
-  queryMatchCount?: (id: string) => number | undefined;
   queryFormedRow?: (id: string) => ResultRow | undefined;
   resultDetail?: () => ResultDetailScope | null;
 };

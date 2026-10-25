@@ -10,15 +10,14 @@ import {
   formedGroupKey,
   groupConnectedFormedBranches,
 } from "./slice-analysis/formed-groups";
-import { densityScopeIdentity } from "../shared/density-identity";
+import { densityScopeIdentity, type DensityBin } from "../shared/density-identity";
+import { collectIntervalDensity } from "./slice-analysis/density";
 import { countriesForTimeEvidence, filterCountryMinimum } from "./slice-analysis/country-minimum";
-import { readDensityGroups, writeDensityGroups, readDensityRows, writeDensityRows, resetDensityCache } from "./slice-analysis/density-cache";
-import { hasCountryMatch } from "../shared/country-matching";
+import { readDensityGroups, writeDensityGroups, resetDensityCache } from "./slice-analysis/density-cache";
 import { findResultNeighbors } from "./slice-analysis/neighbor-suggestions";
 import type { TimeAnalysisResult } from "../shared/types";
 import type {
   AnalysisResult,
-  DensityRow,
   PresenceMode,
   ResultRow,
   SliceMode,
@@ -39,6 +38,7 @@ type SliceAnalysisInput = {
   includeSuggestions?: boolean;
   /** Allows a client retaining this exact density scope to avoid a repeat transfer. */
   knownDensityKey?: string | null;
+  densityIntervals?: readonly DensityBin[];
   /**
    * Crossing only: omit edges whose parent or child is already a Formed identity
    * or same-date member. Unset leaves the full classified Crossing set.
@@ -102,8 +102,6 @@ export function collectRowsAtTarget(
     scopeAllCountries,
   );
   const effectivePresenceMode: PresenceMode = pooledAnchorScope ? "any" : presenceMode;
-  const densityKey = densityScopeIdentity(value, selectedCodes, effectivePresenceMode, anchorId, minSamples,
-    target, maxDeltaYbp, sliceMode);
   const rawKey = densityScopeIdentity(value, selectedCodes, "any", anchorId);
   let densityGroups = readDensityGroups(rawKey);
   const evidenceRows = collectEvidenceRows(
@@ -120,11 +118,8 @@ export function collectRowsAtTarget(
     writeDensityGroups(rawKey, densityGroups);
   }
   const matchingCodes = countriesForTimeEvidence(selectedCodes, evidenceRows.sampleEvidence, effectivePresenceMode, minSamples);
-  let densityRows = readDensityRows(densityKey);
-  if (!densityRows) {
-    densityRows = finalizeDensityRows(densityGroups, matchingCodes, effectivePresenceMode);
-    writeDensityRows(densityKey, densityRows);
-  }
+  const { densityKey, densityRows } = collectIntervalDensity(value, selectedCodes, effectivePresenceMode,
+    minSamples, anchorId, input.densityIntervals);
   const qualifiedEvidence = filterCountryMinimum(evidenceRows.rows, evidenceRows.sampleEvidence,
     matchingCodes, effectivePresenceMode, resultRowKey);
   let eligibleRows = qualifiedEvidence.rows;
@@ -224,36 +219,4 @@ function countPrimaryEvidenceSamples(
     if (sample.resultKeys.some((key) => primaryKeys.has(key))) total += sample.count;
   }
   return total;
-}
-
-function finalizeDensityRows(
-  groups: Map<string, DensityEvidenceRow>,
-  selectedCodes: string[],
-  presenceMode: PresenceMode,
-): DensityRow[] {
-  const eligibility = new Map<string, boolean>();
-  const qualifies = (row: DensityEvidenceRow) => {
-    const path: DensityEvidenceRow[] = [];
-    let current = row;
-    while (!eligibility.has(current.node.id)) {
-      path.push(current);
-      const parent = current.parentId ? groups.get(current.parentId) : undefined;
-      if (!parent || parent.node.formed !== current.node.formed) {
-        eligibility.set(current.node.id, hasCountryMatch(current.countryCounts, selectedCodes, presenceMode));
-        break;
-      }
-      current = parent;
-    }
-    const match = eligibility.get(current.node.id)!;
-    for (const member of path) eligibility.set(member.node.id, match);
-    return match;
-  };
-  return [...groups.values()]
-    .filter(qualifies)
-    .sort((a, b) => {
-      if (a.node.formed !== b.node.formed) return b.node.formed - a.node.formed;
-      if (b.total !== a.total) return b.total - a.total;
-      return a.node.id.localeCompare(b.node.id);
-    })
-    .map(({ node, parentId, total }) => ({ node, parentId, total }));
 }

@@ -6,6 +6,7 @@ import {
   signatureOptionsForQuery,
 } from "./worker/slice-analysis";
 import { createLatestOnlyScheduler } from "./worker/latest-only";
+import { collectIntervalDensity } from "./worker/slice-analysis/density";
 import { countryEvidenceForBranch, countryOverviewForCountry, subcladeProfileForClade } from "./worker/evidence-profile";
 import type {
   HrasIndex,
@@ -19,6 +20,13 @@ let latestLoadId = 0;
 const analyzeScheduler = createLatestOnlyScheduler<Extract<WorkerRequest, { type: "analyze" }>>(
   handleAnalyze,
 );
+const densityScheduler = createLatestOnlyScheduler<Extract<WorkerRequest, { type: "density" }>>(message => {
+  try {
+    const result = collectIntervalDensity(ensureIndex(), message.selectedCountries, message.presenceMode,
+      message.minSamples, null, message.intervals);
+    post({ id: message.id, type: "density", ...result });
+  } catch (error) { postError(message.id, error); }
+});
 
 self.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
   if (event.data.type === "cancelLoad") {
@@ -29,6 +37,7 @@ self.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
     analyzeScheduler.enqueue(event.data);
     return;
   }
+  if (event.data.type === "density") { densityScheduler.enqueue(event.data); return; }
   if (event.data.type === "load") latestLoadId = event.data.id;
   void handleMessage(event.data);
 });
@@ -45,6 +54,7 @@ function handleAnalyze(message: Extract<WorkerRequest, { type: "analyze" }>): vo
       anchorId: message.anchorId,
       scopeAllCountries: message.scopeAllCountries,
       knownDensityKey: message.knownDensityKey,
+      densityIntervals: message.densityIntervals,
       includeCrossing: message.includeCrossing,
     });
     annotateTime(value, result);

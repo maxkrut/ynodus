@@ -102,6 +102,7 @@ function densityBucketTooltip(
     ...densityRateLine(interval, count, context),
     `${context.t("densityFormedLayers")}: ${context.formatNumber(summary.formedLayerCount)}`,
     densityBucketMacroLine(summary.macroGroups, context),
+    densityCountryLine(summary.uniqueRows, context),
     densityBucketMatchLine(summary.uniqueRows, context),
   ];
   if (summary.currentResultCount > 0) {
@@ -122,11 +123,17 @@ function densityBucketAccessibleLabel(
     ...densityRateLine(interval, count, context),
     `${context.t("densityFormedLayers")}: ${context.formatNumber(summary.formedLayerCount)}`,
     densityBucketMacroLine(summary.macroGroups, context),
+    densityCountryLine(summary.uniqueRows, context),
   ];
   if (summary.currentResultCount > 0) {
     parts.push(`${context.t("densityCurrentResults")}: ${context.formatNumber(summary.currentResultCount)}`);
   }
-  return parts.join("; ");
+  return parts.filter(Boolean).join("; ");
+}
+
+function densityCountryLine(rows: DensityRow[], context: TargetControlContext): string {
+  const countries = rows[0]?.participatingCountries;
+  return countries ? `${context.t("densityRequiredCountries")}: ${countries.join(", ")}` : "";
 }
 
 function densityBucketMacroGroups(rows: DensityRow[]): DensityMacroGroup[] {

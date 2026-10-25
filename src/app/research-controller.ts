@@ -66,10 +66,9 @@ export function createResearchController(options: ResearchControllerOptions): Re
   const markup = createResearchMarkup({
     ...options,
     resultDetail: () => resultDetailActive(state) ? state.resultDetail : null,
-    queryMatchCount: (id) => state.analysisBusy ? undefined : state.results.find((row) => row.node.id === id)?.total,
     queryFormedRow: (id) => state.analysisBusy ? undefined : state.results.find((row) => row.node.id === id),
   }, (kind) => revealLimits[kind]);
-  const profileExplorer = createProfileExplorer({ ...options, terminal: () => resultDetailActive(state), ancientBreakdown: () => resultDetailActive(state), root: elements.profileContent,
+  const profileExplorer = createProfileExplorer({ ...options, terminal: () => resultDetailActive(state), ancientBreakdown: () => false, root: elements.profileContent,
     inspector: markup.profileInspector, onChange: () => navigation.remember() });
   const profileLookup = createProfileLookup({
     root: elements.profileWorkspace, workerClient: options.workerClient, t: options.t,
@@ -228,6 +227,7 @@ export function createResearchController(options: ResearchControllerOptions): Re
   function revealEvidence(kind: EvidenceRevealKind): void {
     revealLimits[kind] += kind === "profile-tree" ? TREE_REVEAL_INCREMENT : EVIDENCE_REVEAL_INCREMENT;
     render();
+    navigation.remember();
     queueMicrotask(() => {
       const remaining = document.querySelector<HTMLButtonElement>(`[data-reveal-evidence="${kind}"]`);
       if (remaining) {
