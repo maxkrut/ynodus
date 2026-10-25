@@ -50,6 +50,9 @@
 .results .table-sort-button:not(.active) .sort-indicator { color: var(--muted); }
 .results .table-wrap th:first-child { width: 36px; }
 .results .mockup-row-number { white-space: nowrap; }
+@media (min-width: 1280px) and (max-height: 800px) {
+  .results .table-wrap td { padding-block: 2px; }
+}
 /* Keep primary values on one row axis; summaries and ancient subsets sit below. */
 @media (min-width: 1051px) {
   .results tr[data-result-role] > td { vertical-align: top; }

@@ -13,6 +13,7 @@
 .has-period-inset > .period-band-label {
   width: 100%; padding-inline: 2px; white-space: normal; text-align: center; text-wrap: balance;
   font-size: var(--period-label-size); line-height: 1.05;
+  letter-spacing: 0;
 }
 .has-period-vertical > .period-band-label {
   writing-mode: vertical-rl; white-space: nowrap; padding: 0; text-wrap: nowrap;

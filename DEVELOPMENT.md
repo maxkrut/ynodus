@@ -104,6 +104,11 @@ after both minimum-Node builds, contracts and browser checks pass. Pull requests
 and repositories without that variable only validate. The deployment job alone
 receives Pages and OIDC write permissions; no personal access token is required.
 
+Manual runs can select `layout` to diagnose the compact table, source ledger and
+epoch labels on the Linux runner. This mode never publishes; `full` remains the
+default and the publication gate. Failed browser checks retain diagnostic traces
+as a workflow artifact for seven days.
+
 Vite's `base: "./"` keeps assets relative to the built page. Navigation uses query
 parameters, so direct result/profile/country links stay on `index.html` and do not
 require a server-side SPA fallback. The same artifact supports a domain root or a
