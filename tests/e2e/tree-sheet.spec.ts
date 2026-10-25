@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { branchCountriesFixture } from '../fixtures/branch-countries.mjs';
 import { compact } from '../../scripts/semantic-audit/fixtures.mjs';
 import { expectReadableText, measureTextStates } from './contrast-support';
+import { allResearchLevels } from './research-test-actions';
 
 const base = '/?lang=ru&countries=RUS&min=0&presence=any';
 const parents = { 'R-SYN-ROOT': '', 'R-SYN-A': 'R-SYN-ROOT', 'R-SYN-A1': 'R-SYN-A', 'R-SYN-B': 'R-SYN-ROOT', 'R-SYN-B1': 'R-SYN-B' };
@@ -19,6 +20,7 @@ for (const width of [390, 1440]) test(`same hierarchy and country filters in bot
   await page.setViewportSize({ width, height: 1100 });
   await page.route('**/data/hras-index.json', route => route.fulfill({ json: data }));
   await page.goto(`${base}&view=profile&clade=R-SYN-ROOT`);
+  await allResearchLevels(page);
   await expect(page.locator('.tree-sheet [data-tree-node]')).toHaveCount(5);
   const initial = await rowIds(page); await checkEdges(page);
   await expect(page.locator('[data-profile-mode]')).toHaveCount(0);
@@ -106,6 +108,7 @@ test('paged tree keeps real ancestor rows and all countries', async ({ page }) =
   data.countryCounts = data.countryCodes.map((_, i) => i + 1);
   await page.route('**/data/hras-index.json', route => route.fulfill({ json: data }));
   await page.goto(`${base}&view=profile&clade=R-SYN-ROOT`);
+  await allResearchLevels(page);
   await expect(page.locator('.tree-sheet [data-tree-node]')).toHaveCount(100);
   await page.locator('[data-evidence-tree-page="next"]').click();
   await expect(page.locator('[data-tree-node="R-SYN-D145"]')).toBeVisible();

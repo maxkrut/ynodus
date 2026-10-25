@@ -23,6 +23,12 @@ export function assertTimelineScaleContracts(timeSlider, constants, calendarYear
     "the logarithmic transition must be monotone and must not jump after one source year");
   assert.equal(timeSlider.ybpToSliderValue(235_900, scale), 0);
   assert.equal(timeSlider.sliderValueToYbp(0, scale), 235_900);
+  assert.equal(timeSlider.fullRangeMaxYbp(235900),235900);
+  for(const age of [250000,300000,999999]) {
+    assert.equal(timeSlider.ybpToSliderValueExact(age,scale),0,'outside dates clip to a fixed endpoint');
+    assert.equal(timeSlider.sliderValueToYbp(timeSlider.ybpToSliderValue(age,scale),scale),235900);
+  }
+  assert.equal(timeSlider.sliderValueToYbp(-100,scale),235900,'inverse projection is bounded by the same domain');
 
   const markers = timeSlider.axisMarkerPositions(boundaryYbp, sliderMax, scale);
   assert.ok(Math.abs(markers.target - markers.bceMid) < 0.001,

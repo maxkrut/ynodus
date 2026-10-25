@@ -13,6 +13,7 @@ export function renderTimeline(t: (key: TextKey) => string): string {
         <header class="zone-heading zone-heading-inline">
           <div class="annotated-heading"><h2 id="timeline-zone-title" data-i18n="densityMap">${t("densityMap")}</h2>${renderAnnotation("density", t)}</div>
           <div class="timeline-density-legend">
+            <span class="density-unit-control"><label for="density-unit" data-i18n="densityUnit">${t("densityUnit")}</label><select id="density-unit" data-density-unit><option value="subclades" data-i18n="densityUnitSubclades">${t("densityUnitSubclades")}</option><option value="parents" data-i18n="densityUnitParents">${t("densityUnitParents")}</option></select>${renderAnnotation("density-unit", t)}</span>
             <span class="density-measure-control"><span class="density-measure-switch" role="group" aria-label="${t("densityMeasureLabel")}" data-i18n-aria-label="densityMeasureLabel"><button type="button" data-density-measure="count" aria-pressed="true" data-i18n="densityMeasureCount">${t("densityMeasureCount")}</button><button type="button" data-density-measure="per1000" aria-pressed="false" data-i18n="densityMeasureRate">${t("densityMeasureRate")}</button></span>${renderAnnotation("density-measure", t)}</span>
             <span class="density-legend-context"><i aria-hidden="true"></i><span class="legend-full" data-i18n="densityContextLegend">${t("densityContextLegend")}</span><span class="legend-compact" data-i18n="densityGroupsCompact">${t("densityGroupsCompact")}</span>${renderAnnotation("density-groups", t)}</span>
             <span class="density-legend-current"><i aria-hidden="true"></i><span class="legend-full" data-i18n="densityResultLegend">${t("densityResultLegend")}</span><span class="legend-compact" data-i18n="densityResultsCompact">${t("densityResultsCompact")}</span>${renderAnnotation("density-results", t)}</span>
@@ -21,6 +22,7 @@ export function renderTimeline(t: (key: TextKey) => string): string {
           <span id="target-ybp" class="visually-hidden">${t("targetYbp")}: ${defaultTargetYbp} ${t("ybp")}</span>
         </header>
         <p id="density-settings-status" class="density-settings-status" role="status" hidden></p>
+        <p id="target-outside-scale" class="density-settings-status" role="status" hidden></p>
       <section class="time-axis-panel" aria-label="${t("sliceSlider")}" data-i18n-aria-label="sliceSlider">
         <div class="slice-axis-row">
           <div class="time-axis">
@@ -47,7 +49,7 @@ export function renderTimeline(t: (key: TextKey) => string): string {
             <div class="time-axis-periods" aria-hidden="true">
               ${renderPeriodBandsMarkup(t)}
             </div>
-            <div class="timeline-reading-footer"><span class="annotated-label"><span class="density-height-caption" data-i18n="densityHeightShort">${t("densityHeightShort")}</span>${renderAnnotation("density-counts", t)}</span><span data-i18n="densityClickHint">${t("densityClickHint")}</span>${renderPeriodGuide(t)}</div>
+            <div class="timeline-reading-footer"><span class="annotated-label"><span class="density-height-caption" data-i18n="densityHeightShort">${t("densityHeightShort")}</span>${renderAnnotation("density-counts", t)}</span><span data-i18n="densityClickHint">${t("densityClickHint")}</span><span id="country-fixed-scope-note" class="country-fixed-scope" hidden><span class="visually-hidden" data-fixed-scope-copy></span><button type="button" class="small-button" data-freeze-countries data-i18n="freezeCountries">${t("freezeCountries")}</button>${renderAnnotation("freeze-countries",t)}</span>${renderPeriodGuide(t)}</div>
             <div id="target-density-summary" class="time-axis-density-summary" data-i18n="densityAwaitingResults">${t("densityAwaitingResults")}</div>
           </div>
         </div>

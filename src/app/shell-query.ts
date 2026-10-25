@@ -14,7 +14,7 @@ export function renderQueryPanel(t: (key: TextKey) => string): string {
     </div>`;
   const samples = `<div class="query-inline-field sample-scope-control query-panel-block">
       <div class="annotated-label"><label for="sample-scope" data-i18n="sampleScopeLabel">${t("sampleScopeLabel")}</label>${renderAnnotation("sample-scope", t)}</div>
-      <select id="sample-scope"><option value="all" data-i18n="samplesAll">${t("samplesAll")}</option><option value="modern" data-i18n="samplesModern">${t("samplesModern")}</option><option value="ancient" data-i18n="samplesAncient">${t("samplesAncient")}</option></select>
+      <select id="sample-scope"><option value="all" data-i18n="samplesAll">${t("samplesAll")}</option><option value="modern" data-i18n="samplesModern">${t("samplesModern")}</option><option value="ancient" data-i18n="samplesAncientOnly">${t("samplesAncientOnly")}</option></select>
     </div>`;
   const time = `<div class="query-time-group query-panel-block">
       <div class="query-inline-field query-target-field" id="query-target-control">

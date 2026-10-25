@@ -3,6 +3,7 @@ import { DEFAULT_SLIDER_MAX_YBP } from "./constants";
 import { renderDensityBucketGrid } from "./density-bucket-view";
 import { densityIntervals, densityIntervalIndex, type DensityInterval } from "./density-intervals";
 import { parseInteger } from "./format";
+import { densityParentGroups } from "./density-parent-groups";
 import type { TargetControlContext, TargetControlElements } from "./target-controls";
 import {
   sliderValueToYbp,
@@ -25,10 +26,16 @@ export function renderAxisDensity(
   const rows = context.densityRows;
   const pending = context.densityStatus === "pending";
   const normalized = context.densityMeasure === "per1000";
+  elements.targetDensity.dataset.densityCountUnit = context.densityUnit ?? "subclades";
+  const legend = timelineZone?.querySelector<HTMLElement>(".density-legend-context .legend-full");
+  const compactLegend = timelineZone?.querySelector<HTMLElement>(".density-legend-context .legend-compact");
+  if (legend) { const key = context.densityUnit === "parents" ? "densityParentLegend" : "densityContextLegend"; legend.dataset.i18n = key; legend.textContent = context.t(key); }
+  if (compactLegend) { const key = context.densityUnit === "parents" ? "densityParentCompact" : "densityGroupsCompact"; compactLegend.dataset.i18n = key; compactLegend.textContent = context.t(key); }
   elements.targetDensity.classList.toggle("density-per1000", normalized);
   const caption = timelineZone?.querySelector<HTMLElement>(".density-height-caption");
   if (caption) {
-    const key = normalized ? "densityHeightRate" : "densityHeightShort";
+    const key = context.densityUnit === "parents" ? (normalized ? "densityParentRate" : "densityParentHeight")
+      : normalized ? "densityHeightRate" : "densityHeightShort";
     caption.dataset.i18n = key;
     caption.textContent = context.t(key);
   }
@@ -99,7 +106,7 @@ export function renderAxisDensity(
     context.sliceMode === "formed" && visibleRows.length > 0 && context.maxDeltaYbp > 0,
   );
   const gridKey = densityGridKey(rows, visibleMaxYbp, sliderMax, scale,
-    `${intervals.map(bin => `${bin.start}:${bin.end}`).join(",")}|${context.densityMeasure ?? "count"}`, context.locale);
+    `${intervals.map(bin => `${bin.start}:${bin.end}`).join(",")}|${context.densityMeasure ?? "count"}|${context.densityUnit ?? "subclades"}`, context.locale);
   if (elements.targetDensity.dataset.densityGridKey !== gridKey) {
     const active = document.activeElement instanceof HTMLElement && elements.targetDensity.contains(document.activeElement)
       ? document.activeElement.closest<HTMLElement>("button[data-target-ybp]") : null;
@@ -139,7 +146,7 @@ export function renderAxisDensity(
 
   const summaryItems = pending
     ? [`<span class="density-pending-note">${escapeHtml(context.t("densityUpdatingPrevious"))}</span>`]
-    : [`<span>${escapeHtml(context.t("densityScopeTotal"))}: <strong>${escapeHtml(context.formatNumber(visibleRows.length))}</strong></span>`];
+    : [`<span>${escapeHtml(context.t("densityScopeTotal"))}: <strong>${escapeHtml(context.formatNumber(visibleRows.length))}</strong> · ${escapeHtml(context.t("densityParentScope"))}: <strong>${context.formatNumber(densityParentGroups(visibleRows).length)}</strong></span>`];
   const summaryHtml = `<div class="density-reading-line">${summaryItems.join("")}</div>`;
   if (elements.targetDensitySummary.innerHTML !== summaryHtml) elements.targetDensitySummary.innerHTML = summaryHtml;
 }

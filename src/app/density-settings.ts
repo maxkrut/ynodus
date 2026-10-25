@@ -1,7 +1,8 @@
 import { densityStep } from "./density-intervals";
 import type { DensityMeasure } from "./density-measure";
+import type { DensityUnit } from "./density-parent-groups";
 
-type Settings = { step: number; anchor: "axis" | "target"; sync: boolean; measure: DensityMeasure };
+type Settings = { step: number; anchor: "axis" | "target"; sync: boolean; measure: DensityMeasure; unit: DensityUnit };
 const STORAGE_KEY = "ynodus-density-settings-v2";
 
 export function createDensitySettings(root: Element | null, render: () => void) {
@@ -9,20 +10,26 @@ export function createDensitySettings(root: Element | null, render: () => void) 
   const anchor = root?.querySelector<HTMLSelectElement>("#density-anchor");
   const sync = root?.querySelector<HTMLInputElement>("#density-sync");
   const measures = root?.querySelectorAll<HTMLButtonElement>("[data-density-measure]");
-  let settings: Settings = { step: 300, anchor: "axis", sync: false, measure: "count" };
+  const unit = root?.querySelector<HTMLSelectElement>("[data-density-unit]");
+  let settings: Settings = { step: 300, anchor: "axis", sync: false, measure: "count", unit: "subclades" };
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
     if (saved && typeof saved === "object") settings = {
       step: densityStep(saved.step) || 300, anchor: saved.anchor === "target" ? "target" : "axis", sync: saved.sync === true,
       measure: saved.measure === "per1000" ? "per1000" : "count",
+      unit: saved.unit === "parents" ? "parents" : "subclades",
     };
   } catch { /* Optional preference; defaults work without browser storage. */ }
   if (input) input.value = String(settings.step);
   if (anchor) anchor.value = settings.anchor;
   if (sync) sync.checked = settings.sync;
+  if (unit) unit.value = settings.unit;
   const save = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch { /* Optional. */ } };
   const renderMeasure = () => measures?.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.densityMeasure === settings.measure)));
   renderMeasure();
+  unit?.addEventListener("change", () => {
+    settings.unit = unit.value === "parents" ? "parents" : "subclades"; save(); render();
+  });
   measures?.forEach(button => button.addEventListener("click", () => {
     settings.measure = button.dataset.densityMeasure === "per1000" ? "per1000" : "count";
     renderMeasure(); save(); render();
@@ -49,6 +56,6 @@ export function createDensitySettings(root: Element | null, render: () => void) 
       if (settings.sync) input.value = String(2 * window);
     }
     return { densityStep: settings.sync ? 2 * window : input ? densityStep(Number(input.value)) : settings.step,
-      densityAnchor: settings.anchor, densitySync: settings.sync, densityMeasure: settings.measure };
+      densityAnchor: settings.anchor, densitySync: settings.sync, densityMeasure: settings.measure, densityUnit: settings.unit };
   };
 }

@@ -77,7 +77,7 @@ export function createResearchController(options: ResearchControllerOptions): Re
     profileId: () => state.profile?.node.id, loadProfile,
   });
   const countryTree = createCountryOverviewTree({
-    ...options, root: elements.countryOverviewContent, inspector: markup.profileInspector, onChange: () => navigation.remember(),
+    ...options, root: elements.countryOverviewContent, inspector: (node, isRoot) => markup.profileInspector(node, isRoot, true), onChange: () => navigation.remember(),
   });
   const countryPicker = createCountryComparisonPicker({ ...options, root: elements.countryOverviewContent,
     index: () => state.index, onApply: countries => { const country=state.countryOverview?.country; if(country) {
@@ -87,6 +87,10 @@ export function createResearchController(options: ResearchControllerOptions): Re
     onCountries: countries => { countries = [...new Set(countries)].sort();
       const route = routeForCurrentState();
       if (route.view !== "country") return;
+      const country = route.country && countries.includes(route.country) ? route.country : countries[0];
+      if (country && country !== route.country && route.anchorId) {
+        void loadCountryEvidence(country, route.anchorId, "replace", countries); return;
+      }
       navigation.revise({ ...route, countries });
       state.countryEvidenceCountries = countries;
       render();
@@ -153,7 +157,7 @@ export function createResearchController(options: ResearchControllerOptions): Re
   async function loadCountryEvidence(country: string, anchorId: string,
     historyMode: HistoryMode = "push", countries = state.researchView === "country" ? state.countryEvidenceCountries : [country]): Promise<void> {
     if (historyMode === "push" && resultDetailActive(state)) return;
-    countries = [...new Set(countries)].sort();
+    countries = [...new Set([country, ...countries])].sort();
     if (historyMode !== "none" && (state.researchView === "profile" || state.researchView === "country-overview")) {
       state.countryEvidenceParentView = state.researchView;
     }
@@ -229,23 +233,23 @@ export function createResearchController(options: ResearchControllerOptions): Re
     render();
     navigation.remember();
     queueMicrotask(() => {
-      const remaining = document.querySelector<HTMLButtonElement>(`[data-reveal-evidence="${kind}"]`);
+      const root = document.querySelector<HTMLElement>(`[data-research-panel="${state.researchView}"]`);
+      const remaining = root?.querySelector<HTMLButtonElement>(`[data-reveal-evidence="${kind}"]`);
       if (remaining) {
         remaining.focus();
         return;
       }
       if (kind === "profile-countries") {
-        [...document.querySelectorAll<HTMLButtonElement>('[data-evidence-list="profile-countries"] [data-country-evidence]')].at(-1)?.focus();
+        const list = root?.querySelector<HTMLElement>('[data-evidence-progress="profile-countries"]');
+        const last = list?.querySelector<HTMLButtonElement>('[data-country-search-text]:last-child [data-country-evidence]');
+        if (last) last.focus(); else list?.focus({ preventScroll: true });
         return;
       }
       document.querySelector<HTMLElement>(`[data-evidence-progress="${kind}"], [data-evidence-list="${kind}"] button:last-of-type`)?.focus({ preventScroll: true });
     });
   }
 
-  function invalidateResearchRequest(): void {
-    requestToken += 1;
-    state.researchBusy = false;
-  }
+  function invalidateResearchRequest(): void { requestToken += 1; state.researchBusy = false; }
 
   function resetRevealLimits(scope: "profile" | "country"): void {
     Object.assign(revealLimits, scope === "profile" ? {
@@ -391,6 +395,6 @@ export function createResearchController(options: ResearchControllerOptions): Re
     loadCountryEvidence, loadCountryOverview,
     backFromCountryEvidence: navigation.back, back: navigation.back, restorePosition: navigation.flush,
     searchNearProfileFormation, revealEvidence,
-    restoreRoute: restoreHistoryRoute,
+    restoreRoute: async route => { navigation.reconcile(route); await restoreHistoryRoute(route); },
   };
 }

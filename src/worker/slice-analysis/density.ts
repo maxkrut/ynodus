@@ -62,6 +62,6 @@ function intervalRows(index: TreeIndex, groups: Map<string, DensityEvidenceRow>,
   };
   return [...groups.values()].filter(qualifies).sort((a, b) => b.node.formed - a.node.formed
     || b.total - a.total || a.node.id.localeCompare(b.node.id))
-    .map(({ node, parentId, total }) => ({ node, parentId, total,
+    .map(({ node, parentId, parentMacroGroup, total }) => ({ node, parentId, parentMacroGroup, total,
       ...(presence === "all" ? { participatingCountries: required[bucketById.get(node.id)!] } : {}) }));
 }

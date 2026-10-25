@@ -62,8 +62,17 @@ export function mergeNodes(hrasTree, referenceTree) {
 export function summarizeMerge(hrasTree, referenceTree, mergedTree) {
   let referenceParentUsed = 0;
   let hrasParentFallback = 0;
-  let referenceTimingUsed = 0;
-  let hrasTimingFallback = 0;
+  const formed = {
+    selectionPolicy: "reference-non-null-otherwise-hras",
+    reference: { values: 0, known: 0, unknown: 0 },
+    hrasFallback: { values: 0, known: 0, unknown: 0 },
+    missing: 0, known: 0, unknown: 0,
+    comparison: {
+      sharedNodes: 0, bothKnownEqual: 0, bothKnownDifferent: 0, bothUnknown: 0,
+      referenceKnownHrasUnknown: 0, referenceUnknownHrasKnown: 0,
+      referenceUnknownHrasKnownNotUsed: 0,
+    },
+  };
 
   for (const id of Object.keys(mergedTree)) {
     const merged = mergedTree[id];
@@ -71,8 +80,25 @@ export function summarizeMerge(hrasTree, referenceTree, mergedTree) {
     const hras = hrasTree[id] ?? null;
     if (merged.parent && merged.parent === reference?.parent) referenceParentUsed += 1;
     else if (merged.parent && merged.parent === hras?.parent) hrasParentFallback += 1;
-    if (merged.formed !== null && merged.formed === reference?.formed) referenceTimingUsed += 1;
-    else if (merged.formed !== null && merged.formed === hras?.formed) hrasTimingFallback += 1;
+    // Count selected values separately from usable dates. Zero is a selected
+    // reference value under the existing merge policy, but not a known age.
+    const source = reference?.formed != null ? formed.reference
+      : hras?.formed != null ? formed.hrasFallback : null;
+    const known = isKnownAge(merged.formed);
+    if (source) { source.values += 1; source[known ? "known" : "unknown"] += 1; }
+    else formed.missing += 1;
+    formed[known ? "known" : "unknown"] += 1;
+    if (reference && hras) {
+      const r = isKnownAge(reference.formed), h = isKnownAge(hras.formed);
+      const comparison = formed.comparison;
+      comparison.sharedNodes += 1;
+      if (r && h) comparison[reference.formed === hras.formed ? "bothKnownEqual" : "bothKnownDifferent"] += 1;
+      else if (r) comparison.referenceKnownHrasUnknown += 1;
+      else if (h) {
+        comparison.referenceUnknownHrasKnown += 1;
+        if (!known) comparison.referenceUnknownHrasKnownNotUsed += 1;
+      } else comparison.bothUnknown += 1;
+    }
   }
 
   return {
@@ -82,9 +108,12 @@ export function summarizeMerge(hrasTree, referenceTree, mergedTree) {
     mergedNodeCount: Object.keys(mergedTree).length,
     referenceParentUsed,
     hrasParentFallback,
-    referenceTimingUsed,
-    hrasTimingFallback,
+    formed,
   };
+}
+
+function isKnownAge(value) {
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
 }
 
 function parseNumeric(value) {

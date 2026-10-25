@@ -10,7 +10,7 @@ for (const view of ["profile", "country"] as const) {
     const tokenSelector = view === "profile" ? "a" : "[data-country-evidence-anchor]";
     for (const language of ["ru", "en",]) {
       await page.setViewportSize({ width: 2560, height: 1000 });
-      await page.goto(`/?lang=${language}&view=${view}&clade=R-SYN-DEPTH-15&country=RUS`);
+      await page.goto(`/?lang=${language}&view=${view}&clade=R-SYN-DEPTH-15${view === "country" ? "&country=RUS" : ""}`);
       const path = page.locator(selector);
       const tokens = path.locator(tokenSelector);
       const summary = path.locator("summary");

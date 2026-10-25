@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { layoutFixture, layoutQuery, countryForestFixture } from '../fixtures/layout.mjs';
+import {allResearchLevels} from './research-test-actions';
 
 const profile = (page: Page) => page.locator('#profile-content h3').first();
 const back = (page: Page, panel = 'profile') => page.locator(`[data-research-panel="${panel}"] [data-research-back]`);
@@ -19,6 +20,7 @@ async function country(page: Page) {
   await page.locator('#country-overview-select').selectOption('RUS');
   await page.locator('#country-overview-form button[type="submit"]').click();
   await expect(page.locator('[data-country-tree-search]')).toBeVisible();
+  await allResearchLevels(page);
 }
 
 test('navigation initializes when randomUUID is unavailable', async ({ page }) => {

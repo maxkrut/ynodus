@@ -2,6 +2,7 @@ import {mkdir} from 'node:fs/promises';
 import {expect,test} from '@playwright/test';
 import {branchCountriesFixture} from '../fixtures/branch-countries.mjs';
 import {expectReadableText,measureTextStates} from './contrast-support';
+import {allResearchLevels} from './research-test-actions';
 
 const ids=page=>page.locator('.tree-sheet [data-tree-node]').evaluateAll(rows=>rows.map(row=>row.getAttribute('data-tree-node')));
 for(const width of [390,1440]) test(`compact profile, single-country scope and sample types at ${width}`,async({page})=>{
@@ -12,6 +13,7 @@ for(const width of [390,1440]) test(`compact profile, single-country scope and s
   await page.route('**/data/hras-index.json',route=>route.fulfill({json:data}));
   for(const locale of ['ru','en']){
     await page.goto(`/?lang=${locale}&view=profile&clade=R-SYN-ROOT&countries=RUS&min=0&samples=all`);
+    await allResearchLevels(page);
     await expect(page.locator('.tree-sheet [data-tree-node]')).toHaveCount(5);
     await expect(page.locator('.tree-sheet-matrix')).toHaveCount(1);
     await expect(page.locator('.profile-compact-header h3')).toHaveText('R-SYN-ROOT');
@@ -71,12 +73,16 @@ for(const width of [390,1440]) test(`compact profile, single-country scope and s
 
     await page.locator('#profile-sample-scope').selectOption('modern');
     await expect(page).toHaveURL(/samples=modern/);
+    await expect(page.locator('.tree-sheet [data-tree-node="R-SYN-A"]')).toHaveCount(0);
+    await allResearchLevels(page);
     await expect(page.locator('.tree-sheet [data-tree-node]')).toHaveCount(3);
     expect(await ids(page)).toEqual(['R-SYN-ROOT','R-SYN-B','R-SYN-B1']);
     await expect(page.locator('[data-profile-scope-total]')).toHaveText('10');
     await expect(page.locator('#profile-country-filter option[value="RUS"]')).toHaveCount(0);
     await page.locator('#profile-sample-scope').selectOption('ancient');
     await expect(page).toHaveURL(/samples=ancient/);
+    await expect(page.locator('.tree-sheet [data-tree-node="R-SYN-A"]')).toBeVisible();
+    await allResearchLevels(page);
     await expect(page.locator('.tree-sheet [data-tree-node]')).toHaveCount(3);
     expect(await ids(page)).toEqual(['R-SYN-ROOT','R-SYN-A','R-SYN-A1']);
     await expect(page.locator('[data-profile-scope-total]')).toHaveText('10');

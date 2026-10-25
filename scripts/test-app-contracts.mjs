@@ -19,6 +19,7 @@ import { assertHierarchyMacrogroups } from "./app-contracts/macrogroup-contracts
 import { assertHistoryNamespaceMigration } from "./app-contracts/history-namespace-contracts.mjs";
 import { assertLocalePreferences } from "./app-contracts/locale-preference-contracts.mjs";
 import { assertDensityController } from "./app-contracts/density-controller-contracts.mjs";
+import { assertResearchReading } from "./app-contracts/research-reading-contracts.mjs";
 
 
 try {
@@ -37,6 +38,7 @@ try {
   `);
 
   await assertDensityController();
+  await assertResearchReading();
   await assertHistoryNamespaceMigration();
   await assertLocalePreferences();
   await assertHierarchyMacrogroups();

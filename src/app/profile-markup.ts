@@ -33,7 +33,7 @@ export function createProfileMarkup(
       <details class="profile-extra" data-profile-extra="details"><summary>${escapeHtml(options.t("profileDetails"))}</summary><p>${escapeHtml(options.t("profileDatedDescendants"))}: <strong>${options.formatNumber(profile.datedDescendantCount)}</strong></p><p>${escapeHtml(options.t("profileDatedDescendantsHint"))}</p>${sameFormedLinks > 0 ? `<p data-tree-age-pairs>${escapeHtml(options.t("treeSameAgePairs"))}: <strong>${options.formatNumber(sameFormedLinks)}</strong> ${renderAnnotation("tree-age-pairs", options.t)}</p>` : ""}</details>`;
   }
 
-  function profileInspector(node: EvidenceTreeNode, isRoot: boolean): string {
+  function profileInspector(node: EvidenceTreeNode, isRoot: boolean, countryScope = false): string {
     const countries = [...node.countryCounts].sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
     const detail = options.resultDetail?.();
     const countryList = `${countries.length > 4 ? `<label class="profile-country-search"><span>${escapeHtml(options.t("profileCountrySearch"))}</span><input id="profile-country-search" type="search" data-profile-country-search placeholder="${escapeHtml(options.t("profileCountrySearch"))}" /></label>` : ""}
@@ -41,7 +41,7 @@ export function createProfileMarkup(
       ${countryEvidenceList(countries,node.node.id,revealLimit("profile-countries"),"profile-countries")}`;
     return `<section class="profile-section profile-selected-summary${isRoot ? " is-root" : ""}">
       ${isRoot ? "" : `<span class="profile-selected-label">${escapeHtml(options.t("profileSelectedNode"))}</span><h3>${escapeHtml(node.node.id)}</h3>`}
-      <div class="profile-selected-metric">${metric(options.t("profileSubtreeEvidence"),node.total,options.t("profileSubtreeEvidenceHint"),detail ? node.ancientTotal : undefined,true)}</div>
+      <div class="profile-selected-metric">${metric(options.t(countryScope ? "branchCountriesSelectedColumn" : "profileSubtreeEvidence"),node.total,options.t("profileSubtreeEvidenceHint"),detail ? node.ancientTotal : undefined,true)}</div>
       ${!detail || node.directTotal > 0 ? `<p class="profile-selected-direct">${escapeHtml(options.t("profileNodeDirect"))}: <b>${options.formatNumber(node.directTotal)}</b></p>` : ""}
       ${isRoot ? "" : `<p class="profile-selected-age">${escapeHtml(options.t("sourceFormationEstimate"))} ${renderAnnotation("source-age",options.t)}<br><b>${node.node.formedKnown ? `~${escapeHtml(options.formatCalendar(node.node.formed))}` : escapeHtml(options.t("dateUnknown"))}</b>${node.node.formedKnown ? ` · ${options.formatNumber(node.node.formed)} YBP ${renderAnnotation("calendar",options.t)}` : ""}</p>`}
       ${isRoot || options.resultDetail?.() ? "" : `<button class="small-button" type="button" data-open-profile-subclade="${escapeHtml(node.node.id)}">${escapeHtml(options.t("profileOpenNode").replace("{id}",node.node.id))} ↗</button>`}
@@ -107,7 +107,7 @@ export function createProfileMarkup(
   ): string {
     const renderCountry = ([code, count]: [string, number]) => countryEvidenceButton(code, count, anchorId);
     const visible = entries.map((entry, index) => `<div data-country-search-text="${escapeHtml(`${entry[0]} ${options.countryName(entry[0])}`.toLocaleLowerCase())}" data-country-collapsed="${index >= limit}"${index >= limit ? " hidden" : ""}>${renderCountry(entry)}</div>`).join("");
-    return `<div class="evidence-list" data-evidence-list="${revealKind}">${visible}</div>${revealButton(revealKind, entries.length, limit)}`;
+    return `<div class="evidence-list" data-evidence-list="${revealKind}" data-evidence-progress="${revealKind}" tabindex="-1" aria-label="${escapeHtml(options.t("profileNodeCountries"))}">${visible}</div>${revealButton(revealKind, entries.length, limit)}`;
   }
 
   function revealButton(kind: EvidenceRevealKind, total: number, visible: number): string {

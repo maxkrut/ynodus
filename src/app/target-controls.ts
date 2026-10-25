@@ -34,6 +34,7 @@ export type TargetControlElements = {
 export type TargetControlContext = {
   densityGrid?: import("./density-intervals").DensityInterval[];
   densityMeasure?: DensityMeasure;
+  densityUnit?: import("./density-parent-groups").DensityUnit;
   densityStep?: number;
   densityAnchor?: "axis" | "target";
   densitySync?: boolean;
@@ -79,7 +80,7 @@ export function renderTargetControls(
   }
   elements.targetYear.max = String(era === "CE" ? YBP_BASE_YEAR : MAX_QUERY_YBP - YBP_BASE_YEAR + 1);
   rememberTargetDate(elements.targetYear, ybp);
-  syncSliderRange(elements, context, ybp);
+  syncSliderRange(elements, context);
   elements.targetSlider.value = String(
     ybpToSliderValue(ybp, sliderScale(context)),
   );
@@ -112,7 +113,7 @@ export function setTargetControlsFromYbp(
     elements.targetEra.value === "CE" ? "CE" : "BCE",
     Math.abs(calendarYear),
   );
-  if (syncSlider) syncSliderRange(elements, context, value);
+  if (syncSlider) syncSliderRange(elements, context);
   if (syncSlider) {
     elements.targetSlider.value = String(
       ybpToSliderValue(value, sliderScale(context)),
@@ -175,10 +176,9 @@ function updateSliderAccessibleValue(
 function syncSliderRange(
   elements: TargetControlElements,
   context: TargetControlContext,
-  ybp: number,
 ): void {
   elements.targetSlider.max = String(sliderRangeMax(true));
-  updateAxisMode(elements, context, ybp);
+  updateAxisMode(elements, context);
 }
 
 function updateAxisMarkers(
@@ -197,6 +197,8 @@ function updateAxisMarkers(
   axis?.style.setProperty("--bce-mid-pos", `${markers.bceMid}%`);
   axis?.classList.toggle("target-left-edge", markers.target < 8);
   axis?.classList.toggle("target-right-edge", markers.target > 92);
+  const note = document.getElementById("target-outside-scale");
+  if (note) { note.hidden = ybp <= fullRangeMaxYbp(context.maxFormedYbp); note.textContent = context.t("targetOutsideScale"); }
   renderPeriodBands(axis, sliderMax, sliderScale(context), context);
 }
 
@@ -243,13 +245,12 @@ function renderPeriodBands(
 function updateAxisMode(
   elements: TargetControlElements,
   context: TargetControlContext,
-  ybp = targetYbpFromControls(elements),
 ): void {
   const axis = elements.targetSlider.closest<HTMLElement>(".time-axis");
   axis?.classList.add("full-range");
   const logBoundaryLabel = `${context.formatNumber(LOG_RANGE_START_BCE)} ${context.t("eraBceShort")}`;
   const oldestLabel = formatAxisCalendarYbp(
-    fullRangeMaxYbp(context.maxFormedYbp, ybp),
+    fullRangeMaxYbp(context.maxFormedYbp),
     context,
   );
   setText(

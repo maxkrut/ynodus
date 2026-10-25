@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { mkdir, rename, rm, writeFile } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 
-const HEADERS = { "User-Agent": "yNodus/1.1.0", Accept: "text/plain,*/*" };
+const HEADERS = { "User-Agent": "yNodus/1.2.0", Accept: "text/plain,*/*" };
 
 // Hash only public input bytes. Never retain or log source sample identifiers.
 export function createSourceSnapshot({ fetchImpl = fetch, timeoutMs = 60_000, maxBytes = 64 * 1024 * 1024, expectedSnapshot = null } = {}) {

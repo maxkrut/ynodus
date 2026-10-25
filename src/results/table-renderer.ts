@@ -179,7 +179,9 @@ export function renderNoHitTableBody(
     <tr class="no-result-row">
       <td class="no-result-cell" colspan="6">
         <div class="muted-block no-result-message">
+          ${context.sampleScope === "ancient" ? `<strong class="empty-ancient-scope">${context.t("researchAncientScope")}</strong>` : ""}
           <span>${context.t(messageKey)}</span>
+          ${context.sampleScope === "ancient" ? `<span>${context.t("emptyAncientScopeHint")}</span>` : ""}
           ${suggestionButtons ? `<span>${context.t("emptyNeighborIntro")}</span><span class="no-result-actions">${suggestionButtons}</span>` : ""}
         </div>
       </td>
@@ -276,9 +278,8 @@ function renderFormedRow(
         <div class="mockup-subclade-main">
           ${renderMacroGroupLabel(macroGroup)}
           <span class="table-branch-identity">${renderSubcladeReference(row.node.id, macroGroup, context)}</span>
-          ${renderResultActions(row, context)}
+          ${renderResultActions(row, context, hasDetails ? renderBranchComposition(row.node.id, subcladeCount, events.length, context) : undefined)}
         </div>
-        ${hasDetails ? `<span class="formed-branch-summary-text">${escapeHtml(renderCompactBranchSummary(subcladeCount, events.length, context))}</span>` : ""}
       </td>
       <td>
         ${renderMobileCellLabel(context.t("tableFormedSpan"))}
@@ -309,9 +310,10 @@ function renderMacroGroupLabel(macroGroup: string): string {
     style="--row-color:${groupColor(macroGroup)};--row-fill:${groupFillColor(macroGroup)}"><i aria-hidden="true"></i>${escapeHtml(macroGroup)}</span>`;
 }
 
-function renderCompactBranchSummary(
+function renderBranchComposition(
+  rootId: string,
   subcladeCount: number,
-  formationDateCount: number,
+  groupCount: number,
   context: ResultTableRenderContext,
 ): string {
   const descendantCount = Math.max(0, subcladeCount - 1);
@@ -322,17 +324,12 @@ function renderCompactBranchSummary(
     context.t("descendantSubcladeCountFew"),
     context.t("descendantSubcladeCountMany"),
   );
-  const dateLabel = formationDateCount === 1
-    ? context.t("sameFormationEstimateSuffix")
-    : `${context.formatNumber(formationDateCount)} ${pluralLabel(
-        context.locale,
-        formationDateCount,
-        context.t("formationDateCountOne"),
-        context.t("formationDateCountFew"),
-        context.t("formationDateCountMany"),
-      )}`;
-  const separator = formationDateCount === 1 ? " " : " · ";
-  return `${context.formatNumber(descendantCount)} ${descendantLabel}${separator}${dateLabel}`;
+  const members = context.t("resultCompositionMembers").replace("{root}", rootId)
+    .replace("{descendants}", `${context.formatNumber(descendantCount)} ${descendantLabel}`)
+    .replace("{total}", context.formatNumber(subcladeCount));
+  const groups = groupCount === 1 ? context.t("resultCompositionSameAge")
+    : context.t("resultCompositionGroups").replace("{count}", context.formatNumber(groupCount));
+  return `${members}\n\n${groups}\n\n${context.t("resultCompositionDetails")}`;
 }
 
 function renderFormedSpan(
@@ -349,7 +346,7 @@ function renderDeltaRange(
 ): string {
   const format = (value: number) => context.formatNumber(value);
   if (range.minYbp === range.maxYbp) return format(range.minYbp);
-  return `${format(range.minYbp)}–${format(range.maxYbp)}`;
+  return `${format(range.minYbp)}-${format(range.maxYbp)}`;
 }
 
 function renderPath(pathNodes: ResultRow["path"]): string {
@@ -366,7 +363,7 @@ function renderSubcladeReference(id: string, project: string, _context: ResultTa
   return `<span class="subclade-link"${group}${style}>${escapeHtml(id)}</span>`;
 }
 
-function renderResultActions(row: ResultRow, context: ResultTableRenderContext): string {
+function renderResultActions(row: ResultRow, context: ResultTableRenderContext, composition?: string): string {
   const yfull = (id: string) => {
     const url = context.subcladeUrl(id);
     return url ? `<a class="table-profile-action table-yfull-action" href="${escapeHtml(url)}" target="_blank" rel="noreferrer"
@@ -375,5 +372,8 @@ function renderResultActions(row: ResultRow, context: ResultTableRenderContext):
   return `<span class="table-result-actions"><button class="table-profile-action" type="button"
     data-open-result-detail="${escapeHtml(row.node.id)}"${row.crossingChild ? ` data-result-child="${escapeHtml(row.crossingChild.id)}"` : ""}
     aria-label="${escapeHtml(`${context.t("resultDetailsAction")}: ${row.node.id}${row.crossingChild ? ` → ${row.crossingChild.id}` : ""}`)}">${escapeHtml(context.t("resultDetailsAction"))}</button>
-    ${yfull(row.node.id)}${row.crossingChild ? yfull(row.crossingChild.id) : ""}</span>`;
+    ${yfull(row.node.id)}${row.crossingChild ? yfull(row.crossingChild.id) : ""}
+    ${composition ? `<button type="button" class="annotation-trigger" data-result-composition data-tooltip-pin
+      data-tooltip="${escapeHtml(composition)}" data-popup-title="${escapeHtml(context.t("resultCompositionTitle"))}"
+      aria-label="${escapeHtml(`${context.t("resultCompositionTitle")}: ${row.node.id}`)}" aria-expanded="false" aria-controls="context-annotation"><span aria-hidden="true">!</span></button>` : ""}</span>`;
 }

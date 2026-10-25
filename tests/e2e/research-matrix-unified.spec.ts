@@ -2,6 +2,7 @@ import {mkdir} from 'node:fs/promises';
 import {expect,test,type Page} from '@playwright/test';
 import {branchCountriesFixture} from '../fixtures/branch-countries.mjs';
 import {layoutFixture} from '../fixtures/layout.mjs';
+import {allResearchLevels} from './research-test-actions';
 
 const rows=(p:Page)=>p.locator('.tree-sheet [data-tree-node]');
 const ids=(p:Page)=>rows(p).evaluateAll(els=>els.map(el=>el.getAttribute('data-tree-node')));
@@ -40,6 +41,7 @@ for(const width of [390,1440]) test(`unified matrix, parent and union comparison
 
     await page.goto(`/?lang=${lang}&view=country-overview&country=RUS&countries=RUS&min=0`);
     await expect(total(page)).toHaveText('7');
+    await allResearchLevels(page);
     expect(await ids(page)).toEqual(['R-SYN-ROOT','R-SYN-A','R-SYN-A1']);
     await expect(page.locator('.matrix-country-heading')).toHaveCount(1);
     await page.locator('.country-comparison-open').click();
@@ -111,6 +113,7 @@ test('country overview inspector search filters a comparison union',async({page}
   const data=layoutFixture();
   await page.route('**/data/hras-index.json',route=>route.fulfill({json:data}));
   await page.goto('/?lang=ru&view=country-overview&country=RUS&scope=RUS,POL,UKR,DEU,FIN&countries=RUS&min=0');
+  await allResearchLevels(page);
   await page.locator('[data-profile-select="R-SYN-ROOT"]').click();
   const inspector=page.locator('#country-overview-content [data-profile-inspector]');
   await inspector.locator('[data-profile-countries] > summary').click();
@@ -135,12 +138,14 @@ test('comparison preserves separate source roots and sample-type counts',async({
   await page.route('**/data/hras-index.json',route=>route.fulfill({json:data}));
   await page.goto('/?lang=ru&view=country-overview&country=RUS&scope=FRA,RUS&countries=RUS&min=0');
   await expect(total(page)).toHaveText('16');
+  await allResearchLevels(page);
   await expect(page.locator('[data-tree-node][data-tree-parent=""]')).toHaveCount(2);
   await expect(page.locator('[data-tree-node="R-SYN-OTHER-ROOT"]')).toHaveAttribute('data-tree-parent','');
   await page.locator('#overview-sample-scope').selectOption('modern');
   await expect(total(page)).toHaveText('11');
   await page.locator('#overview-sample-scope').selectOption('ancient');
   await expect(total(page)).toHaveText('5');
+  await allResearchLevels(page);
   await expect(page.locator('[data-tree-node][data-tree-parent=""]')).toHaveCount(2);
   await page.locator('.country-comparison-open').click();
   await picker(page).locator('[data-comparison-preset]').selectOption('slavic');

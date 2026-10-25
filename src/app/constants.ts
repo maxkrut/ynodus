@@ -2,7 +2,7 @@ export { DEFAULT_SLIDER_MAX_YBP, FULL_RANGE_SLIDER_MAX, LOG_RANGE_START_BCE, LOG
 import type { Locale } from "../shared/types";
 
 export const DATA_URL = "./data/hras-index.json";
-export const APP_VERSION = "v1.1.0";
+export const APP_VERSION = "v1.2.0";
 export const DEFAULT_LOCALE: Locale = "en";
 /**
  * The quiet table leads with the strongest country evidence and moves the tail

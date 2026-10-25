@@ -104,6 +104,8 @@ export type DensityRow = {
   node: Pick<TreeNodeRef, "id" | "project" | "macroGroup" | "formed">;
   /** Real source parent used only to group connected same-date nodes in the context map. */
   parentId: string | null;
+  /** Hierarchy-derived colour for grouping known direct parents in the chart. */
+  parentMacroGroup?: string;
   total: number;
   /** Common-country requirements calculated independently for this row's chart interval. */
   participatingCountries?: string[];

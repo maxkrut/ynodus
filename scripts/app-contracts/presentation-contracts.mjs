@@ -244,7 +244,6 @@ export function assertWordmarkCssContracts() {
     "matching source-age links must be visible in the full profile tree");
   assert.match(css, /\.row-macro-label\s*\{[^}]*color\s*:\s*var\(--row-color\)/is);
   assert.match(css, /\.subclade-link\s*\{[^}]*color\s*:\s*var\(--row-color/is);
-  assert.match(css, /\.formed-branch-summary-text\s*\{[^}]*font-size/is);
   assert.match(css, /#app\s*\{[^}]*width\s*:\s*100%[^}]*max-width\s*:\s*none/is);
   assert.match(css, /\.app-header\s*\{[^}]*display\s*:\s*grid/is);
   assert.match(css, /\.provenance-row\s*\{[^}]*grid-template-columns/is);

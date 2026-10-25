@@ -2,7 +2,7 @@
 
 yNodus
 
-Copyright 2026 Maks Krutikov
+Copyright 2026 Maksim Krutikov
 
 The application source code in this repository is licensed under the
 Apache License, Version 2.0. See `LICENSE`.

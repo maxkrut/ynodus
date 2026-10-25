@@ -16,7 +16,7 @@ for (const width of [390, 1440]) {
     await column.hover();
     await expect(panel).toBeVisible();
     await expect(panel).toContainText("Состав интервала");
-    await expect(panel.locator(".annotation-facts")).toContainText("Субкладов");
+    await expect(panel.locator(".annotation-facts").first()).toContainText("Субкладов");
     await expect(panel.locator(".popup-action")).toContainText(await column.getAttribute("data-target-label") || "");
     await expect(column).not.toHaveAttribute("title");
     expect(await panel.evaluate(el => getComputedStyle(el).backgroundColor)).toBe("rgb(255, 255, 255)");

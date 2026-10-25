@@ -1,7 +1,7 @@
 import type { CountryOverview } from "../shared/types";
 import type { ResearchMarkupOptions } from "./research-markup-shared";
 import { escapeHtml as h } from "../shared/html";
-import { groupFillColor } from "../shared/group-palette";
+import { researchMacroSelect } from "./research-tree-reading";
 import { renderAnnotation } from "./annotation-markup";
 import { renderResearchSampleControl } from "./research-sample-control";
 
@@ -9,7 +9,6 @@ type Options = Pick<ResearchMarkupOptions, "t" | "formatNumber" | "countryName" 
 export function renderCountryOverviewMarkup(overview: CountryOverview, o: Options): string {
   const codes=[overview.country,...(overview.countries??[]).filter(code=>code!==overview.country)];
   const counts=overview.countryCounts ?? new Map([[overview.country,overview.total]]);
-  const scale=Math.max(1,...overview.groups.map(group=>group.total));
   return `<section class="profile-compact-header country-compact-header" aria-label="${h(o.t("countryOverviewTitle"))}">
     <div class="profile-compact-identity"><span class="country-evidence-flag" aria-hidden="true">${o.countryFlag(overview.country)}</span><h3>${h(o.countryName(overview.country))} <small>${h(overview.country)}</small></h3>
       ${renderAnnotation("sample-countries",o.t)}<span class="profile-compact-total country-overview-total"><span>${h(o.t("countryComparisonTotal"))}</span>: <strong>${o.formatNumber(overview.total)}</strong> ${renderAnnotation("country-overview-total",o.t)}</span>
@@ -20,13 +19,14 @@ export function renderCountryOverviewMarkup(overview: CountryOverview, o: Option
       <button type="button" class="small-button country-comparison-open" data-country-comparison-open>${h(o.t("countryComparisonChoose"))} · ${o.formatNumber(codes.length)}</button>
       <label class="profile-compact-control"><span>${h(o.t("profileCountryFilter"))}</span><select data-country-tree-filter><option value="">${h(o.t("matrixAllCountries"))}</option>${codes.map(code=>`<option value="${h(code)}">${h(o.countryName(code))} (${h(code)})</option>`).join("")}</select></label>
       <button type="button" class="small-button profile-country-reset" data-tree-country-reset disabled>${h(o.t("profileCountryReset"))}</button>
+      ${researchMacroSelect(overview.groups.map(group => group.project), o)}
+      <button type="button" class="small-button" data-research-collapse>${h(o.t("researchMacroReset"))}</button>
+      <button type="button" class="small-button" data-research-expand>${h(o.t("researchExpand"))}</button>
       <label class="profile-compact-control profile-node-search" for="country-tree-search"><span>${h(o.t("countryTreeSearch"))}</span><input id="country-tree-search" type="search" data-country-tree-search autocomplete="off" spellcheck="false"></label>
     </div>
   </section>
   <div data-country-comparison-picker></div>
   <details class="profile-inspector-disclosure" data-country-node-details><summary>${h(o.t("profileNodeDetails"))}</summary><aside class="profile-node-inspector" data-profile-inspector></aside></details>
   <section class="profile-section profile-tree-section country-tree-section" data-country-tree><header><h3>${h(o.t("countryTreeTitle"))}</h3><span class="annotated-label">${h(o.t("countryTreeAssignments"))}: ${o.formatNumber(overview.assignments.length)} ${renderAnnotation("country-assignments",o.t)}</span></header><div data-country-tree-body></div></section>
-  <details class="profile-extra country-macrogroup-disclosure"><summary>${h(o.t("countryOverviewGroups"))} ${renderAnnotation("country-projects",o.t)}</summary>
-    <div class="country-overview-groups">${overview.groups.map(group=>`<article data-country-macrogroup="${h(group.project)}"><strong>${h(group.project)}</strong><span class="country-distribution-track" aria-hidden="true"><i style="width:${100*group.total/scale}%;background:${groupFillColor(group.project)}"></i></span><em>${o.formatNumber(group.total)}</em></article>`).join("")}</div>
-  </details>`;
+  `;
 }

@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { compact } from "../../scripts/semantic-audit/fixtures.mjs";
+import {allResearchLevels} from './research-test-actions';
 
 async function fixture(page: Page, parents: number[], ages: (number | null)[], samples: number[][]) {
   const data = compact(parents, ages, samples);
@@ -14,7 +15,7 @@ test("nested source ages and disconnected equal ages have truthful group labels"
   const rows = page.locator('#result-body tr[data-result-role="formed"]');
   await expect(rows).toHaveCount(2);
   const root = rows.filter({ has: page.locator('[data-open-result-detail="SYN-000"]') });
-  await expect(root.locator(".formed-branch-summary-text")).toContainText("3 age groups");
+  await expect(root.locator("[data-result-composition]")).toHaveAttribute("data-tooltip", /Connected groups sharing a Formed estimate: 3/);
   await expect(page.locator('#result-head [data-table-sort="formed"]')).toHaveAttribute("data-tooltip", /not a confidence interval/);
   await root.locator('[data-open-result-detail="SYN-000"]').click();
   const profileGroups = page.locator("#profile-content .profile-formed-context");
@@ -52,13 +53,14 @@ test("progressive tree states its full scope while only the first batch is rende
   const count = 205;
   await fixture(page, Array.from({ length: count }, (_, i) => i - 1), Array(count).fill(5500), [[count - 1, 0, 2]]);
   await page.goto(query + "&view=profile&clade=SYN-000");
+  await allResearchLevels(page);
   const tree = page.locator("#profile-content .profile-tree-section");
   await expect(tree.locator(".evidence-tree-node")).toHaveCount(100);
   await expect(tree.locator(".evidence-tree-progress")).toContainText("of 205");
   await tree.locator('[data-evidence-tree-page="next"]').click();
   await tree.locator('[data-evidence-tree-page="next"]').click();
   await expect(tree.locator(".evidence-tree-node")).toHaveCount(205);
-  await expect(tree.locator(".evidence-tree-progress")).toContainText("201–205 of 205");
+  await expect(tree.locator(".evidence-tree-progress")).toContainText("201-205 of 205");
   const last = tree.locator('.evidence-tree-node[data-tree-depth="204"]');
   await expect(last).toHaveAttribute("data-tree-parent", "SYN-203");
   await expect(last.locator('.tree-node-col')).not.toContainText("Parent:");

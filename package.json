@@ -1,6 +1,6 @@
 {
   "name": "ynodus",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "license": "Apache-2.0",
   "engines": {
@@ -10,13 +10,14 @@
   "scripts": {
     "data": "node scripts/build-hras-index.mjs",
     "data:check": "node scripts/check-upstream-version.mjs",
-    "test": "npm run test:size && npm run test:i18n && npm run test:exports && npm run test:app && npm run test:semantics && npm run test:data-check",
+    "test": "npm run test:size && npm run test:i18n && npm run test:exports && npm run test:app && npm run test:semantics && npm run test:semantics:audit && npm run test:data-check",
     "test:exports": "node --test scripts/exports/usage.test.mjs && node scripts/check-exports.mjs",
     "test:i18n": "node --test scripts/i18n/usage.test.mjs && node scripts/check-i18n.mjs",
     "test:size": "node scripts/check-source-size.mjs",
     "test:app": "node scripts/test-app-contracts.mjs",
     "test:semantics": "node scripts/test-result-invariants.mjs",
     "test:semantics:exhaustive": "node scripts/test-result-invariants.mjs --exhaustive",
+    "test:semantics:audit": "node scripts/test-semantic-audit.mjs",
     "test:data-check": "node scripts/test-upstream-version-check.mjs",
     "test:e2e": "playwright test",
     "test:pages": "node scripts/test-pages.mjs",

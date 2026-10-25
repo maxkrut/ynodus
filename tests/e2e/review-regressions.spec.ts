@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { countryForestFixture } from "../fixtures/layout.mjs";
 import { resultStatesFixture, resultStateQuery } from "../fixtures/result-states.mjs";
 import { collectWholeTree } from "./tree-sheet-support";
+import { allResearchLevels } from './research-test-actions';
 
 test("country search has no redundant tooltip and Escape restores picker focus", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -44,6 +45,7 @@ for (const view of ["overview", "branch"] as const) {
     await page.goto(overview
       ? "/?lang=ru&view=country-overview&country=RUS"
       : "/?lang=ru&view=country&country=RUS&clade=I-SYN-ROOT");
+    if(overview) await allResearchLevels(page);
     const parent = page.locator('[data-evidence-tree-toggle="I-SYN-ROOT"]');
     await expect(parent).toBeVisible();if(await parent.getAttribute("aria-expanded")==="false")await parent.click();
     const ids=await collectWholeTree(page,"I-SYN-ROOT");

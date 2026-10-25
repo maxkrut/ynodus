@@ -75,7 +75,15 @@ export function bindTimeControls(bindings: AppEventBindings): void {
     renderPresenceMode();
     queueAnalysis();
   });
-  elements.presenceToggle.closest(".query-zone")?.addEventListener("click", event => {
+  elements.presenceToggle.closest("#time-workspace")?.addEventListener("click", event => {
+    if ((event.target as HTMLElement).closest("[data-freeze-countries]")) {
+      const countries = state.countryParticipation?.formed;
+      if (state.analysisBusy || state.presenceMode !== "all" || !countries?.length || state.minResultSamples <= 0) return;
+      state.selectedCountries = new Set(countries); state.minResultSamples = 0; state.activePreset = null;
+      elements.minResultSamplesInput.value = "0";
+      bindings.renderCountries(); bindings.renderCountryPresets(); bindings.renderSelectedSummary(); bindings.renderStats();
+      renderPresenceMode(); queueAnalysis(); elements.minResultSamplesInput.focus({preventScroll:true}); return;
+    }
     if (!(event.target as HTMLElement).closest("[data-accept-country-minimum]")
       || state.analysisBusy || !state.countryMinimumOffer || state.presenceMode !== "all"
       || state.committedQuery?.presenceMode !== "all") return;

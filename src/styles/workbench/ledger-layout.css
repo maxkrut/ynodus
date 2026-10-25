@@ -36,16 +36,20 @@
 }
 
 /* Make in-app details distinct from the external tree link. */
-.results .mockup-subclade-main { grid-template-columns: 28px minmax(0, 1fr) max-content; }
+.results .mockup-subclade-main { grid-template-columns: 44px minmax(0, 1fr) max-content; }
 .results .table-profile-action { color: var(--accent-dark); background: var(--tint); border: 1px solid var(--line); border-radius: 4px; padding: 3px 5px; text-decoration: none; white-space: nowrap; }
 .results .table-profile-action { display: inline-flex; align-items: center; justify-content: center; line-height: 16px; }
 .results .table-profile-action:hover { border-color: var(--accent); }
 .table-result-actions { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
-.result-role-crossing .table-result-actions { grid-column: 2 / -1; }
+.result-role-crossing .table-result-actions { display: grid; grid-template-columns: max-content minmax(0, 1fr); grid-column: 2 / -1; min-width: 0; }
+.result-role-crossing .table-result-actions > [data-open-result-detail] { grid-column: 1; grid-row: 1 / span 2; }
+.result-role-crossing .table-result-actions > .table-yfull-action { grid-column: 2; justify-self: stretch; }
+.result-role-crossing .table-branch-identity { grid-column: 2 / -1; }
 .results .table-yfull-action { background: var(--surface); color: var(--muted); }
 .results .table-result-actions .table-yfull-action { white-space: normal; overflow-wrap: anywhere; }
 @media (max-width: 760px) {
   .results .table-result-actions .table-profile-action { min-height: calc(45px / var(--content-scale)); display: inline-flex; align-items: center; }
+  .results .table-result-actions .annotation-trigger { width: calc(45px / var(--content-scale)); height: calc(45px / var(--content-scale)); display: grid; place-items: center; }
 }
 .results .table-sort-button:not(.active) .sort-indicator { color: var(--muted); }
 .results .table-wrap th:first-child { width: 36px; }
@@ -53,21 +57,28 @@
 @media (min-width: 1280px) and (max-height: 800px) {
   .results .table-wrap td { padding-block: 2px; }
 }
-/* Keep primary values on one row axis; summaries and ancient subsets sit below. */
+/* Center complete cell contents, including wrapped values. */
 @media (min-width: 1051px) {
-  .results tr[data-result-role] > td { vertical-align: top; }
+  .results tr[data-result-role] > td { vertical-align: middle; }
   .results .result-primary-value { display: block; min-height: 24px; line-height: 24px; }
-  .results .mockup-subclade-main { min-height: 24px; align-items: start; }
+  .results .mockup-subclade-main { min-height: 24px; align-items: center; }
   .results .table-branch-identity { min-height: 24px; line-height: 24px; }
   .results .row-macro-label { min-height: 24px; }
   .results .table-profile-action { min-height: 24px; }
-  .results .pill-row { min-height: 24px; align-content: start; }
+  .results .pill-row { min-height: 24px; align-content: center; }
   .results .pill-row > .country-pill, .results .pill-row > button { min-height: 24px; }
   .results .table-total > .result-primary-value { text-align: right; }
 }
+@media (min-width: 1280px) {
+  /* Keep actions aligned when only some rows have a composition explanation. */
+  .result-role-formed .table-result-actions { display: grid; grid-template-columns: max-content max-content 24px; }
+  .results table[data-result-mode="crossing"] th:nth-child(2) { width: 480px; }
+  .results .result-role-crossing .table-branch-identity { grid-column: 2; }
+  .results .result-role-crossing .table-result-actions { grid-column: 3; }
+}
 .retry-analysis { margin-top: 14px; min-height: 44px; }
 @media (min-width: 761px) and (max-width: 1279px) {
-  .results .mockup-subclade-main { grid-template-columns: 28px minmax(0, 1fr); }
+  .results .mockup-subclade-main { grid-template-columns: 44px minmax(0, 1fr); }
   .results .table-profile-action { grid-column: 2; justify-self: start; }
   .results .table-result-actions { grid-column: 2; }
 }

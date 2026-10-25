@@ -37,6 +37,11 @@ export function handCases() {
       [[1, 0, 5], [2, 1, 6]]), q: query({ minSamples: 5, presenceMode: "all" }) },
     { name: "snapshot-rare-country-does-not-block", data: compact([-1, 0, 0], [3, 2, 2],
       [[1, 0, 5], [2, 1, 1]]), q: query({ minSamples: 5, presenceMode: "all" }) },
+    { name: "density-outside-empty-search-window", data: compact([-1, -1, -1], [null, null, 1],
+      [[0, 0, 1], [1, 1, 2], [2, 0, 3]]), q: query({ target: 0, minSamples: 2, presenceMode: "all" }) },
+    { name: "density-distinct-interval-country-pools", data: compact([-1, -1], [600, 100],
+      [[0, 0, 5], [1, 1, 5]]), q: query({ target: 600, minSamples: 5, presenceMode: "all",
+        densityIntervals: [{ older: 1000, younger: 300 }, { older: 300, younger: 0 }] }) },
   ];
 }
 

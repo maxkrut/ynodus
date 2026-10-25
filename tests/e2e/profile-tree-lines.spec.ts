@@ -1,6 +1,7 @@
 import {expect,test} from '@playwright/test';
 import {mkdir} from 'node:fs/promises';
 import {compact} from '../../scripts/semantic-audit/fixtures.mjs';
+import {allResearchLevels} from './research-test-actions';
 
 const parents=[-1,0,1,2,2,1,0,6,7,7,6,0,11,11];
 const names=['ROOT','A','A1','A11','A12','A2','B','B1','B11','B12','B2','C','C1','C2'];
@@ -16,6 +17,7 @@ for(const width of [390,1440]) test(`classic profile lines retain real branches 
   await page.setViewportSize({width,height:1100});
   await page.route('**/data/hras-index.json',route=>route.fulfill({json:data}));
   await page.goto('/?lang=ru&view=profile&clade=R-SYN-ROOT&countries=RUS&min=0');
+  await allResearchLevels(page);
   await expect(page.locator('.tree-sheet [data-tree-node]')).toHaveCount(14);
   const leaf=page.locator('[data-tree-node="R-SYN-A11"]');
   await expect(leaf.locator('.tree-sheet-guide')).toHaveCount(2);

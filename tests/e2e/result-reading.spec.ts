@@ -11,9 +11,23 @@ for (const width of [320, 390, 1440]) test('result reading and actions at ' + wi
   await expect(page.locator('#export-csv')).toBeEnabled();
   await expect(page.locator('#result-query')).toContainText('Дата поиска:');
   await expect(page.locator('.formed-result-set .result-reading-line')).toContainText('по выбранным странам');
-  await expect(page.locator('.formed-branch-summary-text').first()).toContainText('верхнего субклада');
+  await expect(page.locator('[data-result-composition]').first()).toHaveAttribute('data-tooltip', /одна округлённая оценка Formed/);
   for (const locale of ['ru', 'en',]) {
     await page.locator('#locale-switcher').selectOption(locale);
+    const composition = page.locator('[data-result-composition]').first();
+    await composition.click();
+    const popup = page.locator('#context-annotation');
+    await expect(popup).toContainText(locale === 'ru' ? 'Состав результата' : 'Result composition');
+    await expect(popup).toContainText(locale === 'ru' ? 'за пределами окна поиска' : 'outside the search window');
+    await page.mouse.move(0, 0);
+    await expect(popup).toBeVisible();
+    expect(await popup.evaluate(el => el.scrollHeight <= el.clientHeight + 1)).toBe(true);
+    await popup.screenshot({ path: `output/result-composition/popup-${width}-${locale}.png` });
+    await page.keyboard.press('Escape');
+    await expect(popup).toBeHidden();
+    await composition.click();
+    await page.locator('.result-reading-line').first().click();
+    await expect(popup).toBeHidden();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     const geometry = await page.locator('#result-body tr[data-result-role]').first().evaluate(row => {
       const profile = row.querySelector('.table-profile-action')!;

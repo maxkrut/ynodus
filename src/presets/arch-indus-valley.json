@@ -15,8 +15,8 @@
   ],
   "guide": {
     "period": {
-      "ru": "Около 2600–1900 до н. э.: зрелая городская фаза. Ранние и поздние хараппские этапы выходят за эти рамки.",
-      "en": "C. 2600–1900 BCE: the mature urban phase. Early and Late Harappan phases extend beyond it."
+      "ru": "Около 2600-1900 до н. э.: зрелая городская фаза. Ранние и поздние хараппские этапы выходят за эти рамки.",
+      "en": "C. 2600-1900 BCE: the mature urban phase. Early and Late Harappan phases extend beyond it."
     },
     "region": {
       "ru": "Основное распространение - территория современного Пакистана и северо-западной Индии. В северном Афганистане известно отдельное поселение Шортугай.",
@@ -28,7 +28,7 @@
     },
     "sources": [
       {
-        "title": "The Met - South Asia, 2000–1000 BCE",
+        "title": "The Met - South Asia, 2000-1000 BCE",
         "url": "https://www.metmuseum.org/toah/ht/03/ssa.html"
       },
       {

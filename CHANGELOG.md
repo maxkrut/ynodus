@@ -1,5 +1,48 @@
 # Changelog
 
+## 1.2.0 - 2026-10-25
+
+### Added
+
+- Optional timeline grouping by a known direct parent and identical Formed
+  estimate, alongside the existing subclade count. Help distinguishes these
+  descriptive groups from independent historical events.
+- An explicit comparison action keeps the current window's participating
+  countries and sets the minimum to zero, making that country set required
+  throughout the chart and results.
+
+### Changed
+
+- Country exploration starts with a compact macrogroup summary. Profiles and
+  result details initially show the root and immediate children; deeper levels,
+  country filters, macrogroup filters and search remain available on demand.
+- Result actions align consistently; branch-composition explanations live in
+  help popovers. Ancient-only selection and empty results are more explicit.
+- Timeline and preset explanations clarify source estimates, shared dates and
+  the limits of country-based archaeological comparisons.
+
+### Fixed
+
+- Country navigation keeps the opened country and comparison scope consistent.
+  Searches, explicit collapses, language changes, returns and reloads retain
+  their presentation state. Rapid typing defers repeated large-table renders.
+- Selecting every available country behaves like clearing the local filter.
+  Scoped counts and hidden descendant counts have accurate explanations.
+- Out-of-range dates no longer stretch the timeline. Invalid scoped links are
+  corrected with a notice, and revealing the final country batch keeps focus.
+- Common-branch help now explains qualification at the upper branch of each
+  connected same-Formed group; the calculation is unchanged.
+- The independent semantic audit uses interval-local country minima and runs
+  as part of the standard test command.
+
+### Data
+
+- Import metadata separates known, unknown and missing Formed values and counts
+  disagreements between HRAS and YFull. The source-priority rule is unchanged.
+  All 56 inputs matched the saved snapshot hashes on rebuild; topology, selected
+  dates, sample counts and ancient classifications are unchanged. Only merge
+  metadata and build/verification timestamps changed.
+
 ## 1.1.0 - 2026-10-25
 
 ### Changed

@@ -67,7 +67,7 @@ for (const width of [390, 768, 1101, 1440, 2560]) test(`content scale, filter he
       for (const route of ['view=profile&clade=J-SYN-ROOT', 'view=country-overview&country=RUS']) {
         await page.goto(`${localizedQuery}&${route}`);
         const profile = route.startsWith('view=profile');
-        await expect(page.locator(profile ? '#profile-content [data-profile-select]' : '[data-country-tree-node]').first()).toBeVisible();
+        await expect(page.locator(profile ? '#profile-content [data-profile-select]' : '[data-research-group]').first()).toBeVisible();
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
         await page.screenshot({ path: `output/content-density/${profile ? 'profile' : 'country'}-${width}-${locale}.png` });
       }

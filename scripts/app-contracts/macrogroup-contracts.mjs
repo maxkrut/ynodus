@@ -45,6 +45,7 @@ export async function assertHierarchyMacrogroups() {
   for (const row of formed.rows) assert.equal(nodeMacroGroup(row.node), expected.get(row.node.id));
   for (const row of formed.densityRows) if (expected.has(row.node.id)) {
     assert.equal(nodeMacroGroup(row.node), expected.get(row.node.id), 'density retains the same derived identity');
+    if (row.parentId) assert.equal(row.parentMacroGroup, nodeMacroGroup(expanded[row.parentId]), 'parent-group colour follows the actual parent, including parents outside the time interval');
   }
   const crossing = collectRowsAtTarget(index, {...query,target:5250,sliceMode:'crossing'});
   assert.equal(crossing.rows.length, 1);

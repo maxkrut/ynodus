@@ -148,6 +148,11 @@ export function createResearchNavigation(options: Options) {
   function revise(route: ResearchHistoryRoute) {
     save(); commit({ route, origin: entry.origin, snapshot: entry.snapshot }, "replace"); pending = false;
   }
+  function reconcile(route: ResearchHistoryRoute) {
+    // Index validation may correct a route before loading. An unchanged route
+    // must keep its saved presentation rather than capture the empty loading UI.
+    if (!sameHistoryRoute(entry.route, route)) commit({ route, origin: entry.origin }, "replace");
+  }
   function workspace(view: ResearchView) {
     save();
     const target = entry.workspaces[view] ?? { route: view === "profile" ? { view, clade: null }
@@ -208,5 +213,5 @@ export function createResearchNavigation(options: Options) {
       queueMicrotask(() => { if (token === generation) restoreNavigationPosition(route, snapshot); });
     }
   }
-  return { navigate, revise, workspace, back, render, flush, remember: save, keepPosition: () => { pending = false; } };
+  return { navigate, revise, reconcile, workspace, back, render, flush, remember: save, keepPosition: () => { pending = false; } };
 }

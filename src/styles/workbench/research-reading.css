@@ -1,0 +1,25 @@
+.density-unit-control { display: inline-flex; align-items: center; gap: 6px; }
+.density-unit-control select { max-width: 145px; min-height: 22px; padding: 1px 22px 1px 7px; font: inherit; }
+.country-fixed-scope { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px; color: var(--muted); font-size: 11px; }
+.country-fixed-scope .small-button { min-height: 22px; padding: 2px 6px; font-size: 11px; }
+.country-fixed-scope[hidden] { display: none; }
+.country-fixed-scope > span { overflow-wrap: anywhere; }
+.research-reading-note { color: var(--muted); font-size: 12px; margin: 8px 0; }
+.research-macro-summary { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,360px),1fr)); gap: 6px 18px; }
+.research-macro-summary > button { display: grid; grid-template-columns: 16px 48px minmax(40px,1fr) 65px 55px; gap: 8px; align-items: center; text-align: left; padding: 8px 12px; min-height: 44px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; color: var(--text); }
+.research-macro-summary > button:hover { background: #edf5f5; border-color: #528d95; }
+.research-macro-summary b,.research-macro-summary small { text-align: right; font-variant-numeric: tabular-nums; }
+.research-macro-track { height: 6px; background: #edf1f3; border-radius: 3px; overflow: hidden; }
+.research-macro-track i { display: block; height: 100%; min-width: 2px; }
+.tree-macro-context { opacity: .65; }
+.research-macro-paths { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 8px 0; font-size: 12px; }
+.research-macro-paths > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; min-width: 0; }
+.research-macro-paths details p { overflow-wrap: anywhere; margin: 6px 0; }
+@media(min-width:1280px) and (max-height:800px) {
+  .timeline-zone { padding-bottom: 2px; margin-bottom: 2px; }
+}
+@media(max-width:760px) {
+  .density-unit-control select { min-height: calc(44px / var(--content-scale,1)); }
+  .country-fixed-scope .small-button,.profile-compact-controls [data-research-collapse],.profile-compact-controls [data-research-expand],.profile-compact-controls [data-research-macro],.research-macro-summary > button { min-height: calc(44px / var(--content-scale,1)); }
+  .research-macro-summary { grid-template-columns: minmax(0,1fr); }
+}

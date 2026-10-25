@@ -5,8 +5,9 @@ import { renderBranchCountrySidebar } from "./branch-country-sidebar";
 import { renderBranchCountryMatrix } from "./branch-country-matrix";
 import { MATRIX_ROWS } from "./profile-matrix";
 import { bindEvidenceTreeKeys } from "./evidence-tree-table";
+import { deferredResearchRender } from "./research-display-state";
 
-export type BranchTreeState = { anchor: string; query: string; opened: string[]; limits: Array<[string, number]>; offset?: number; treeScrollLeft?: number };
+export type BranchTreeState = { anchor: string; query: string; searchClosed?: string[]; opened: string[]; limits: Array<[string, number]>; offset?: number; treeScrollLeft?: number };
 type Options = {
   root: HTMLElement; t: (key: TextKey) => string;
   formatNumber: (value: number) => string; formatCalendar: (value: number) => string;
@@ -21,6 +22,7 @@ export function createBranchCountryTree({ root, t, formatNumber: n, formatCalend
   let offset = 0;
   let treeScrollLeft = 0;
   const opened = new Set<string>(), limits = new Map<string, number>();
+  const searchClosed = new Set<string>(), deferred = deferredResearchRender(renderBody);
   const display = { t, formatNumber: n, formatCalendar, countryName, countryFlag };
   bindEvidenceTreeKeys(root);
   root.addEventListener("scroll", event => { const target = event.target; if (target instanceof HTMLElement && target.matches(".tree-sheet-scroll")) { treeScrollLeft = target.scrollLeft; onChange(); } }, { capture: true, passive: true });
@@ -28,7 +30,7 @@ export function createBranchCountryTree({ root, t, formatNumber: n, formatCalend
   root.addEventListener("keydown", event => { if (event.key !== "Escape") return; const drawer = root.querySelector<HTMLDetailsElement>(".branch-country-filter-drawer[open]"); if (drawer) { drawer.open = false; drawer.querySelector<HTMLElement>("summary")?.focus(); } });
   root.addEventListener("input", event => {
     const input = event.target as HTMLInputElement;
-    if (input.matches("[data-branch-tree-search]")) { query = input.value; offset = 0; renderBody(); onChange(); }
+    if (input.matches("[data-branch-tree-search]")) { query = input.value; searchClosed.clear(); offset = 0; deferred.schedule(); onChange(); }
     if (input.matches("[data-branch-country-search]")) {
       const needle = input.value.trim().toLocaleLowerCase();
       root.querySelectorAll<HTMLElement>("[data-branch-country-option]").forEach(row => { row.hidden = !row.dataset.branchCountryOption!.includes(needle); });
@@ -62,7 +64,7 @@ export function createBranchCountryTree({ root, t, formatNumber: n, formatCalend
       render(current, selected); onCountries(selected); return;
     }
     const id = button.dataset.evidenceTreeToggle;
-    if (id) { if (opened.has(id)) opened.delete(id); else opened.add(id); }
+    if (id) { const toggles = query.trim() ? searchClosed : opened; if (toggles.has(id)) toggles.delete(id); else toggles.add(id); }
     const more = button.dataset.evidenceTreeMore;
     if (more) limits.set(more, (limits.get(more) ?? 20) + 20);
     if (button.dataset.evidenceTreePage) offset = Math.max(0, offset + (button.dataset.evidenceTreePage === "next" ? MATRIX_ROWS : -MATRIX_ROWS));
@@ -77,9 +79,10 @@ export function createBranchCountryTree({ root, t, formatNumber: n, formatCalend
   });
 
   function render(value: SubcladeProfile | null, selected: string[]): void {
+    deferred.cancel();
     const container = root.querySelector<HTMLElement>("[data-branch-country-tree]");
     if (!value || !container) return;
-    if (profile?.node.id !== value.node.id) { query = ""; offset = 0; treeScrollLeft = 0; opened.clear(); limits.clear(); opened.add(value.node.id); }
+    if (profile?.node.id !== value.node.id) { query = ""; searchClosed.clear(); offset = 0; treeScrollLeft = 0; opened.clear(); limits.clear(); opened.add(value.node.id); }
     profile = value; countries = [...selected]; draft = new Set(countries);
     container.innerHTML = `<div class="branch-country-main">
       <div class="branch-country-toolbar">
@@ -89,17 +92,19 @@ export function createBranchCountryTree({ root, t, formatNumber: n, formatCalend
     renderBody();
   }
   function renderBody(): void {
+    deferred.cancel();
     const body = root.querySelector<HTMLElement>("[data-branch-tree-body]");
     if (!body || !profile) return;
     body.innerHTML = renderBranchCountryMatrix(profile, countries, MATRIX_ROWS, offset, display,
-      { opened: [...opened], limits: [...limits], query });
+      { opened: [...opened], limits: [...limits], query, searchClosed: [...searchClosed] });
     const pane = body.querySelector<HTMLElement>(".tree-sheet-scroll");
     if (pane) { pane.scrollLeft = treeScrollLeft; offset = Number(pane.dataset.treeOffset); }
   }
-  function capture(): BranchTreeState | undefined { return profile ? { anchor: profile.node.id, query, opened: [...opened], limits: [...limits], offset, treeScrollLeft } : undefined; }
+  function capture(): BranchTreeState | undefined { return profile ? { anchor: profile.node.id, query, searchClosed: [...searchClosed], opened: [...opened], limits: [...limits], offset, treeScrollLeft } : undefined; }
   function restore(saved?: BranchTreeState): void {
     if (!saved || saved.anchor !== profile?.node.id) return;
     query = saved.query; offset = saved.offset ?? 0; treeScrollLeft = saved.treeScrollLeft ?? 0;
+    searchClosed.clear(); saved.searchClosed?.forEach(id => searchClosed.add(id));
     opened.clear(); limits.clear(); saved.opened.forEach(id => opened.add(id)); saved.limits.forEach(([id, limit]) => limits.set(id, limit));
   }
   return { render, capture, restore };

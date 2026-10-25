@@ -1,10 +1,12 @@
 import {expect,test} from '@playwright/test';
 import {countryForestFixture,countryDeepFixture} from '../fixtures/layout.mjs';
+import {allResearchLevels} from './research-test-actions';
 const rows=p=>p.locator('[data-country-tree-node]');
 test('country matrix bounds large sibling groups and preserves search, focus and reload',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/data/hras-index.json',r=>r.fulfill({json:countryForestFixture()}));
   await page.goto('/?lang=ru&view=country-overview&country=RUS');
+  await allResearchLevels(page);
   await expect(rows(page)).toHaveCount(43);
   await expect(page.locator('.country-overview-total > strong')).toHaveText('806');
   await expect(page.locator('.country-tree-section > header')).toContainText('800');
@@ -36,6 +38,7 @@ for(const width of [320,390,761,1440]) test('country forest reading and search a
   await page.setViewportSize({width,height:1000});
   await page.route('**/data/hras-index.json',r=>r.fulfill({json:countryForestFixture()}));
   await page.goto('/?lang=ru&view=country-overview&country=RUS');
+  await allResearchLevels(page);
   for(const lang of ['ru','en']){
     await page.locator('#locale-switcher').selectOption(lang);
     await page.locator('[data-country-tree-search]').fill('R-SYN-L');
@@ -52,6 +55,7 @@ for(const width of [320,390,761,1440]) test('country forest reading and search a
 test('deep country ancestry keeps real parents and horizontal scrolling inside matrix',async({page})=>{
   await page.route('**/data/hras-index.json',r=>r.fulfill({json:countryDeepFixture()}));
   await page.goto('/?lang=ru&view=country-overview&country=RUS');
+  await allResearchLevels(page);
   await expect(rows(page)).toHaveCount(16);
   for(const width of [320,390,1440]){
     await page.setViewportSize({width,height:1000});

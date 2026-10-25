@@ -5,6 +5,7 @@ import type {
   TreeIndex,
 } from "../types";
 import { groupConnectedSameFormedEvidence } from "./formed-groups";
+import { nodeMacroGroup } from "../../shared/haplogroups";
 
 export type EvidenceRows = {
   rows: ResultRow[];
@@ -51,13 +52,15 @@ export function collectEvidenceRows(
         const node = sample.path[pathIndex];
         if (node.formedKnown === false) continue;
         if (densityGroups) {
-          addDensityEvidence(
+          const density = addDensityEvidence(
             densityGroups,
             node,
             sample.path[pathIndex - 1]?.id ?? null,
             sample.country,
             sample.count,
           );
+          const parent = sample.path[pathIndex - 1];
+          if (parent) density.parentMacroGroup = nodeMacroGroup(parent);
         }
 
         if (

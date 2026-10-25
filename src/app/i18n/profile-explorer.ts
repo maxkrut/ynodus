@@ -15,7 +15,7 @@ export const profileExplorerCopy = {
     profileMatrixHint: "Числа включают потомков. Вложенные уровни не складываются.",
     matrixAllCountries: "Все страны", matrixAllResultCountries: "Все страны результата", matrixAncientShort: "древних",
     matrixCountryFilterHint: "Нажмите для отбора ветвей. Несколько стран - записи хотя бы одной из них.",
-    matrixTreeProgress: "Узлы {start}–{end} из {total}",
+    matrixTreeProgress: "Узлы {start}-{end} из {total}",
     matrixNodesPrevious: "Предыдущие узлы", matrixNodesNext: "Следующие узлы",
   },
   en: {
@@ -34,7 +34,7 @@ export const profileExplorerCopy = {
     profileMatrixHint: "Counts include descendants. Nested levels must not be added together.",
     matrixAllCountries: "All countries", matrixAllResultCountries: "All result countries", matrixAncientShort: "ancient",
     matrixCountryFilterHint: "Click to filter branches. Multiple countries match records from any of them.",
-    matrixTreeProgress: "Nodes {start}–{end} of {total}",
+    matrixTreeProgress: "Nodes {start}-{end} of {total}",
     matrixNodesPrevious: "Previous nodes", matrixNodesNext: "Next nodes",
   },
 };

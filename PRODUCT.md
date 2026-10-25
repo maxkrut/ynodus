@@ -161,6 +161,13 @@ as research `scope`, separate from time countries, through locale/history/reload
 
 ## 4. Result and density contracts
 
+Research reading controls keep calculation and presentation separate:
+
+- Density retains its default subclade count and adds an optional parent-group unit. A group is one known direct parent plus one exact source Formed value. Unrelated equal dates and different dates under one parent stay separate. Each unresolved parent is a singleton. This is a descriptive grouping, never a claim of independent dates or historical events. Parent mode colours the confirmed parent's hierarchy-derived macrogroup. Tooltips expose both counts, unresolved parents and the largest groups. Duration normalization applies to the selected unit; result rows, outlines and CSV still refer to underlying evidence.
+- An explicit comparison action uses the committed Formed window's participating countries as the new selected country set and sets minimum to 0. This intentionally changes evidence scope and totals. All remaining countries are then required throughout the chart, table and Crossing calculation. Ordinary URL/query/CSV state records the operation, without a hidden country policy. Disable the action during pending; offer it only for a nonempty positive-minimum Common pool.
+- Country overviews initially show a compact terminal-assignment macrogroup summary, with disjoint counts. Selecting a group opens the real supported hierarchy from its first matching nodes. Each scope root discloses its actual immediate parent and a collapsible source-ancestry path. Ancestors inside a filtered profile remain context and retain full descendant-inclusive counts. Search covers the full scope when no macrogroup is selected. Comparison countries remain a union, including unique branches. All levels is an explicit opt-in to the paged full hierarchy.
+- Profiles and terminal Details initially open the root and its immediate children. Deeper levels open on demand. Country and macrogroup filters, search, collapse, locale and history preserve scope and real edges. A macrogroup category is never a genealogical parent.
+
 `TimeAnalysisResult` contains `formed: AnalysisResult` and optional `crossing`.
 `ResultRow` includes `node`, optional `crossingChild`, real `path`, primary `total`,
 `delta`, `countryCounts`, optional `sliceRelation` and below-minimum counts.

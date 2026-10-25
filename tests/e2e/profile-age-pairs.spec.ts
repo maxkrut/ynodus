@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { compact } from '../../scripts/semantic-audit/fixtures.mjs';
+import { allResearchLevels } from './research-test-actions';
 
 for (const width of [390, 1440]) test(`profile and result age pairs remain available in branch details at ${width}`, async ({ page }, info) => {
   const data = compact([-1, 0, 1, 1, 3, 0, 5, 0], [5000, 5000, 4500, 4000, 4000, null, null, 5000],
@@ -21,6 +22,7 @@ for (const width of [390, 1440]) test(`profile and result age pairs remain avail
     await extra.locator('> summary').click();
     await expect(page.locator('[data-tree-age-pairs]')).toContainText(`${labels[lang]}: 3`);
     // Two pairs are at 5000, one at 4000; the unknown-parent/unknown-child link is excluded.
+    await allResearchLevels(page);
     await expect(page.locator('.same-formed-marker')).toHaveCount(0);
     await expect(page.locator('.tree-sheet .same-formed')).toHaveCount(3);
     await expect(page.locator('[data-profile-select="R-SYN-D"]')).toHaveText('R-SYN-D');

@@ -17,8 +17,8 @@
   ],
   "guide": {
     "period": {
-      "ru": "Синташта - Петровка: около 2200–1700 до н. э.; андроновские культуры: около 2000–1200 до н. э. Границы зависят от фазы и региона.",
-      "en": "Sintashta–Petrovka: c. 2200–1700 BCE; Andronovo cultures: c. 2000–1200 BCE. Boundaries vary by phase and region."
+      "ru": "Синташта - Петровка: около 2200-1700 до н. э.; андроновские культуры: около 2000-1200 до н. э. Границы зависят от фазы и региона.",
+      "en": "Sintashta-Petrovka: c. 2200-1700 BCE; Andronovo cultures: c. 2000-1200 BCE. Boundaries vary by phase and region."
     },
     "region": {
       "ru": "Южное Зауралье и север Казахстана для Синташты; более широкий степной и лесостепной пояс Казахстана, юга Сибири и прилегающих районов Средней Азии для андроновских групп.",
@@ -30,7 +30,7 @@
     },
     "sources": [
       {
-        "title": "The Met - Central and North Asia, 2000–1000 BCE",
+        "title": "The Met - Central and North Asia, 2000-1000 BCE",
         "url": "https://www.metmuseum.org/toah/ht/03/nc.html"
       }
     ]

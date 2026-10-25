@@ -234,7 +234,7 @@ export function startApp(): void {
     onIndexReady: async () => {
       await workspaceUrl.onIndexReady();
       const route = routeFromUrl(new URL(location.href));
-      if ((route.view === "profile" && route.clade) || route.view === "country" || route.view === "country-overview") {
+      if (route.view !== "time" || state.researchView !== "time") {
         await researchController.restoreRoute(route);
       }
       applyLocale();

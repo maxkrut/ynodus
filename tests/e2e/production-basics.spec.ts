@@ -212,7 +212,7 @@ test("Formed stays primary while optional Crossing uses its own table and sort s
   await expect(countryDisclosure).not.toHaveAttribute("open", "");
 
   const branchRow = page.locator(".formed-branch-result-row").filter({ has: page.locator('[data-open-result-detail="R-SYN-100"]') });
-  await expect(branchRow.locator(".formed-branch-summary-text")).toContainText("1 субклад-потомок с оценкой формирования верхнего субклада");
+  await expect(branchRow.locator("[data-result-composition]")).toHaveAttribute("data-tooltip", /R-SYN-100 и ещё 1 субклад ниже по дереву. Всего субкладов: 2/);
   const branchTotal = await branchRow.locator(".mockup-support strong").innerText();
   await expect(page.locator(".formed-branch-dialog")).toHaveCount(0);
   await branchRow.locator("[data-open-result-detail]").click();

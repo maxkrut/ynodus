@@ -200,7 +200,6 @@
   .mockup-subclade-cell > .mobile-cell-label, .mockup-support > .mobile-cell-label { display: none; }
   .mockup-subclade-main { gap: 6px; }
   .table-profile-action { min-height: 32px; font-size: 11px; }
-  .formed-branch-summary-text { font-size: 11px; }
   .chip-details > summary, .selected-more summary { display: flex; align-items: center; }
   /* Keep disclosure/pagination targets >=44 screen px after content scaling. */
   .chip-details > summary, .selected-more summary, .show-more-row button {

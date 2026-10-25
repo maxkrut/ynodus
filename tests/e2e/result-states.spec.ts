@@ -21,7 +21,7 @@ for(const width of [390,768,1440]) test('long results, disclosure, last page and
   await disclosure.locator('summary').click();await expect(disclosure).not.toHaveAttribute('open','');
   const more=page.locator('#result-body [data-show-more-results]');await more.click();await expect(rows).toHaveCount(100);await expect(more).toBeFocused();
   await more.click();await expect(rows).toHaveCount(120);await expect(more).toHaveCount(0);await expect(page.locator('#result-range')).toBeFocused();
-  await expect(page.locator('#result-range')).toContainText('1–120');
+  await expect(page.locator('#result-range')).toContainText('1-120');
   await page.locator('#result-range').evaluate(e=>(e as HTMLElement).blur());
   await expect(page.locator('#result-range')).toBeInViewport();
   await page.locator('#result-head [data-table-sort="subclade"]').click();await expect(rows).toHaveCount(50);

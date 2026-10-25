@@ -23,7 +23,7 @@ test("audit: localized landmarks, truthful disclosures, nested group roles", asy
     await expect(disclosure.locator(".disclosure-more")).toBeHidden();
     await expect(disclosure.locator(".disclosure-less")).toBeVisible();
     await disclosure.locator("summary").click();
-    await expect(row.locator(".formed-branch-summary-text")).toBeVisible();
+    await expect(row.locator("[data-result-composition]")).toBeVisible();
     await row.locator('[data-open-result-detail="J-Z600"]').click();
     const groups = page.locator("#profile-content .profile-formed-context");
     await expect(groups).toContainText("J-Z615");

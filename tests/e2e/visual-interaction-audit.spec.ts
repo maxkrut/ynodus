@@ -1,6 +1,7 @@
 import {expect,test} from '@playwright/test';
 import {startAudit,analyses,markChart,sameChart,fit,capture} from './visual-audit-support';
 import {layoutQuery} from '../fixtures/layout.mjs';
+import {allResearchLevels} from './research-test-actions';
 
 for(const width of [390,1440]) for(const lang of ['ru','en']){
   test(`local actions preserve the timeline and do not analyze: ${lang} ${width}`,async({page})=>{
@@ -87,6 +88,8 @@ for(const width of [390,1440]) for(const lang of ['ru','en']){
     await picker.locator('[data-comparison-search]').fill('POL');
     await picker.locator('[data-country-code="POL"]').check();
     await picker.locator('[data-comparison-apply]').click();
+    await expect(page.locator('[data-country-comparison-remove="POL"]')).toBeVisible();
+    await allResearchLevels(page);
     await expect(page.locator('.matrix-country-heading')).toHaveCount(2);
     await expect(countryReturn).toHaveText(countryReturnText!);
     await page.locator('[data-country-tree-filter]').selectOption('POL');

@@ -63,6 +63,11 @@ export function readNavigationSnapshot(value: unknown): NavigationSnapshot | und
     countryChoice: /^[A-Z]{3}$/.test(String(raw.countryChoice)) ? String(raw.countryChoice) : "",
     tree: tree.country && /^[A-Z]{3}$/.test(String(tree.country)) ? {
       country: String(tree.country), query: text(tree.query, 100), limits,
+      countrySearch: text(tree.countrySearch,120),
+      searchClosed: Array.isArray(tree.searchClosed) ? tree.searchClosed.slice(0,2048).map(safeClade).filter((id): id is string => !!id) : [],
+      macro: safeClade(tree.macro) ?? undefined,
+      browse: tree.browse === true,
+      opened: Array.isArray(tree.opened) ? tree.opened.slice(0,2048).map(safeClade).filter((id): id is string => !!id) : undefined,
       closed: Array.isArray(tree.closed) ? tree.closed.slice(0,2048).map(safeClade).filter((id): id is string => !!id) : [],
       countries: Array.isArray(tree.countries) ? tree.countries.filter((code): code is string => typeof code === "string" && /^[A-Z]{3}$/.test(code)).slice(0,300) : [],
       offset: count(tree.offset), treeScrollLeft: count(tree.treeScrollLeft), selected: safeClade(tree.selected) ?? undefined, inspectorOpen: tree.inspectorOpen === true,
@@ -71,6 +76,7 @@ export function readNavigationSnapshot(value: unknown): NavigationSnapshot | und
     branchTree: safeClade(branch.anchor) ? {
       offset: count(branch.offset),
       anchor: safeClade(branch.anchor)!, query: text(branch.query, 100),
+      searchClosed: Array.isArray(branch.searchClosed) ? branch.searchClosed.slice(0,2048).map(safeClade).filter((id): id is string => !!id) : [],
       treeScrollLeft: count(branch.treeScrollLeft),
       opened: Array.isArray(branch.opened) ? branch.opened.slice(0, 2048).map(safeClade).filter((id): id is string => !!id) : [],
       limits: Array.isArray(branch.limits) ? branch.limits.slice(0, 2048).filter(row => Array.isArray(row) && safeClade(row[0])).map(row => [row[0], count(row[1], 20)]) : [],
@@ -86,6 +92,10 @@ export function readNavigationSnapshot(value: unknown): NavigationSnapshot | und
       treeScrollLeft: count(explorer.treeScrollLeft),
       countries: Array.isArray(explorer.countries) ? [...new Set(explorer.countries.filter(code => typeof code === "string" && /^[A-Z]{3}$/.test(code)))].slice(0, 300) as string[] : [],
       query: text(explorer.query, 100),
+      countrySearch: text(explorer.countrySearch,120),
+      searchClosed: Array.isArray(explorer.searchClosed) ? explorer.searchClosed.slice(0,2048).map(safeClade).filter((id): id is string => !!id) : [],
+      macro: safeClade(explorer.macro) ?? undefined,
+      opened: Array.isArray(explorer.opened) ? explorer.opened.slice(0,2048).map(safeClade).filter((id): id is string => !!id) : undefined,
       closed: Array.isArray(explorer.closed) ? explorer.closed.slice(0, 2048).map(safeClade).filter((id): id is string => !!id) : [],
       limits: Array.isArray(explorer.limits) ? explorer.limits.slice(0, 2048).filter(row => Array.isArray(row) && safeClade(row[0])).map(row => [row[0], count(row[1], 20)] as [string, number]) : [],
     } : undefined,
@@ -143,7 +153,10 @@ export function restoreNavigationInputs(route: ResearchHistoryRoute, snapshot: N
   if (route.view === "profile") {
     set("#profile-clade-search", snapshot.lookup, snapshot.lookup !== (route.clade ?? ""));
     set("[data-profile-country-search]", snapshot.countrySearch, true);
-  } else if (route.view === "country-overview" && snapshot.countryChoice) set("#country-overview-select", snapshot.countryChoice);
+  } else if (route.view === "country-overview") {
+    if (snapshot.countryChoice) set("#country-overview-select", snapshot.countryChoice);
+    set("[data-profile-country-search]", snapshot.countrySearch, true);
+  }
 }
 
 export function restoreNavigationPosition(route: ResearchHistoryRoute, snapshot?: NavigationSnapshot): void {

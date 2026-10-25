@@ -3,6 +3,7 @@ import { checkSourceExplanations } from "./production-smoke-support";
 import { expect, test, type Page } from "@playwright/test";
 import { countryForestFixture } from "../fixtures/layout.mjs";
 import { collectWholeTree } from "./tree-sheet-support";
+import { allResearchLevels } from './research-test-actions';
 
 async function ready(page: Page) {
   await expect(page.locator("#result-body tr[data-result-role]").first()).toBeVisible({ timeout: 30_000 });
@@ -61,7 +62,7 @@ test("full audit: profile reveal labels match the increment and final focus stay
 test("full audit: Formed groups and same-age counts are visible in the profile", async ({ page }) => {
   await page.goto("/?lang=en&countries=RUS&presence=any&target=5449&window=300&min=5"); await ready(page);
   const row = page.locator('#result-body tr[data-result-role]').filter({ has: page.locator('[data-open-result-detail="J-Z600"]') });
-  await expect(row.locator(".formed-branch-summary-text")).toContainText("age groups");
+  await expect(row.locator("[data-result-composition]")).toHaveAttribute("data-tooltip", /Connected groups sharing a Formed estimate/);
   await expect(row.locator(".formed-branch-dialog")).toHaveCount(0);
   await row.locator('[data-open-result-detail="J-Z600"]').click();
   const groups = page.locator("#profile-content .profile-formed-context");
@@ -105,11 +106,12 @@ test("full audit: large same-age groups remain visible in the profile", async ({
   };
   await page.route("**/data/hras-index.json", route => route.fulfill({ json: fixture }));
   await page.goto("/?lang=en&countries=RUS&presence=any&target=4000&window=0&min=0"); await ready(page);
-  await expect(page.locator(".formed-branch-summary-text")).toContainText("85 descendant subclades");
+  await expect(page.locator("[data-result-composition]")).toHaveAttribute("data-tooltip", /85 descendant subclades/);
   await page.locator('[data-open-result-detail="R-AUDIT-0"]').click();
   const groups = page.locator("#profile-content .profile-formed-context");
   await expect(groups).toContainText("Same-age descendants: 85 · Groups: 1");
   await expect(groups.locator(".profile-same-formed-members > span")).toHaveCount(86);
+  await allResearchLevels(page);
   await expect(page.locator("#profile-content .evidence-tree-node.same-formed")).toHaveCount(85);
   expect(await groups.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
 });

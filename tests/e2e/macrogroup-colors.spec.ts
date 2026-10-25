@@ -6,6 +6,25 @@ import { readFile } from 'node:fs/promises';
 import { parseCsv } from '../../scripts/semantic-audit/csv.mjs';
 
 const groups = ['R1a', 'R1b', 'I1', 'I2', 'J1', 'J2'];
+
+test('long macrogroup labels stay on one line without overlapping branch names',async({page})=>{
+  const labels=['GHIJK','A0-T','R1b'];
+  const fixture=compact([-1,-1,-1],[5500,5500,5500],[[0,0,5],[1,0,5],[2,0,5]]);
+  fixture.projectIds=labels;fixture.nodeIds=labels.map(group=>`${group}-SYN-LABEL`);
+  fixture.nodes.forEach((node,i)=>{node[0]=i;});
+  fixture.countryCodes=['RUS'];fixture.countryCounts=[15];
+  await page.route('**/data/hras-index.json',route=>route.fulfill({json:fixture}));
+  await page.goto('/?lang=ru&countries=RUS&target=5500&window=0&min=0&presence=any');
+  await expect(page.locator('#result-body tr[data-result-role]')).toHaveCount(3);
+  for(const width of [390,761,1280,1440]){
+    await page.setViewportSize({width,height:1000});
+    for(const row of await page.locator('#result-body tr[data-result-role]').all()){
+      const label=await row.locator('.row-macro-label').boundingBox(),name=await row.locator('.table-branch-identity').boundingBox();
+      expect(label!.x+label!.width).toBeLessThanOrEqual(name!.x);
+      expect(await row.locator('.row-macro-label').evaluate(el=>el.scrollWidth-el.clientWidth)).toBeLessThanOrEqual(1);
+    }
+  }
+});
 const data = compact(groups.map(() => -1), groups.map(() => 5500),
   groups.flatMap((_, i) => [[i, 0, 5], [i, 1, 3]]));
 data.countryCodes = ['RUS', 'POL', 'FRA'];
@@ -88,9 +107,9 @@ for (const width of [390, 1440]) test(`hierarchy overrides broad and conflicting
   await page.goto('/?lang=ru&view=profile&clade=R-SYN-BROAD-B&countries=RUS,POL&min=0&presence=all');
   await expect(page.locator('.profile-project')).toHaveText('R1b');
   await page.goto('/?lang=ru&view=country-overview&country=RUS&countries=RUS,POL&min=0&presence=all');
-  await expect(page.locator('[data-country-macrogroup="R1b"] em')).toContainText('10');
-  await expect(page.locator('[data-country-macrogroup="R"] em')).toContainText('10');
-  expect(await page.locator('[data-country-macrogroup="R1b"] .country-distribution-track i')
+  await expect(page.locator('[data-research-group="R1b"] b')).toContainText('10');
+  await expect(page.locator('[data-research-group="R"] b')).toContainText('10');
+  expect(await page.locator('[data-research-group="R1b"] .research-macro-track i')
     .evaluate(e=>getComputedStyle(e).backgroundColor)).toBe('rgb(0, 190, 108)');
   expect(errors).toEqual([]);
 });

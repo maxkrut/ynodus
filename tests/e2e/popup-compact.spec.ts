@@ -123,8 +123,10 @@ for (const [width, height] of [[1440, 900], [1024, 600], [390, 844], [320, 600]]
       const url = page.url();
       await cell.focus();
       await expect(panel).toBeVisible();
-      await expect(panel.locator('.annotation-facts')).toContainText('1 000');
+      await expect(panel.locator('.annotation-facts').first()).toContainText('1 000');
       await fits(`${locale}/interval`);
+      await panel.locator('details > summary').click();
+      await fits(`${locale}/interval-parent-groups`);
       expect(page.url()).toBe(url);
       if (locale === 'ru') await page.screenshot({ path: `output/playwright/popup-interval-${width}.png` });
       await page.keyboard.press('Escape');

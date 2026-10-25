@@ -89,10 +89,23 @@ export function referenceQuery(data, query) {
   };
   const candidates = nodes.filter((n) => n.known && n.total > 0 && Math.abs(n.age - query.target) <= query.maxDeltaYbp);
   const { below, qualified } = rule(new Set(candidates.map(n => n.i)));
+  // Density has its own country pool in each interval, independent of Target/Hit.
+  const bins = query.densityIntervals ?? referenceDensityBins(data);
+  const bucket = node => {
+    const found = bins.findIndex(bin => node.age > bin.younger);
+    return found < 0 ? bins.length - 1 : found;
+  };
+  const endpoints = new Map();
+  for (const node of nodes) if (node.known && node.total > 0 && bins.length) {
+    const key = bucket(node);
+    if (!endpoints.has(key)) endpoints.set(key, new Set());
+    endpoints.get(key).add(node.i);
+  }
+  const densityRules = new Map([...endpoints].map(([key, ids]) => [key, rule(ids)]));
   const densityQualified = (node) => {
     let root = node;
     while (nodes[root.parent]?.known && nodes[root.parent].age === root.age) root = nodes[root.parent];
-    return qualified(root);
+    return densityRules.get(bucket(node))?.qualified(root) ?? false;
   };
   const groups = components(candidates.map((n) => n.i), (i) =>
     [nodes[i].parent, ...nodes[i].children].filter((j) => j >= 0 && nodes[j].age === nodes[i].age));
@@ -149,6 +162,21 @@ export function referenceQuery(data, query) {
     density: sorted(nodes.filter((n) => n.known && n.total > 0 && densityQualified(n)).map((n) => ({
       id: n.id, age: n.age, total: n.total, parent: nodes[n.parent]?.id ?? null,
     }))) };
+}
+
+// Independent fixed 300-unit grid, anchored at 10,000 BCE (11,949 YBP).
+// Explicit bins are also tested; no production grouping or country-pool helper is used.
+function referenceDensityBins(data) {
+  const maximum = Math.max(150000, ...data.nodes.map(node => node[2] ?? 0));
+  const end = 20000, seam = 11949, anchor = end - seam;
+  const edges = [0];
+  for (let point = anchor % 300; point < end; point += 300) if (point > 0) edges.push(point);
+  edges.push(end);
+  const age = point => {
+    const magnitude = end - point;
+    return magnitude <= seam ? magnitude : Math.round(seam * Math.exp((magnitude - seam) / (end - seam) * Math.log(maximum / seam)));
+  };
+  return edges.slice(0, -1).map((point, i) => ({ older: age(point), younger: age(edges[i + 1]) }));
 }
 
 export function referenceProfile(data, anchor) {

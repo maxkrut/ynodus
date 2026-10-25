@@ -8,6 +8,7 @@ import { groupDensityFormedLayers } from "./density-model";
 import type { TargetControlContext } from "./target-controls";
 import { densityIntervalIndex, type DensityInterval } from "./density-intervals";
 import { densityIntervalValue, densityValueLabel } from "./density-measure";
+import { densityParentGroups, type ParentDating } from "./density-parent-groups";
 
 type DensityMacroGroup = { count: number; group: string };
 type DensityBucketSummary = {
@@ -15,6 +16,7 @@ type DensityBucketSummary = {
   uniqueRows: DensityRow[];
   formedLayerCount: number;
   currentResultCount: number;
+  parentGroups: ParentDating[];
 };
 
 export function renderDensityBucketGrid(
@@ -30,9 +32,9 @@ export function renderDensityBucketGrid(
     buckets[bucket].push(row);
   }
 
-  const summaries = buckets.map(bucket => summarizeDensityBucket(bucket, currentResultIds));
+  const summaries = buckets.map(bucket => summarizeDensityBucket(bucket, currentResultIds, context.densityUnit === "parents"));
   const measure = context.densityMeasure ?? "count";
-  const values = summaries.map((summary, i) => densityIntervalValue(summary.uniqueRows.length, intervals[i], measure));
+  const values = summaries.map((summary, i) => densityIntervalValue(context.densityUnit === "parents" ? summary.parentGroups.length : summary.uniqueRows.length, intervals[i], measure));
   const maximum = Math.max(...values, 0) || 1;
   let formedLayerCount = 0;
   const html = summaries.map((summary, index) => {
@@ -67,12 +69,15 @@ export function renderDensityBucketGrid(
 function summarizeDensityBucket(
   rows: DensityRow[],
   currentResultIds: ReadonlySet<string>,
+  byParent: boolean,
 ): DensityBucketSummary {
   const uniqueRows = [...new Map(rows.map((row) => [row.node.id, row])).values()];
   const layers = groupDensityFormedLayers(uniqueRows, currentResultIds);
+  const parentGroups = densityParentGroups(uniqueRows);
   return {
-    macroGroups: densityBucketMacroGroups(uniqueRows),
+    macroGroups: densityBucketMacroGroups(byParent ? parentGroups.map(group => ({ node: { ...group.rows[0].node, macroGroup: group.macroGroup } })) : uniqueRows),
     uniqueRows,
+    parentGroups,
     formedLayerCount: layers.length,
     currentResultCount: layers.reduce((sum, layer) => sum + layer.currentResultCount, 0),
   };
@@ -99,11 +104,13 @@ function densityBucketTooltip(
   const parts = [
     ...densityBucketParameters(interval, context),
     `${context.t("densityBucketTotal")}: ${context.formatNumber(count)}`,
-    ...densityRateLine(interval, count, context),
+    `${context.t("densityParentGroups")}: ${context.formatNumber(summary.parentGroups.length)}`,
+    ...densityRateLine(interval, context.densityUnit === "parents" ? summary.parentGroups.length : count, context),
     `${context.t("densityFormedLayers")}: ${context.formatNumber(summary.formedLayerCount)}`,
     densityBucketMacroLine(summary.macroGroups, context),
     densityCountryLine(summary.uniqueRows, context),
     densityBucketMatchLine(summary.uniqueRows, context),
+    ...parentBreakdown(summary, context),
   ];
   if (summary.currentResultCount > 0) {
     parts.splice(5, 0, `${context.t("densityCurrentResults")}: ${context.formatNumber(summary.currentResultCount)}`);
@@ -120,7 +127,8 @@ function densityBucketAccessibleLabel(
   const parts = [
     ...densityBucketParameters(interval, context),
     `${context.t("densityBucketTotal")}: ${context.formatNumber(count)}`,
-    ...densityRateLine(interval, count, context),
+    `${context.t("densityParentGroups")}: ${context.formatNumber(summary.parentGroups.length)}`,
+    ...densityRateLine(interval, context.densityUnit === "parents" ? summary.parentGroups.length : count, context),
     `${context.t("densityFormedLayers")}: ${context.formatNumber(summary.formedLayerCount)}`,
     densityBucketMacroLine(summary.macroGroups, context),
     densityCountryLine(summary.uniqueRows, context),
@@ -136,7 +144,7 @@ function densityCountryLine(rows: DensityRow[], context: TargetControlContext): 
   return countries ? `${context.t("densityRequiredCountries")}: ${countries.join(", ")}` : "";
 }
 
-function densityBucketMacroGroups(rows: DensityRow[]): DensityMacroGroup[] {
+function densityBucketMacroGroups(rows: Pick<DensityRow, "node">[]): DensityMacroGroup[] {
   const counts = new Map<string, number>();
   for (const row of rows) {
     const group = nodeMacroGroup(row.node);
@@ -152,6 +160,15 @@ function densityRateLine(interval: DensityInterval, count: number, context: Targ
   const duration = interval.older - interval.younger;
   const rate = densityIntervalValue(count, interval, "per1000");
   return [`${context.t("densityRateValue")}: ${context.formatNumber(count)} ÷ ${context.formatNumber(duration)} × 1 000 = ${context.formatNumber(rate)}`];
+}
+
+function parentBreakdown(summary: DensityBucketSummary, context: TargetControlContext): string[] {
+  const known = summary.parentGroups.filter(group => group.parentId);
+  const unknown = summary.parentGroups.length - known.length;
+  return [
+    known.length ? `${context.t("densityParentLargest")}: ${known.slice(0, 3).map(group => `${group.parentId} (${context.formatNumber(group.formed)} YBP): ${group.rows.length}`).join("; ")}` : "",
+    unknown ? `${context.t("densityParentUnknown")}: ${context.formatNumber(unknown)}` : "",
+  ].filter(Boolean);
 }
 
 function densityBucketMacroLine(groups: DensityMacroGroup[], context: TargetControlContext): string {
@@ -189,7 +206,7 @@ function densityBucketParameters(
   context: TargetControlContext,
 ): string[] {
   return [
-    `${context.t("densityBucketRange")}: ${formatDensityCalendar(interval.older, context)} – ${formatDensityCalendar(interval.younger, context)}`,
+    `${context.t("densityBucketRange")}: ${formatDensityCalendar(interval.older, context)} - ${formatDensityCalendar(interval.younger, context)}`,
     `${context.t("densityDuration")}: ${context.t("densityYears").replace("{n}", context.formatNumber(interval.older - interval.younger))}`,
     `${context.t("densityScale")}: ${context.t(interval.mixed ? "densityMixed" : interval.logarithmic ? "densityLogarithmic" : "densityLinear")}`,
   ];

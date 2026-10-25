@@ -180,10 +180,13 @@ export function assertSameFormedTableGrouping(
     "one connected dated branch must render as one canonical table row");
   assert.equal([...markup.matchAll(/<td class="mockup-support">/g)].length, 1,
     "nested event support must not create additional table support cells");
-  assert.match(markup, /class="formed-branch-summary-text"/);
+  assert.match(markup, /data-result-composition data-tooltip-pin/);
+  assert.doesNotMatch(markup, /formed-branch-summary-text/);
   assert.doesNotMatch(markup, /data-open-formed-branch|<dialog class="formed-branch-dialog"/);
-  assert.match(markup, /3 descendant subclades · 3 age groups/,
-    "the compact branch text must count descendants and connected age groups, which need not have distinct ages");
+  assert.match(markup, /R-A and 3 descendant subclades: 4 subclades in total/);
+  assert.match(markup, /Connected groups sharing a Formed estimate: 3/,
+    "composition must count connected groups, which need not have distinct ages");
+  assert.match(markup, /Separate groups may have the same date/);
   const sameAgeMarkup = renderRows({
     rows: [{
       ...grouped,
@@ -194,8 +197,8 @@ export function assertSameFormedTableGrouping(
     tableRowLimit: 10,
     tableSort: { key: "formed", direction: "desc" },
   }, context);
-  assert.match(sameAgeMarkup, /1 descendant subclade with the upper subclade’s formation estimate/,
-    "a same-age group must say that the additional item is a descendant below the upper result");
+  assert.match(sameAgeMarkup, /R-A and 1 descendant subclade: 2 subclades in total/);
+  assert.match(sameAgeMarkup, /share one rounded Formed estimate/);
   assert.doesNotMatch(markup, /class="formed-branch-ledger formed-branch-tree"/,
     "the result row must stay compact while the full structure is shown in the profile");
   assert.match(markup, /data-open-result-detail="R-A"/,
@@ -233,7 +236,7 @@ export function assertSameFormedTableGrouping(
     tableRowLimit: 10,
     tableSort: { key: "formed", direction: "desc" },
   }, { ...context, locale: "ru", t: (key) => ru[key] });
-  assert.match(sharedDateMarkup, /30 субкладов-потомков с оценкой формирования верхнего субклада/,
+  assert.match(sharedDateMarkup, /30 субкладов ниже по дереву. Всего субкладов: 31/,
     "Russian one-date branch copy must count only descendants below the upper result and explain the shared estimate");
   const formedHead = renderTimeTableHead({ key: "total", direction: "desc" }, context);
   assert.equal([...formedHead.matchAll(/<th/g)].length, 6);

@@ -6,13 +6,15 @@ export async function assertHistoryNamespaceMigration() {
   const { parseHistoryRoute, writeRouteHistory } = await loadModule("app/research-history.ts");
   const { readNavigationSnapshot } = await loadModule("app/navigation-snapshot.ts");
   const saved = readNavigationSnapshot({ scroll: 120, time: { tableSort: { key: "total", direction: "desc" } },
-    tree: { country: "RUS", query: "R-SYN", opened: ["R-SYN-ROOT"], searchLimit: 40,
+    tree: { country: "RUS", query: "R-SYN", opened: ["R-SYN-ROOT"], macro: "R1a", browse: true, searchLimit: 40,
       closed: ["R-SYN-CHILD"], countries: ["RUS"], treeScrollLeft: 12, offset: 100 },
     branchTree: { anchor: "R-SYN-ROOT", mode: "tree", rows: 20, searchLimit: 40,
       opened: ["R-SYN-ROOT"], limits: [["R-SYN-ROOT", 40]], query: "R-SYN", treeScrollLeft: 24 },
     profileExplorer: { anchor: "R-SYN-ROOT", selected: "R-SYN-CHILD", mode: "tree", rows: 100,
       closed: ["R-SYN-CHILD"], countries: ["RUS"], query: "R-SYN", treeScrollLeft: 36, inspectorOpen: true } });
   assert.deepEqual(saved.tree.closed, ["R-SYN-CHILD"]);
+  assert.equal(saved.tree.macro, "R1a");
+  assert.equal(saved.tree.browse, true);
   assert.deepEqual(saved.tree.countries, ["RUS"]);
   assert.equal(saved.tree.offset, 100);
   assert.equal(saved.tree.treeScrollLeft, 12);
@@ -28,7 +30,8 @@ export async function assertHistoryNamespaceMigration() {
   for (const state of [saved.tree, saved.branchTree, saved.profileExplorer]) {
     assert.ok(!("mode" in state) && !("searchLimit" in state), "retired controls do not survive snapshot normalization");
   }
-  assert.ok(!("opened" in saved.tree) && !("rows" in saved.branchTree));
+  assert.deepEqual(saved.tree.opened, ["R-SYN-ROOT"], "compact trees preserve explicit expansion");
+  assert.ok(!("rows" in saved.branchTree));
   const route = { view: "profile", clade: "R-SYN-CHILD", detail: { mode: "crossing", countries: ["RUS"], parentId: "R-SYN-ROOT" } };
   const entry = { version: 1, owner: "synthetic-owner", index: 2, route,
     origin: { index: 1, route: { view: "time" } },

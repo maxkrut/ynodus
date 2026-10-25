@@ -251,7 +251,7 @@ export function createResultsController(options: ResultsControllerOptions) {
       }
       return t(mode === "crossing" ? "showingZeroCrossingResults" : "showingZeroResults");
     }
-    const base = `${t("showing")} 1–${formatNumber(Math.min(filteredTotal, limit))} ${t("of")} ${formatNumber(filteredTotal)}`;
+    const base = `${t("showing")} 1-${formatNumber(Math.min(filteredTotal, limit))} ${t("of")} ${formatNumber(filteredTotal)}`;
     return macroGroupForMode(mode)
       ? `${base} · ${formatNumber(total)} ${t("calculatedRows")}`
       : base;

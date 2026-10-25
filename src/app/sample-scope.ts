@@ -14,9 +14,10 @@ export function bindSampleScope(): void {
   let previousExportDisabled: boolean | undefined;
   const loadedScope = readSampleScope();
   select.value = loadedScope;
+  select.dataset.activeSampleScope = loadedScope;
   window.addEventListener("pageshow", () => {
     if (readSampleScope() !== loadedScope) { location.reload(); return; }
-    document.querySelectorAll<HTMLSelectElement>(selector).forEach(control => { control.value = loadedScope; control.disabled = false; });
+    document.querySelectorAll<HTMLSelectElement>(selector).forEach(control => { control.value = loadedScope; control.dataset.activeSampleScope = loadedScope; control.disabled = false; });
     const exportButton = document.querySelector<HTMLButtonElement>("#export-csv");
     if (exportButton && previousExportDisabled !== undefined) exportButton.disabled = previousExportDisabled;
   });

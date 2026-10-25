@@ -28,7 +28,7 @@ export const TIME_PERIOD_BANDS = [
 export function periodRange(period: TimePeriodBand, t: Translate, number: (value: number) => string = String): string {
   const year = (value: number) => `${number(Math.abs(value))} ${t(value < 0 ? "eraBceShort" : "eraCeShort")}`;
   if (period.startYear === null) return t("periodBefore").replace("{date}", year(period.endYear));
-  return `${year(period.startYear)} – ${year(period.endYear)}`;
+  return `${year(period.startYear)} - ${year(period.endYear)}`;
 }
 
 export function renderPeriodBandsMarkup(t: Translate): string {

@@ -4,10 +4,12 @@ import type { ProfileMatrixOptions } from "./profile-matrix";
 import { ancientNote, selectedAncient } from "./sample-scope";
 import { renderAnnotation } from "./annotation-markup";
 import { matrixCountPaint } from "./matrix-colours";
+import { nodeMacroGroup } from "../shared/haplogroups";
+import { activeCountryFilter } from "./research-display-state";
 
 export type EvidenceTableState = {
   countries?: string[]; opened?: string[]; closed?: string[]; limits?: Array<[string, number]>;
-  query?: string; selected?: string; offset?: number; pageSize?: number; branch?: boolean;
+  query?: string; searchClosed?: string[]; selected?: string; offset?: number; pageSize?: number; branch?: boolean; macro?: string;
 };
 type Entry = { node: EvidenceTreeNode; parent: Entry | null; depth: number; selected: number; eligible: boolean };
 const CHILDREN = 20;
@@ -22,8 +24,8 @@ export function renderEvidenceForestTable(profile: { roots: readonly EvidenceTre
   const forest = profile.anchorId === undefined;
   const allLabel = t(o.terminal?.() ? "matrixAllResultCountries" : "matrixAllCountries");
   const codes = [...profile.countryCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([code]) => code);
-  const selected = (state.countries ?? []).filter(code => profile.countryCounts.has(code));
-  const filtered = (state.countries?.length ?? 0) > 0 && selected.length < codes.length;
+  const selected = activeCountryFilter(state.countries, profile.countryCounts);
+  const filtered = selected.length > 0;
   const scope = filtered ? selected : codes;
   const opened = state.opened ? new Set(state.opened) : null, closed = new Set(state.closed), limits = new Map(state.limits);
   const needle = state.query?.trim().toLocaleUpperCase() ?? "";
@@ -33,12 +35,13 @@ export function renderEvidenceForestTable(profile: { roots: readonly EvidenceTre
     const { node, parent } = pending.pop()!;
     const count = filtered ? scope.reduce((sum, code) => sum + (node.countryCounts.get(code) ?? 0), 0) : node.total;
     const entry = { node, parent, depth: parent ? parent.depth + 1 : 0, selected: count,
-      eligible: count > 0 && (!needle || node.node.id.toLocaleUpperCase().includes(needle)) };
+      eligible: count > 0 && (!state.macro || nodeMacroGroup(node.node) === state.macro) && (!needle || node.node.id.toLocaleUpperCase().includes(needle)) };
     entries.push(entry); byId.set(node.node.id, entry);
     for (let i = node.children.length - 1; i >= 0; i--) pending.push({ node: node.children[i], parent: entry });
   }
-  if (needle) for (let i = entries.length - 1; i >= 0; i--) if (entries[i].eligible && entries[i].parent) entries[i].parent!.eligible = true;
-  const expanded = (entry: Entry) => !!needle || (opened ? opened.has(entry.node.node.id) : !closed.has(entry.node.node.id));
+  if (needle || state.macro) for (let i = entries.length - 1; i >= 0; i--) if (entries[i].eligible && entries[i].parent) entries[i].parent!.eligible = true;
+  const searchClosed = new Set(state.searchClosed);
+  const expanded = (entry: Entry) => needle ? !searchClosed.has(entry.node.node.id) : (opened ? opened.has(entry.node.node.id) : !closed.has(entry.node.node.id));
   const visible: Entry[] = [], childMore = new Map<string, number>();
   const queue = entries.filter(entry => !entry.parent).reverse();
   while (queue.length) {
@@ -78,7 +81,7 @@ export function renderEvidenceForestTable(profile: { roots: readonly EvidenceTre
   const countryCell = (entry: Entry, code: string) => {
     const value = entry.node.countryCounts.get(code) ?? 0;
     const ancient = showAncient && entry.node.ancientCountryCounts ? entry.node.ancientCountryCounts.get(code) ?? 0 : undefined;
-    const content = value ? `${n(value)}${compactAncient(ancient)}` : "–";
+    const content = value ? `${n(value)}${compactAncient(ancient)}` : "-";
     const description = `${o.countryName(code)} · ${entry.node.node.id} · ${n(value)}${ancient === undefined ? "" : ` · ${t("ancientSubset")} ${n(ancient)}`}`;
     const action = value && !o.terminal?.() ? `<button type="button" data-country-evidence="${h(code)}" data-country-evidence-anchor="${h(entry.node.node.id)}" aria-label="${h(description)}">${content}</button>` : content;
     const paint = matrixCountPaint(value,maximum);
@@ -95,7 +98,7 @@ export function renderEvidenceForestTable(profile: { roots: readonly EvidenceTre
       ? `<button type="button" data-country-evidence="${h(codes.find(code => scope.includes(code) && (node.countryCounts.get(code) ?? 0) > 0) ?? scope[0])}" data-country-evidence-anchor="${h(id)}" aria-label="${h(`${t("branchCountriesOpen")}: ${id}`)}">↗</button>`
       : `<button type="button" class="profile-node-open" data-open-profile-subclade="${h(id)}" aria-label="${h(t("profileOpenNode").replace("{id}", id))}">↗</button>`;
     const more = childMore.get(id);
-    return `<tr class="evidence-tree-node tree-sheet-row${tie ? " same-formed" : ""}${primary.has(entry) ? "" : " tree-context-row"}${id === state.selected ? " is-selected" : ""}" role="row" aria-level="${depth + 1}"${children ? ` aria-expanded="${open}"` : ""} data-tree-depth="${depth}" data-tree-parent="${h(parent?.node.node.id ?? "")}" data-branch-tree-node="${h(id)}" data-branch-tree-parent="${h(parent?.node.node.id ?? "")}" data-tree-node="${h(id)}"${forest ? ` data-country-tree-node="${h(id)}" data-country-tree-parent="${h(parent?.node.node.id ?? "")}"` : ""}>
+    return `<tr class="evidence-tree-node tree-sheet-row${tie ? " same-formed" : ""}${primary.has(entry) ? "" : " tree-context-row"}${state.macro && nodeMacroGroup(node.node) !== state.macro ? " tree-macro-context" : ""}${id === state.selected ? " is-selected" : ""}" role="row" aria-level="${depth + 1}"${children ? ` aria-expanded="${open}"` : ""} data-tree-depth="${depth}" data-tree-parent="${h(parent?.node.node.id ?? "")}" data-branch-tree-node="${h(id)}" data-branch-tree-parent="${h(parent?.node.node.id ?? "")}" data-tree-node="${h(id)}"${forest ? ` data-country-tree-node="${h(id)}" data-country-tree-parent="${h(parent?.node.node.id ?? "")}"` : ""}>
       <th scope="row" class="tree-node-col">${connectors(entry)}<div class="tree-sheet-identity" style="--tree-depth:${cleanTree ? depth : Math.min(depth, 10)}">${children ? `<button type="button" class="tree-sheet-toggle" data-evidence-tree-toggle="${h(id)}"${forest ? ` data-country-tree-toggle="${h(id)}"` : ""} aria-expanded="${open}" aria-label="${h(`${t(open ? "countryTreeCollapse" : "countryTreeExpand")}: ${id}`)}">${open ? "▾" : "▸"}</button>` : `<span class="tree-sheet-leaf" aria-hidden="true">${cleanTree ? "" : "·"}</span>`}<span class="profile-node-links">${inspect}${openLink}</span></div>${cleanTree ? "" : `<small class="tree-node-age-mobile">${node.node.formedKnown ? `~${h(o.formatCalendar(node.node.formed))}` : h(t("dateUnknown"))}</small>`}${!cleanTree && depth >= 10 && parent ? `<small class="tree-parent-label">${h(t("treeParent"))}: ${h(parent.node.node.id)}</small>` : ""}${!cleanTree && node.directTotal && node.children.length ? `<small class="tree-direct-label">${h(t("profileNodeDirect"))}: ${n(node.directTotal)}</small>` : ""}${more && open ? `<button class="tree-child-more" type="button" data-evidence-tree-more="${h(id)}" aria-label="${h(t("showMoreBranches"))} · ${n(Math.min(20, more))}">${cleanTree ? "…" : `${h(t("showMoreBranches"))} · ${n(Math.min(20, more))}`}</button>` : ""}</th>
       <td class="tree-age-col">${node.node.formedKnown ? `~${h(o.formatCalendar(node.node.formed))}` : h(t("dateUnknown"))}</td>
       ${codes.map(code => countryCell(entry, code)).join("")}
@@ -103,9 +106,11 @@ export function renderEvidenceForestTable(profile: { roots: readonly EvidenceTre
       <td class="tree-total-col"><strong data-branch-tree-all>${n(node.total)}</strong>${showAncient ? ancientNote(node.ancientTotal, t, n) : ""}</td></tr>`;
   };
   const progress = t("matrixTreeProgress").replace("{start}", n(visible.length ? offset + 1 : 0)).replace("{end}", n(Math.min(visible.length, offset + size))).replace("{total}", n(visible.length));
-  return `<div class="tree-sheet-toolbar"><p>${h(t("profileMatrixHint"))} ${renderAnnotation("sample-counts", t)}</p><span class="matrix-colour-legend"><i aria-hidden="true"></i>1…${n(maximum)} ${renderAnnotation("matrix-colours",t)}</span><div><span>${h(filtered ? scope.map(code => o.countryName(code)).join(", ") : allLabel)}</span>${filtered ? `<button type="button" class="small-button" data-tree-country-reset>${h(allLabel)}</button>` : ""}</div></div>
+  const scopeCount = entries.filter(entry => entry.eligible).length;
+  const contextAncestors = state.macro && entries.some(entry => entry.selected > 0 && nodeMacroGroup(entry.node.node) !== state.macro);
+  return `${contextAncestors ? `<p class="research-reading-note">${h(t("researchMacroContext"))}</p>` : ""}<div class="tree-sheet-toolbar"><p>${h(t("profileMatrixHint"))} ${renderAnnotation("sample-counts", t)}</p><span class="matrix-colour-legend"><i aria-hidden="true"></i>1…${n(maximum)} ${renderAnnotation("matrix-colours",t)}</span><div><span>${h(filtered ? scope.map(code => o.countryName(code)).join(", ") : allLabel)}</span>${filtered ? `<button type="button" class="small-button" data-tree-country-reset>${h(allLabel)}</button>` : ""}</div></div>
     <div class="profile-matrix-scroll tree-sheet-scroll" data-tree-offset="${offset}" tabindex="0" role="region" aria-label="${h(t("profileFullTree"))}"><table class="profile-matrix tree-sheet${cleanTree ? ` tree-sheet-clean${nodeWidth > 310 ? " tree-sheet-wide-tree" : ""}` : ""}${state.branch ? " branch-country-matrix" : ""} tree-sheet-matrix" role="treegrid" aria-label="${h(t("profileMatrixMode"))}" style="--tree-sheet-min:${nodeWidth + codes.length * 44 + (filtered || state.branch ? (cleanTree ? 110 : 90) : 0) + 200}px"><colgroup><col class="tree-node-width"><col class="tree-age-width">${codes.map(() => '<col class="tree-country-width">').join("")}${filtered || state.branch ? '<col class="tree-selected-width">' : ""}<col class="tree-total-width"></colgroup><thead><tr><th scope="col">${h(t("tableBranch"))}</th><th scope="col">${h(t("sourceFormationEstimate"))} ${renderAnnotation("source-age", t)}</th>${codes.map(countryHeader).join("")}${filtered || state.branch ? `<th scope="col">${h(t("branchCountriesSelectedColumn"))}</th>` : ""}<th scope="col">${h(t(forest ? "countryTreeTotal" : "branchCountriesAll"))}</th></tr></thead><tbody>${rows.map(row).join("") || `<tr><td colspan="${columns}">${h(t("countryTreeEmpty"))}</td></tr>`}</tbody></table></div>
-    <div class="profile-matrix-footer"><span class="evidence-tree-progress" role="status" tabindex="-1" data-evidence-progress="profile-tree">${h(progress)}</span><div><button type="button" class="small-button" data-evidence-tree-page="previous"${offset ? "" : " disabled"}>${h(t("matrixNodesPrevious"))}</button><button type="button" class="small-button" data-evidence-tree-page="next"${offset + size < visible.length ? "" : " disabled"}>${h(t("matrixNodesNext"))}</button></div></div>`;
+    <div class="profile-matrix-footer"><span class="evidence-tree-progress" role="status" tabindex="-1" data-evidence-progress="profile-tree">${h(progress)}${scopeCount > visible.length ? ` · ${h(t("researchScopeNodes").replace("{count}",n(scopeCount)))}` : ""}</span><div><button type="button" class="small-button" data-evidence-tree-page="previous"${offset ? "" : " disabled"}>${h(t("matrixNodesPrevious"))}</button><button type="button" class="small-button" data-evidence-tree-page="next"${offset + size < visible.length ? "" : " disabled"}>${h(t("matrixNodesNext"))}</button></div></div>`;
 }
 
 export function bindEvidenceTreeKeys(root: HTMLElement): void {

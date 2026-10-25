@@ -8,7 +8,9 @@ import { countryTreeCopy } from "./country-tree";
 import { annotationCopy } from "./annotations";
 import { navigationCopy } from "./navigation";
 import { resultCountriesCopy } from "./result-countries";
+import { researchReadingCopy } from "./research-reading";
 export const en = {
+  ...researchReadingCopy.en,
   "presetAbout": "About this set",
   "presetInfoClose": "Close set description",
   "presetPeriod": "Approximate dates",
@@ -111,9 +113,6 @@ export const en = {
   "tablePath": "Path",
   "tablePathDirection": "ancestor → result",
   "sourceDateInversion": "source dates inverted",
-  "formationDateCountOne": "age group",
-  "formationDateCountFew": "age groups",
-  "formationDateCountMany": "age groups",
   "macroGroupFilter": "Macrogroup",
   "formedMacroGroupFilter": "Macrogroup in matching branches",
   "crossingMacroGroupFilter": "Macrogroup in transitions",

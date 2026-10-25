@@ -8,6 +8,7 @@ import {
 import { assessUpstreamChange } from "./check-upstream-version.mjs";
 import "./test-data-snapshot.mjs";
 import "./test-runtime-format-migration.mjs";
+import "./test-merge-metadata.mjs";
 
 const local = {
   treeVersion: "v14.03.00",

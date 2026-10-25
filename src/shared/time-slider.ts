@@ -34,11 +34,10 @@ export function sliderRangeMax(fullRange: boolean): number {
   return fullRange ? FULL_RANGE_SLIDER_MAX : DEFAULT_SLIDER_MAX_YBP;
 }
 
-export function fullRangeMaxYbp(maxFormedYbp = 0, extraYbp = 0): number {
+export function fullRangeMaxYbp(maxFormedYbp = 0): number {
   return Math.max(
     DEFAULT_FULL_RANGE_MAX_YBP,
     maxFormedYbp,
-    Math.max(0, extraYbp),
   );
 }
 
@@ -60,8 +59,8 @@ function sliderPercent(ybp: number, sliderMax: number, scale: TimeSliderScale): 
 }
 
 function ybpToSliderMagnitude(ybp: number, scale: TimeSliderScale, rounded = true): number {
-  if (!scale.fullRange || ybp <= LOG_RANGE_START_YBP) return Math.max(0, ybp);
-  const maxYbp = fullRangeMaxYbp(scale.maxFormedYbp, ybp);
+  if (!scale.fullRange || ybp <= LOG_RANGE_START_YBP) return Math.max(0, Math.min(sliderRangeMax(scale.fullRange), ybp));
+  const maxYbp = fullRangeMaxYbp(scale.maxFormedYbp);
   const capped = Math.min(maxYbp, ybp);
   const progress =
     Math.log(capped / LOG_RANGE_START_YBP) /
@@ -71,7 +70,7 @@ function ybpToSliderMagnitude(ybp: number, scale: TimeSliderScale, rounded = tru
 }
 
 function sliderMagnitudeToYbp(sliderMagnitude: number, scale: TimeSliderScale): number {
-  const value = Math.max(0, sliderMagnitude);
+  const value = Math.max(0, Math.min(sliderRangeMax(scale.fullRange), sliderMagnitude));
   if (!scale.fullRange || value <= LOG_RANGE_START_YBP) return value;
   const maxYbp = fullRangeMaxYbp(scale.maxFormedYbp);
   const progress =

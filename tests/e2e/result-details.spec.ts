@@ -40,8 +40,7 @@ for (const width of [390, 1440]) test(`terminal result details preserve scope an
   await expect(content.locator('#profile-sample-scope')).toBeDisabled();
   await expect(content.locator('#profile-country-filter option')).toHaveCount(2);
   await content.locator('#profile-country-filter').selectOption('RUS');
-  await expect(content.locator('[data-profile-country-reset]')).toBeEnabled();
-  await content.locator('[data-profile-country-reset]').click();
+  await expect(content.locator('#profile-country-filter')).toHaveValue('');
   await expect(content.locator('[data-profile-country-reset]')).toBeDisabled();
   await expect(content.locator('.tree-direct-label, .same-formed-marker')).toHaveCount(0);
   await expect(content.locator('.profile-scope-note')).toHaveCount(0);
@@ -57,6 +56,7 @@ for (const width of [390, 1440]) test(`terminal result details preserve scope an
   await expect(content.locator('[data-open-profile-subclade], [data-country-evidence], [data-search-profile-formed], a')).toHaveCount(0);
   await expect(content.locator('[data-profile-select="R-SYN-B"]')).toHaveCount(0);
   const url = page.url();
+    await content.locator('[data-evidence-tree-toggle="R-SYN-A"]').click();
   await content.locator('[data-profile-select="R-SYN-A1"]').click();
   await expect(page).toHaveURL(url);
   await expect(content.locator('.profile-selected-summary h3')).toHaveText('R-SYN-A1');

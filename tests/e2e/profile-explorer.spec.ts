@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { branchCountriesFixture, branchCountriesLargeFixture } from '../fixtures/branch-countries.mjs';
 import { layoutFixture } from '../fixtures/layout.mjs';
 import { expectReadableText, measureTextStates } from './contrast-support';
+import {allResearchLevels} from './research-test-actions';
 
 for (const lang of ['ru', 'en']) test(`retired presentation fields preserve the current matrix after reload in ${lang}`, async ({page}) => {
   await page.setViewportSize({width:390,height:1000});
@@ -47,6 +48,7 @@ for (const width of [390,768,1440]) test(`profile explorer selection, flags, hie
   await expect(root.locator('[data-profile-tree-view]')).toBeVisible();
   await expect(root.locator('.matrix-country-heading .fi')).toHaveCount(3);
   const table = root.locator('.profile-matrix');
+  await allResearchLevels(page);
   await expect(table.locator('tbody tr')).toHaveCount(5);
   // Root and descendants are nested. The root alone carries the whole-branch total.
   expect(await table.locator('tbody [data-branch-tree-all]').allTextContents()).toEqual(['20','10','3','8','7']);

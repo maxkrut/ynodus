@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { layoutFixture } from '../fixtures/layout.mjs';
 import { branchCountriesFixture } from '../fixtures/branch-countries.mjs';
 import { compact } from '../../scripts/semantic-audit/fixtures.mjs';
+import { allResearchLevels } from './research-test-actions';
 
 async function openResult(page: Page, data: ReturnType<typeof layoutFixture>, target: number, id: string) {
   await page.route('**/data/hras-index.json', route => route.fulfill({ json: data }));
@@ -115,6 +116,7 @@ test('detail filters describe the active subset and never inspect an excluded no
   const total = root.locator('[data-profile-scope-total]');
   const select = root.locator('[data-profile-country-filter]');
   const inspector = root.locator('[data-profile-inspector]');
+  await allResearchLevels(page);
   await root.locator('[data-profile-select="R-SYN-B1"]').click();
   await expect(inspector.locator('h3').first()).toHaveText('R-SYN-B1');
   await root.locator('[data-profile-country="RUS"]').click();
@@ -132,7 +134,9 @@ test('detail filters describe the active subset and never inspect an excluded no
   await expect(select.locator('option:checked')).not.toHaveText('All countries');
   await root.locator('[data-profile-country="FRA"]').click();
   await expect(total).toHaveText('20');
-  await expect(root.locator('.matrix-country-heading[aria-pressed="true"]')).toHaveCount(3);
+  await expect(root.locator('.matrix-country-heading[aria-pressed="true"]')).toHaveCount(0);
+  await expect(select).toHaveValue('');
+  await expect(root.locator('[data-profile-country-reset]')).toBeDisabled();
   await root.locator('[data-profile-country="RUS"]').click();
   await expect(total).toHaveText('13');
   await expect(root.locator('[data-profile-country="RUS"]')).toHaveAttribute('aria-pressed', 'false');

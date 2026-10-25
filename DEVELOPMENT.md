@@ -79,6 +79,13 @@ npm run data -- --migrate-format
 - `--migrate-format` is a namespace-only migration of an existing version-3 index:
   change only `format`, without fetching data or claiming a new snapshot. Source
   versions, timestamps, provenance, hierarchy and sample counts remain unchanged.
+- `merge.formed` separates selected reference/HRAS values into known positive
+  ages and unknown values; `missing` means neither source supplied a value and
+  is included in the overall `unknown` count. `comparison` covers shared nodes,
+  including unknown reference ages with known HRAS ages and those left unknown
+  after merging. These counters replace `referenceTimingUsed`/`hrasTimingFallback`.
+  Selection remains reference-first for non-null values: zero stays unknown;
+  null/missing values permit HRAS fallback. The counters never change that rule.
 
 Ancient membership is read during generation, then reduced to aggregate counts.
 Only country-coded HRAS/YSEQ records are country evidence. Never store names,

@@ -8,11 +8,12 @@ import { routeFromUrl } from "./research-history";
 import { translate } from "./i18n";
 import { availablePresetCountries, sameCountrySelection } from "./query-model";
 import type { Locale } from "../shared/types";
+import { correctWorkspaceLink } from "./workspace-link-validation";
 
 /** Public query settings only; never sample identities or worker result payloads. */
 export function createWorkspaceUrl(state: AppState, startupLocale?: Locale) {
   let ready = false;
-  let invalidLink = false;
+  let invalidLink = correctWorkspaceLink();
   const initialRoute = routeFromUrl(new URL(location.href));
   state.researchView = initialRoute.view;
   const initialTarget = readSettings();
@@ -27,6 +28,7 @@ export function createWorkspaceUrl(state: AppState, startupLocale?: Locale) {
     return Number(raw);
   }
   function readSettings(restoreLocale = true): number {
+    invalidLink = correctWorkspaceLink() || invalidLink;
     const params = new URL(location.href).searchParams;
     const defaults = createInitialState();
     const lang = params.get("lang");
@@ -66,6 +68,7 @@ export function createWorkspaceUrl(state: AppState, startupLocale?: Locale) {
   function validateCountries(): void {
     if (!state.index) return;
     const available = state.index.countries;
+    invalidLink = correctWorkspaceLink(available) || invalidLink;
     for (const code of state.selectedCountries) {
       if (!available.has(code)) { state.selectedCountries.delete(code); invalidLink = true; }
     }

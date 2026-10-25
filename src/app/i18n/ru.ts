@@ -8,8 +8,10 @@ import { countryTreeCopy } from "./country-tree";
 import { annotationCopy } from "./annotations";
 import { navigationCopy } from "./navigation";
 import { resultCountriesCopy } from "./result-countries";
+import { researchReadingCopy } from "./research-reading";
 import type { LocaleMessages } from "./en";
 export const ru = {
+  ...researchReadingCopy.ru,
   "presetAbout": "О наборе",
   "presetInfoClose": "Закрыть описание набора",
   "presetPeriod": "Примерная датировка",
@@ -112,9 +114,6 @@ export const ru = {
   "tablePath": "Путь",
   "tablePathDirection": "предок → субклад",
   "sourceDateInversion": "необычный порядок оценок в источнике",
-  "formationDateCountOne": "группа по времени",
-  "formationDateCountFew": "группы по времени",
-  "formationDateCountMany": "групп по времени",
   "macroGroupFilter": "Макрогруппа",
   "formedMacroGroupFilter": "Макрогруппа в найденных ветвях",
   "crossingMacroGroupFilter": "Макрогруппа в переходах",

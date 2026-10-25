@@ -20,7 +20,7 @@ for (const width of [390, 1440, 2560]) {
     await page.locator("#density-anchor").selectOption("target");
     await page.locator("#density-sync").check();
     const focus = page.locator("button.density-focused-interval");
-    await expect(focus).toHaveAttribute("data-tooltip", /14.?128 до н. э. – 12.?437 до н. э./);
+    await expect(focus).toHaveAttribute("data-tooltip", /14.?128 до н. э. - 12.?437 до н. э./);
     await expect(focus).toHaveAttribute("data-tooltip", /Длительность: 1.?691 лет/);
     await expect(focus).toHaveAttribute("data-tooltip", /Субкладов: 5/);
     // The wider log column includes context outside the exact inclusive ±150 search.

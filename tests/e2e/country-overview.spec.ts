@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import {countryForestFixture} from "../fixtures/layout.mjs";
+import {allResearchLevels} from './research-test-actions';
 
 async function ready(page: Page) {
   await page.route('**/data/hras-index.json',route=>route.fulfill({json:countryForestFixture()}));
@@ -17,7 +18,7 @@ test("whole-country overview is disjoint, restorable and distinct from branch ev
   await expect(page.locator("#country-overview-content h3").first()).toContainText("RUS");
 
   const total = numberOf(await page.locator("#country-overview-content .country-overview-total > strong").innerText());
-  const groupTotals = await page.locator("#country-overview-content .country-overview-groups em")
+  const groupTotals = await page.locator("#country-overview-content [data-research-group] b")
     .allTextContents();
   expect(groupTotals.reduce((sum, value) => sum + numberOf(value), 0)).toBe(total);
   await expect(page).toHaveURL(/view=country-overview/);
@@ -25,6 +26,7 @@ test("whole-country overview is disjoint, restorable and distinct from branch ev
 
   await page.reload();
   await expect(page.locator("#country-overview-content h3").first()).toContainText("RUS", { timeout: 20_000 });
+  await allResearchLevels(page);
   await page.locator("#country-overview-content .tree-sheet [data-country-evidence][data-country-evidence-anchor]").first().click();
   await expect(page.locator("#country-evidence-workspace")).toBeVisible();
   await expect(page.locator("#country-evidence-content .country-evidence-identity")).toContainText("RUS");
@@ -42,6 +44,7 @@ test("large profile tree is progressive and inactive research DOM is released", 
   await page.goto('/?lang=ru&view=profile&clade=R-SYN-ROOT');
   await expect(page.locator('.profile-compact-header h3')).toHaveText('R-SYN-ROOT');
   const nodes=page.locator('#profile-content [data-tree-node]');
+  await allResearchLevels(page);
   await expect(nodes).toHaveCount(22);
   await page.locator('[data-evidence-tree-more="R-SYN-BRANCH"]').click();
   await expect(nodes).toHaveCount(42);

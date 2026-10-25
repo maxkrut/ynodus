@@ -24,7 +24,7 @@ export type ResearchMarkupOptions = {
 
 export type ResearchMarkup = {
   profile: (profile: SubcladeProfile) => string;
-  profileInspector: (node: EvidenceTreeNode, isRoot: boolean) => string;
+  profileInspector: (node: EvidenceTreeNode, isRoot: boolean, countryScope?: boolean) => string;
   countryEvidence: (evidence: CountryEvidence, profile?: SubcladeProfile | null, countries?: string[]) => string;
   countryOverview: (overview: CountryOverview) => string;
   loading: () => string;

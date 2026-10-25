@@ -1,7 +1,7 @@
 {
   "key": "arch-bmac",
   "label": {
-    "en": "Bactria–Margiana (BMAC)",
+    "en": "Bactria-Margiana (BMAC)",
     "ru": "Бактрия - Маргиана (БМАК)"
   },
   "category": {
@@ -17,8 +17,8 @@
   ],
   "guide": {
     "period": {
-      "ru": "Около 2300–1800 до н. э. в приведённом исследовании; датировки комплекса и его поздних фаз различаются.",
-      "en": "C. 2300–1800 BCE in the cited study; chronologies of the complex and its later phases differ."
+      "ru": "Около 2300-1800 до н. э. в приведённом исследовании; датировки комплекса и его поздних фаз различаются.",
+      "en": "C. 2300-1800 BCE in the cited study; chronologies of the complex and its later phases differ."
     },
     "region": {
       "ru": "Оазисы юга Средней Азии, прежде всего Маргиана и Бактрия: части Туркменистана, Узбекистана и севера Афганистана.",
@@ -34,7 +34,7 @@
         "url": "https://www.nature.com/articles/s41586-021-04052-7"
       },
       {
-        "title": "The Met - Central and North Asia, 2000–1000 BCE",
+        "title": "The Met - Central and North Asia, 2000-1000 BCE",
         "url": "https://www.metmuseum.org/toah/ht/03/nc.html"
       }
     ]

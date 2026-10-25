@@ -30,6 +30,7 @@
 @import "./workbench/tree-sheet.css";
 @import "./workbench/profile-compact.css";
 @import "./workbench/country-comparison.css";
+@import "./workbench/research-reading.css";
 
 /* The complete header component follows shared and workspace styles. */
 @import "./workbench/header.css";
