@@ -94,17 +94,21 @@ test("audit: era switch keeps separate BCE and CE drafts", async ({ page }) => {
 test("audit: density bucket click directly changes the target and slider", async ({ page }) => {
   test.setTimeout(60_000);
   await start(page);
+  await settled(page);
   const year = page.locator("#target-year");
   const initial = await year.inputValue();
   const slider = page.locator("#target-slider"), initialSlider = await slider.inputValue();
   const bucket = page.locator("#target-density button.density-cell").first();
-  await bucket.click();
   await expect(bucket).toHaveAttribute("aria-label", /Range:.*Duration:/);
   await expect(bucket).not.toHaveAttribute("title", /./);
-  expect((await bucket.boundingBox())!.height).toBeGreaterThanOrEqual(32);
+  // Check the hit target before clicking: a new query can replace the density grid.
+  await expect.poll(async () => (await bucket.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(32);
+  const target = await bucket.getAttribute("data-target-ybp");
+  await bucket.click();
   await expect(year).not.toHaveValue(initial);
   await expect(slider).not.toHaveValue(initialSlider);
   await settled(page);
+  await expect.poll(() => new URL(page.url()).searchParams.get("target")).toBe(target);
 });
 
 test("audit: CSV records the committed window and independent source provenance", async ({ page }) => {

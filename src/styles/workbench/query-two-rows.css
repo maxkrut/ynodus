@@ -62,8 +62,14 @@
   .query-zone .query-chart-step { border-left: 0; padding-left: 0; }
   .query-presence-switch [data-presence] { white-space: normal; line-height: 1.2; padding: 3px 5px; text-align: center; }
 }
-@media(max-width:760px) {
+/* Narrow tablet columns can wrap the switch caption; keep all controls aligned. */
+@media(max-width:980px) {
   .query-zone { --query-control-height: calc(45px / var(--content-scale)); }
+}
+@media(min-width:761px) and (max-width:980px) {
+  .query-zone .query-parameters { grid-template-columns: repeat(3, minmax(0, 1fr)) repeat(2, minmax(0, 1.2fr)); }
+}
+@media(max-width:760px) {
   .query-zone .query-parameters { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 12px; }
   .query-zone .query-panel-block { padding-inline: 12px; }
   .query-zone :is(.query-scope-row, .sample-scope-control, .query-time-group, #query-crossing-control) {

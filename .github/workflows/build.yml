@@ -70,12 +70,15 @@ jobs:
         run: |
           if [ "$BROWSER_SUITE" = "layout" ]; then
             npx playwright test \
+              tests/e2e/annotations.spec.ts tests/e2e/audit-query.spec.ts \
               tests/e2e/audit-round2-alignment.spec.ts tests/e2e/full-audit-regressions.spec.ts \
               tests/e2e/header-query-reading.spec.ts tests/e2e/period-labels.spec.ts \
               tests/e2e/compact-locale.spec.ts tests/e2e/layout-reading.spec.ts \
               tests/e2e/ledger-layout.spec.ts tests/e2e/production-geometry.spec.ts \
-              tests/e2e/setting-switches.spec.ts \
-              --grep 'BR-209|BR-210|mobile provenance text|header explanations|complete epoch names|source relationship|source facts|source columns|critical breakpoints|labelled settings switches'
+              tests/e2e/setting-switches.spec.ts tests/e2e/content-density.spec.ts \
+              tests/e2e/query-panel-layout.spec.ts tests/e2e/production-workflows.spec.ts \
+              tests/e2e/density-focus.spec.ts tests/e2e/density-drag.spec.ts \
+              tests/e2e/audit-visual.spec.ts
           else
             npm run test:e2e
           fi

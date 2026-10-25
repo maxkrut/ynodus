@@ -182,6 +182,7 @@
   .provenance-date time[datetime] { min-width: 0; white-space: normal; }
   .provenance-date { gap: 3px; }
   .provenance-links { grid-template-columns: subgrid; }
+  .provenance-links .provenance-repository { white-space: normal; overflow-wrap: anywhere; }
 }
 @media (max-width: 389px) {
   .provenance-repository { grid-column: 1 / -1; }
