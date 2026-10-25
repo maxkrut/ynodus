@@ -20,7 +20,6 @@ export const DEFAULT_MAX_DELTA_YBP = 300;
 export const MAX_QUERY_YBP = 999_999;
 export const DEFAULT_TARGET_YEAR = 3500;
 export const DEFAULT_TARGET_ERA = "BCE" as "BCE" | "CE";
-export const DEFAULT_PRESET_KEY = "slavic";
 export const DEFAULT_MIN_RESULT_SAMPLES = 5;
 export const WORKER_REQUEST_TIMEOUT_MS = 60_000;
 export const ANALYSIS_DEBOUNCE_MS = 120;

@@ -1,3 +1,4 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { expect, test } from "@playwright/test";
 import {
   fillMinResultSamples,
@@ -5,7 +6,7 @@ import {
 
 test("mobile empty and load-error states keep recovery actions readable and tappable", async ({ page }) => {
   await page.setViewportSize({ width: 340, height: 844 });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
   await page.locator("#locale-switcher").selectOption("ru");
   await fillMinResultSamples(page, "100000");
@@ -36,7 +37,7 @@ test("mobile empty and load-error states keep recovery actions readable and tapp
       body: "<!doctype html><title>fallback</title>",
     });
   });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await page.locator("#locale-switcher").selectOption("ru");
   const retry = page.locator("[data-retry-load]");
   await expect(retry).toBeVisible();
@@ -59,7 +60,7 @@ test("populated subclade profiles remain readable at compact and boundary widths
 
   for (const width of [340, 390, 640, 760, 761, 981]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/");
+    await page.goto(populatedTimeUrl);
     await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
     await page.locator("#locale-switcher").selectOption("ru");
     await page.locator('.research-entrypoints [data-research-view="profile"]').click();
@@ -153,7 +154,7 @@ test("large country selections stay compact, aligned and operable across picker 
 
   for (const width of [340, 760, 761, 981]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/");
+    await page.goto(populatedTimeUrl);
     await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
     await page.locator("#locale-switcher").selectOption("ru");
     await page.locator("#selection-panel-toggle").click();

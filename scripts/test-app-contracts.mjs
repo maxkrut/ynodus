@@ -33,7 +33,6 @@ try {
       },
     ];
     export const COUNTRY_PRESET_MAP = new Map(COUNTRY_PRESETS.map((preset) => [preset.key, preset]));
-    export const DEFAULT_PRESET_COUNTRIES = [];
   `);
 
   await assertHistoryNamespaceMigration();

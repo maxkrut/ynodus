@@ -1,3 +1,4 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import fs from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { compact } from "../../scripts/semantic-audit/fixtures.mjs";
@@ -46,7 +47,7 @@ test("audit fixes: minimum samples is explained, applied, and exported consisten
 test("audit fixes: expanded selections and the source header stay bounded", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const snapshotResponse = page.waitForResponse("**/data/hras-index.json");
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   const snapshot = await (await snapshotResponse).json();
   await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
   await page.locator("#locale-switcher").selectOption("ru");

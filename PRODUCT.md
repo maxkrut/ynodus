@@ -23,6 +23,9 @@ control rather than repeating a large generic disclaimer.
 
 ## 2. Evidence and country rules
 
+- A fresh time-search entry has no selected countries or preset. Show the country
+  selection prompt and keep results/export empty until the user chooses a scope.
+  Explicit URL countries and restored navigation keep their chosen scope.
 - All / Modern / Ancient is a shared sample scope, persisted as URL `samples`.
   Ancient records are matched to HRAS's separate ancient list during generation;
   only aggregate counts survive. Modern means unmarked in that list, not a tested

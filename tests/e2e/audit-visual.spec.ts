@@ -1,9 +1,10 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { checkSourceExplanations } from "./production-smoke-support";
 import { expect, test, type Page } from "@playwright/test";
 import { revealPreset } from "./preset-support";
 
 async function start(page: Page) {
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#result-body tr[data-result-role]").first()).toBeVisible({ timeout: 20_000 });
 }
 
@@ -85,7 +86,7 @@ test("audit: mobile country preview and log boundary stay visible in both langua
 
 test("audit: loading provenance does not overlap adjacent links", async ({ page }) => {
   await page.route("**/data/hras-index.json", () => {});
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await checkSourceExplanations(page);
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 900 });

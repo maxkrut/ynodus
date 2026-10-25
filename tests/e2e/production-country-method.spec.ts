@@ -1,8 +1,9 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { expect, test } from "@playwright/test";
 
 test("small portrait and landscape keep the country methodology reachable", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 844 });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
   await page.locator("#locale-switcher").selectOption("ru");
 

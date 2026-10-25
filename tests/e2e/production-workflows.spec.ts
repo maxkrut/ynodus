@@ -1,3 +1,4 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { expect, test } from "@playwright/test";
 import {
   setCrossingEnabled,
@@ -12,7 +13,7 @@ test("ordinary time, country and profile workflows do not emit browser errors", 
   page.on("pageerror", (error) => browserErrors.push(error.message));
 
   await page.setViewportSize({ width: 430, height: 900 });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
   await page.locator("#locale-switcher").selectOption("en");
   await setPresenceMode(page, "all");
@@ -32,7 +33,7 @@ test("ordinary time, country and profile workflows do not emit browser errors", 
 
 test("WCAG text spacing keeps the time, country and profile workspaces inside the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#results tbody tr[data-result-role]").first()).toBeVisible({ timeout: 20_000 });
   await page.locator("#locale-switcher").selectOption("ru");
   await page.addStyleTag({
@@ -77,7 +78,7 @@ test("forced colors preserves selected presence, optional Crossing and keyboard 
   });
   const page = await context.newPage();
   try {
-    await page.goto("/");
+    await page.goto(populatedTimeUrl);
     await expect(page.locator("#results tbody tr[data-result-role]").first()).toBeVisible({ timeout: 20_000 });
     await setCrossingEnabled(page, true);
     await expect(page.locator("#crossing-results-section")).toBeVisible({ timeout: 20_000 });
@@ -122,7 +123,7 @@ test("forced colors preserves selected presence, optional Crossing and keyboard 
 
 test("reduced motion removes nonessential transition time", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
   const motion = await page.evaluate(() => {
     const control = document.querySelector<HTMLElement>(".research-entrypoints button")!;

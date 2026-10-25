@@ -17,11 +17,9 @@ import type { ResultDetailScope } from "./research-history";
 import {
   DEFAULT_LOCALE,
   DEFAULT_MAX_DELTA_YBP,
-  DEFAULT_PRESET_KEY,
   DEFAULT_MIN_RESULT_SAMPLES,
   TABLE_INITIAL_ROW_LIMIT,
 } from "./constants";
-import { COUNTRY_PRESET_MAP, DEFAULT_PRESET_COUNTRIES } from "./presets";
 
 export type AppState = {
   index: TreeIndex | null;
@@ -98,7 +96,7 @@ export function createInitialState(): AppState {
     index: null,
     loading: false,
     locale: DEFAULT_LOCALE,
-    selectedCountries: new Set<string>(DEFAULT_PRESET_COUNTRIES),
+    selectedCountries: new Set<string>(),
     countryFilter: "",
     minResultSamples: DEFAULT_MIN_RESULT_SAMPLES,
     presenceMode: DEFAULT_PRESENCE_MODE,
@@ -106,7 +104,7 @@ export function createInitialState(): AppState {
     countryParticipation: null,
     includeCrossing: false,
     maxDeltaYbp: DEFAULT_MAX_DELTA_YBP,
-    activePreset: COUNTRY_PRESET_MAP.has(DEFAULT_PRESET_KEY) ? DEFAULT_PRESET_KEY : null,
+    activePreset: null,
     researchView: "time",
     profile: null,
     resultDetail: null,

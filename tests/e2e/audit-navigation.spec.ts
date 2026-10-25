@@ -1,3 +1,4 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { expect, test, type Page } from "@playwright/test";
 
 async function ready(page: Page) {
@@ -11,7 +12,7 @@ async function lookup(page: Page, clade: string) {
 }
 
 test("audit: reload and direct profile/country links preserve query, language and route", async ({ page, context }) => {
-  await page.goto("/"); await ready(page);
+  await page.goto(populatedTimeUrl); await ready(page);
   await page.locator("#locale-switcher").selectOption("en");
   await page.locator("#target-year").fill("5000");
   await page.locator("#max-delta-ybp").fill("500");

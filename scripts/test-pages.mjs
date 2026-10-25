@@ -73,6 +73,10 @@ async function checkBrowser(browser, base, width) {
   try {
     // First load the real snapshot through the built Worker, without screenshots.
     await page.goto(base);
+    await expect(page.locator(".empty-title")).toHaveText("Select at least one country.");
+    await expect(page.locator("#export-csv")).toBeDisabled();
+    await expect(page.locator("#result-body tr[data-result-role]")).toHaveCount(0);
+    await page.goto(base + "?countries=RUS,SRB&presence=any");
     await expect(page.locator("#export-csv")).toBeEnabled({ timeout: 30_000 });
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     assert.ok(await page.locator("#result-body tr[data-result-role]").count());

@@ -1,9 +1,10 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { expect, test } from "@playwright/test";
 
 test("source columns and result transition remain readable across locales and widths", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#results")).toBeVisible({ timeout: 20000 });
   for (const width of [1920, 1440, 1280, 1050, 768, 390]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });

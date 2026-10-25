@@ -61,6 +61,7 @@ export function createResearchNavigation(options: Options) {
   let entry: Entry = typeof history !== "undefined" ? readEntry(history.state, options.initial) ?? fresh(options.initial) : fresh(options.initial);
   let generation = 0;
   let pending = true;
+  let startupPending = true;
   let restoring = false;
   const visited = new Map<string, NavigationSnapshot>();
   const routes = new Map<string, ResearchHistoryRoute>();
@@ -90,6 +91,7 @@ export function createResearchNavigation(options: Options) {
     window.addEventListener("popstate", async event => {
       const route = parseHistoryRoute(event.state);
       if (!route) return;
+      startupPending = false;
       const token = ++generation;
       // popstate fires after history moved: retain the departed UI in memory for Forward.
       remember();
@@ -119,6 +121,7 @@ export function createResearchNavigation(options: Options) {
     });
   }
   function commit(target: Workspace, mode: "push" | "replace") {
+    startupPending = false;
     generation += 1;
     restoring = false;
     const nextIndex = mode === "push" ? entry.index + 1 : entry.index;
@@ -194,11 +197,16 @@ export function createResearchNavigation(options: Options) {
   function flush() {
     if (!pending || restoring || !options.ready()) return;
     pending = false;
+    // Loading must not override focus the user already chose on the initial page.
+    const preserveStartupFocus = startupPending && !!document.activeElement && document.activeElement !== document.body;
+    startupPending = false;
     const token = generation, route = entry.route, snapshot = entry.snapshot;
     if (snapshot) {
       options.apply(snapshot); options.refresh(); options.inputs(route, snapshot);
     }
-    queueMicrotask(() => { if (token === generation) restoreNavigationPosition(route, snapshot); });
+    if (!preserveStartupFocus) {
+      queueMicrotask(() => { if (token === generation) restoreNavigationPosition(route, snapshot); });
+    }
   }
   return { navigate, revise, workspace, back, render, flush, remember: save, keepPosition: () => { pending = false; } };
 }

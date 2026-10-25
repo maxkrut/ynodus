@@ -1,5 +1,4 @@
 import type { CountryPreset } from "../shared/types";
-import { DEFAULT_PRESET_KEY } from "./constants";
 import { localizedText } from "./i18n";
 
 type PresetModule = { default: CountryPreset } | CountryPreset;
@@ -51,4 +50,3 @@ export const COUNTRY_PRESETS = Object.entries(PRESET_MODULES)
   .sort((a, b) => localizedText(a.category, "en").localeCompare(localizedText(b.category, "en")) || localizedText(a.label, "en").localeCompare(localizedText(b.label, "en")));
 
 export const COUNTRY_PRESET_MAP = new Map(COUNTRY_PRESETS.map((preset) => [preset.key, preset]));
-export const DEFAULT_PRESET_COUNTRIES = [...(COUNTRY_PRESET_MAP.get(DEFAULT_PRESET_KEY)?.countries ?? [])];

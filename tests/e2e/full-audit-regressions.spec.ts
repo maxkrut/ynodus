@@ -1,3 +1,4 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { checkSourceExplanations } from "./production-smoke-support";
 import { expect, test, type Page } from "@playwright/test";
 import { countryForestFixture } from "../fixtures/layout.mjs";
@@ -9,7 +10,7 @@ async function ready(page: Page) {
 }
 
 test("full audit: restoring the same Min samples value completes the pending query", async ({ page }) => {
-  await page.goto("/?lang=en"); await ready(page);
+  await page.goto(populatedTimeUrl + "&lang=en"); await ready(page);
   const field = page.locator("#min-result-samples");
   const before = await page.locator("#result-body").innerText();
   for (const value of ["5", "7", "0"]) {
@@ -38,7 +39,7 @@ test("full audit: unavailable URL countries and conflicting presets are disclose
   expect(new URL(page.url()).searchParams.get("countries")).toBe("CHN");
   await expect(page.locator("#selection-panel-toggle")).not.toHaveAttribute("aria-label", /Slavic/);
   await expect(page.locator("#time-workspace")).not.toContainText("Slavic");
-  await page.goto("/?lang=en"); await ready(page);
+  await page.goto(populatedTimeUrl + "&lang=en"); await ready(page);
   await expect(page.locator("#workspace-link-note")).toBeHidden();
   expect(new URL(page.url()).searchParams.get("preset")).toBe("slavic");
 });
@@ -70,7 +71,7 @@ test("full audit: Formed groups and same-age counts are visible in the profile",
   await expect(page.locator("#profile-content .evidence-tree-node.same-formed").first()).toBeVisible();
 });
 test("full audit: mobile provenance text fits its link targets in every locale", async ({ page }) => {
-  await page.goto("/"); await ready(page);
+  await page.goto(populatedTimeUrl); await ready(page);
   await checkSourceExplanations(page);
   for (const width of [320, 390, 760, 761]) {
     await page.setViewportSize({ width, height: 844 });

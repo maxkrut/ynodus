@@ -1,3 +1,4 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { expect, test } from "@playwright/test";
 import { branchCountriesLargeFixture } from "../fixtures/branch-countries.mjs";
 import { layoutFixture } from "../fixtures/layout.mjs";
@@ -22,7 +23,7 @@ test("production publishes real legal and source-ledger documents", async ({ req
 
 test("390px keeps matches readable and the timeline inside the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
   await expect(page.locator("#result-body tr[data-result-role]").first()).toBeVisible();
   const timeEntrypoint = page.locator('.research-entrypoints [data-research-view="time"]');
@@ -253,7 +254,7 @@ test("Formed stays primary while optional Crossing uses its own table and sort s
 });
 
 test("country picker contains keyboard focus and restores its opener", async ({ page }) => {
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   const countryOpener = page.locator("#selection-panel-toggle");
   await countryOpener.click();
   const countryDialog = page.locator("#selection-panel");
@@ -276,7 +277,7 @@ test("locale changes preserve a failed-load Retry action", async ({ page }) => {
       body: "<!doctype html><title>fallback</title>",
     });
   });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("[data-retry-load]")).toBeVisible();
   await expect(page.locator("#empty-state")).toHaveAttribute("role", "alert");
   await page.locator("#locale-switcher").selectOption("en");
@@ -314,7 +315,7 @@ test("country matrix expansion preserves language, filtering and profile return"
 
 test("tablet keeps locale, source ledger and country picker within the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 900 });
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#results")).toBeVisible({ timeout: 20_000 });
   for (const locale of ["en", "ru",]) {
     await page.locator("#locale-switcher").selectOption(locale);

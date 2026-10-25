@@ -20,6 +20,14 @@ export async function assertLocalePreferences() {
     }
     values.clear();
     assert.equal(createInitialState().locale, "en");
+    for (const query of ["", "?lang=ru", "?countries=", "?countries=RUS,POL"]) {
+      Object.defineProperty(globalThis, "location", { configurable: true, value: new URL(`https://example.test/${query}`) });
+      const initial = createInitialState();
+      createWorkspaceUrl(initial);
+      assert.deepEqual([...initial.selectedCountries], query.includes("RUS") ? ["RUS", "POL"] : [],
+        "only explicit URL countries establish the initial time-search scope");
+      assert.equal(initial.activePreset, null);
+    }
     for (const locale of ["ru", "en"]) {
       saveLocalePreference(locale);
       assert.equal(readLocalePreference(), locale);

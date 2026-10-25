@@ -1,3 +1,4 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { readFile } from "node:fs/promises";
 import { expect, test, type Page } from "@playwright/test";
 
@@ -5,7 +6,7 @@ async function settled(page: Page) {
   await expect(page.locator("#live-status")).toHaveAttribute("data-busy", "false", { timeout: 20_000 });
 }
 async function start(page: Page) {
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#result-body tr[data-result-role]").first()).toBeVisible({ timeout: 20_000 });
   await page.locator("#locale-switcher").selectOption("en");
 }

@@ -1,8 +1,9 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { openStandaloneProfile } from "./production-smoke-support";
 import { expect, test, type Page, type Locator } from "@playwright/test";
 
 async function ready(page: Page) {
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#result-body tr[data-result-role]").first()).toBeVisible({ timeout: 20_000 });
   await page.evaluate(() => document.fonts.ready);
 }

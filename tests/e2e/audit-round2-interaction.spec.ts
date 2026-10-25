@@ -1,8 +1,9 @@
+import { populatedTimeUrl } from "../fixtures/time-url";
 import { expect, test, type Page } from "@playwright/test";
 import { revealPreset } from "./preset-support";
 
 async function ready(page: Page) {
-  await page.goto("/");
+  await page.goto(populatedTimeUrl);
   await expect(page.locator("#result-body tr[data-result-role]").first()).toBeVisible({ timeout: 20_000 });
 }
 
