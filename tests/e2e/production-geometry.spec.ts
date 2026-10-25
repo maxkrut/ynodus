@@ -2,8 +2,8 @@ import { populatedTimeUrl } from "../fixtures/time-url";
 import { expect, test } from "@playwright/test";
 
 test("critical breakpoints keep neighboring controls and research views geometrically stable", async ({ page }) => {
-  test.setTimeout(120_000);
-  for (const width of [320, 340, 390, 430, 431, 640, 760, 761, 980, 981, 1440]) {
+  test.setTimeout(180_000);
+  for (const width of [320, 340, 390, 430, 431, 640, 760, 761, 980, 981, 1279, 1280, 1366, 1440, 1441]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(populatedTimeUrl);
     await expect(page.locator("#result-body tr[data-result-role]").first()).toBeVisible({ timeout: 20_000 });
