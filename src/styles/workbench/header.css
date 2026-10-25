@@ -176,13 +176,19 @@
   .provenance-row > .provenance-links { grid-column: 4 / span 4; grid-row: 1; }
 }
 @media (max-width: 1050px) {
-  .provenance-row { grid-template-columns: max-content max-content minmax(0, 1fr); }
+  .provenance-ledger { grid-template-columns: max-content max-content minmax(0, 1fr); column-gap: 9.6px; }
+  .provenance-row { grid-column: 1 / -1; grid-template-columns: subgrid; }
+  .provenance-row > .provenance-date { grid-column: 3 / -1; }
   .provenance-date time[datetime] { min-width: 0; white-space: normal; }
   .provenance-date { gap: 3px; }
-  .provenance-links { grid-template-columns: repeat(3, max-content); }
+  .provenance-links { grid-template-columns: subgrid; }
 }
-@media (min-width: 361px) and (max-width: 1050px) {
-  .provenance-links { grid-template-columns: repeat(4, max-content); }
+@media (max-width: 389px) {
+  .provenance-repository { grid-column: 1 / -1; }
+}
+@media (min-width: 390px) and (max-width: 1050px) {
+  .provenance-ledger { grid-template-columns: repeat(3, max-content) minmax(0, 1fr); }
+  .provenance-repository { grid-column: auto; }
 }
 /* Keep source targets above 24 screen pixels at every header breakpoint. */
 .app-header .provenance-links a {

@@ -1,5 +1,5 @@
 /* Native inputs keep keyboard and restored checked state; text mirrors that state. */
-.query-zone .setting-switch { display: flex; align-items: center; gap: 8px; min-height: var(--query-control-height); cursor: pointer; }
+.query-zone .setting-switch { display: flex; align-items: center; gap: 8px; height: auto; min-height: var(--query-control-height); cursor: pointer; }
 .query-zone .setting-switch > input {
   appearance: none; position: relative; flex: none; width: 36px; height: 22px;
   min-height: 22px; margin: 0; padding: 0; border: 1px solid #9aadb3;

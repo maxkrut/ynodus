@@ -69,7 +69,13 @@ jobs:
           BROWSER_SUITE: ${{ inputs.browser_suite || 'full' }}
         run: |
           if [ "$BROWSER_SUITE" = "layout" ]; then
-            npx playwright test tests/e2e/audit-round2-alignment.spec.ts tests/e2e/full-audit-regressions.spec.ts tests/e2e/header-query-reading.spec.ts tests/e2e/period-labels.spec.ts --grep 'BR-209|mobile provenance text|header explanations|complete epoch names'
+            npx playwright test \
+              tests/e2e/audit-round2-alignment.spec.ts tests/e2e/full-audit-regressions.spec.ts \
+              tests/e2e/header-query-reading.spec.ts tests/e2e/period-labels.spec.ts \
+              tests/e2e/compact-locale.spec.ts tests/e2e/layout-reading.spec.ts \
+              tests/e2e/ledger-layout.spec.ts tests/e2e/production-geometry.spec.ts \
+              tests/e2e/setting-switches.spec.ts \
+              --grep 'BR-209|BR-210|mobile provenance text|header explanations|complete epoch names|source relationship|source facts|source columns|critical breakpoints|labelled settings switches'
           else
             npm run test:e2e
           fi
