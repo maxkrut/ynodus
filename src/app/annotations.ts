@@ -12,11 +12,18 @@ export function bindAnnotations(root: HTMLElement, t: (key: TextKey) => string):
   let openTimer: ReturnType<typeof setTimeout> | undefined;
   let pending: HTMLElement | null = null;
   let pointerFocus = false;
+  let openedByHover = false;
+  let densityDismissed = false;
   root.addEventListener("pointerdown", () => { pointerFocus = true; }, true);
   // Touch focus can arrive after pointerup but before click. Keep its origin
   // until click so a newly opened note cannot intercept the tap that opens it.
-  document.addEventListener("click", () => { pointerFocus = false; }, true);
-  document.addEventListener("keydown", () => { pointerFocus = false; }, true);
+  document.addEventListener("click", event => {
+    pointerFocus = false;
+    if ((event.target as Element | null)?.closest(".density-cell")) {
+      densityDismissed = true; hide();
+    }
+  }, true);
+  document.addEventListener("keydown", () => { pointerFocus = false; densityDismissed = false; }, true);
   document.addEventListener("pointercancel", () => { pointerFocus = false; }, true);
   const trigger = (target: EventTarget | null) => (target as Element | null)?.closest<HTMLElement>("[data-annotation], [data-tooltip], [title]") ?? null;
   const cancelClose = () => { clearTimeout(closeTimer); closeTimer = undefined; };
@@ -71,7 +78,7 @@ export function bindAnnotations(root: HTMLElement, t: (key: TextKey) => string):
     panel.style.left = `${left / scale}px`;
     panel.style.top = `${top / scale}px`;
   }
-  function show(button: HTMLElement): void {
+  function show(button: HTMLElement, fromHover = false): void {
     if (button === suppressed) return;
     const id = button.dataset.annotation as AnnotationId;
     const isAnnotation = Boolean(id && Object.hasOwn(ANNOTATIONS, id));
@@ -97,9 +104,11 @@ export function bindAnnotations(root: HTMLElement, t: (key: TextKey) => string):
     if (isAnnotation) button.setAttribute("aria-expanded", "true");
     else button.setAttribute("aria-describedby", [...new Set([...(button.getAttribute("aria-describedby") || "").split(" ").filter(Boolean), panel.id])].join(" "));
     panel.hidden = false;
+    openedByHover = fromHover;
     position();
   }
   function scheduleOpen(button: HTMLElement): void {
+    if (densityDismissed && button.matches(".density-cell")) return;
     cancelClose();
     if (button === active) return;
     if (button === pending) return;
@@ -107,14 +116,15 @@ export function bindAnnotations(root: HTMLElement, t: (key: TextKey) => string):
     pending = button;
     openTimer = setTimeout(() => {
       cancelOpen();
-      if (root.contains(button) && !button.closest("[hidden], [inert]") && button.matches(":hover")) show(button);
-    }, 800);
+      if (root.contains(button) && !button.closest("[hidden], [inert]") && button.matches(":hover")) show(button, true);
+    }, button.matches(".density-cell") ? 1000 : 800);
   }
   function scheduleClose(): void {
     cancelClose();
     closeTimer = setTimeout(() => {
-      if (!pinned && !active?.matches(":hover") && !panel.matches(":hover")
-        && document.activeElement !== active && !panel.contains(document.activeElement)) hide();
+      const keepFocus = !(openedByHover && active?.matches(".density-cell"))
+        && (document.activeElement === active || panel.contains(document.activeElement));
+      if (!pinned && !active?.matches(":hover") && !panel.matches(":hover") && !keepFocus) hide();
     }, 160);
   }
   root.addEventListener("pointerover", event => {
@@ -133,9 +143,16 @@ export function bindAnnotations(root: HTMLElement, t: (key: TextKey) => string):
     if (button === suppressed && !button?.contains(event.relatedTarget as Node | null)) suppressed = null;
     if (button || panel.contains(event.target as Node)) scheduleClose();
   });
+  root.addEventListener("pointermove", event => {
+    if (!densityDismissed || !(event.movementX || event.movementY)) return;
+    densityDismissed = false;
+    const button = trigger(event.target);
+    if (event.pointerType === "mouse" && button?.matches(".density-cell")) scheduleOpen(button);
+  });
   root.addEventListener("focusin", event => {
     cancelOpen();
     const button = trigger(event.target);
+    if (densityDismissed && button?.matches(".density-cell")) return;
     // Pointer activation opens explicit notes on click; keyboard focus opens now.
     if (button && pointerFocus) {
       if (!button.hasAttribute("data-annotation")) scheduleOpen(button);

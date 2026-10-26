@@ -18,11 +18,11 @@ test("audit fixes: minimum samples is explained, applied, and exported consisten
   const minimum = page.locator("#min-result-samples");
   const description = page.locator("#min-result-samples-description");
   await expect(description).toBeVisible();
-  await expect(description).toContainText("минимум в окне таблицы и отдельно в каждом баре");
+  await expect(description).toHaveText("По всей базе, для выбранного типа образцов. 0 - требовать все страны.");
   await expect(minimum).toHaveAttribute("aria-describedby", "min-result-samples-description");
 
   await minimum.fill("999999");
-  await expect(page.locator("#country-minimum-reset-note")).toContainText("Ни одна из выбранных стран не набрала минимум (999999)");
+  await expect(page.locator("#country-minimum-reset-note")).toContainText("У каждой выбранной страны во всей базе меньше 999999 образцов выбранного типа.");
   await expect(page.locator("#presence-mode-toggle")).toHaveAttribute("aria-checked", "true");
   await expect(page.locator("#result-body tr[data-result-role]")).toHaveCount(0);
   await expect(minimum).toBeEnabled();

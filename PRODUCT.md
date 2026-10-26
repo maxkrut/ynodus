@@ -236,9 +236,12 @@ supported-date/evidence sweep, not a full query per candidate.
 Wide-screen filter groups form one compact row with subtle vertical separators;
 countries have the widest group. Keep date and window together during reflow and
 step sync below the interval. Full epoch names in EN/RU use thin bracket bands,
-hatched transitions and self-hosted type. Fit narrow final periods inside their
-calendar widths with smaller/two-line/vertical labels; other callouts may use
-nonoverlapping leader lines. Reflow after font loading, locale and width changes.
+hatched transitions and self-hosted type. Keep every label horizontal and readable.
+Use up to two lines inside a band where it fits; otherwise use nonoverlapping
+horizontal callouts with leader lines, preserving calendar widths. Reflow after
+font loading, locale and width changes. Interval composition appears after one
+second of pointer hover, closes on bar activation or pointer exit from the bar
+and tooltip, and remains accessible through keyboard focus.
 Do not replace results with redundant large sample/row/result metric tiles.
 At 390 px, result heading/summary precedes secondary timeline context. Supported
 widths have no document-level horizontal overflow or overlapping controls; focus

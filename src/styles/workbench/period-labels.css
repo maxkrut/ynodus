@@ -15,9 +15,6 @@
   font-size: var(--period-label-size); line-height: 1.05;
   letter-spacing: 0;
 }
-.has-period-vertical > .period-band-label {
-  writing-mode: vertical-rl; white-space: nowrap; padding: 0; text-wrap: nowrap;
-}
 .has-period-callout > .period-band-label {
   transform: none; height: auto; min-height: 20px; background: #fff;
   white-space: normal; overflow-wrap: anywhere;

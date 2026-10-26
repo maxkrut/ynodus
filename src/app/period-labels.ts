@@ -40,21 +40,18 @@ export function layoutPeriodLabels(axis: HTMLElement): void {
     const labelStyle = getComputedStyle(label);
     const lineRatio = parseFloat(labelStyle.lineHeight) / parseFloat(labelStyle.fontSize) || 1.05;
     const fontSize = Math.min(14, 14 * Math.max(1, bandWidth - 5) / twoLineWidth);
-    const vertical = internal && fontSize < 6;
-    const verticalFont = Math.min(10, Math.max(1, bandWidth - 2) / Math.max(1, lineRatio));
+    const labelWidth = Math.ceil(textWidth(text)) + 8;
+    const outside = internal ? fontSize < 11 : labelWidth + gap > bandWidth;
     return [{ band, label, left: parseFloat(band.style.left) * width / 100, bandWidth,
-      labelWidth: Math.ceil(textWidth(text)) + 8, internal, vertical,
-      fontSize: vertical ? verticalFont : fontSize,
-      verticalHeight: vertical ? textWidth(text) * verticalFont / 14 + 12 : internal ? 2 * fontSize * lineRatio + 4 : 0 }];
+      labelWidth, internal, outside, fontSize: outside ? 14 : fontSize,
+      insetHeight: internal && !outside ? 2 * fontSize * lineRatio + 4 : 0 }];
   });
-  const bandHeight = Math.ceil(Math.max(baseHeight, ...entries.map(entry => entry.verticalHeight)));
+  const bandHeight = Math.ceil(Math.max(baseHeight, ...entries.map(entry => entry.insetHeight)));
   strip.style.setProperty("--period-band-height", `${bandHeight}px`);
   const lanes: number[] = [];
-  for (const { band, label, left, bandWidth, labelWidth, internal, vertical, fontSize } of entries) {
-    const outside = !internal && labelWidth + gap > bandWidth;
+  for (const { band, label, left, bandWidth, labelWidth, internal, outside, fontSize } of entries) {
     band.classList.toggle("has-period-callout", outside);
-    band.classList.toggle("has-period-inset", internal);
-    band.classList.toggle("has-period-vertical", vertical);
+    band.classList.toggle("has-period-inset", internal && !outside);
     label.style.setProperty("--period-label-size", `${fontSize}px`);
     if (!outside) {
       label.style.width = "";

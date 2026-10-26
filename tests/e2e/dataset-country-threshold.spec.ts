@@ -40,8 +40,8 @@ for (const width of [390, 1440]) for (const lang of ['ru', 'en']) {
       expect(geometry.overflow).toBeLessThanOrEqual(0);
       const optionFits = await page.locator('#sample-scope').evaluate((element:HTMLSelectElement) => {
         const style = getComputedStyle(element), context = document.createElement('canvas').getContext('2d')!;
-        context.font = style.font;
-        const available = element.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+        context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        const available = element.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - 20;
         return context.measureText(element.selectedOptions[0].text).width <= available;
       });
       expect(optionFits, `${scope}: selected sample type stays readable`).toBe(true);

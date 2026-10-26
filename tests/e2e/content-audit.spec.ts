@@ -79,7 +79,7 @@ test("country controls expose current translated hints and explain filtered sele
   const toggle = page.locator("#presence-mode-toggle");
   await expect(toggle).toHaveAttribute("title", /any selected country/i);
   await toggle.locator('[data-presence="all"]').click();
-  await expect(toggle).toHaveAttribute("title", /all countries/i);
+  await expect(toggle).toHaveAttribute("title", "Each branch contains samples from every country required by the dataset threshold.");
   await page.locator("#locale-switcher").selectOption("ru");
   await expect(toggle).toHaveAttribute("title", /кажд/);
   await expect(toggle).toHaveAttribute("title", await page.locator("#mode-hint").innerText());

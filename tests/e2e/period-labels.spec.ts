@@ -24,14 +24,15 @@ for(const locale of ['ru','en']) test(`complete epoch names remain readable in $
       return{height:rect.height,overflow:document.documentElement.scrollWidth-innerWidth,
         labels:labels.map(label=>({text:label.textContent,hidden:getComputedStyle(label).fontSize==='0px',
           right:label.getBoundingClientRect().right,bottom:label.getBoundingClientRect().bottom,
-          font:getComputedStyle(label).fontFamily})),bottom:rect.bottom,
-        inset:[...strip.querySelectorAll<HTMLElement>('.has-period-inset')].map(band=>{
+          font:getComputedStyle(label).fontFamily, size:parseFloat(getComputedStyle(label).fontSize),
+          writingMode:getComputedStyle(label).writingMode})),bottom:rect.bottom,
+        inset:[...strip.querySelectorAll<HTMLElement>('[data-period-band="medieval"], [data-period-band="modern"]')].map(band=>{
           const label=band.querySelector<HTMLElement>('.period-band-label')!;
           const box=band.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(label);
           const lines=[...range.getClientRects()];
           return{text:label.textContent,font:getComputedStyle(label).fontSize,width:box.width,
             glyphs:lines.map(line=>({left:line.left-box.left,right:line.right-box.right,top:line.top-box.top,bottom:line.bottom-box.bottom})),
-            callout:band.classList.contains('has-period-callout'),vertical:band.classList.contains('has-period-vertical'),
+            callout:band.classList.contains('has-period-callout'),
             lines:lines.length,contained:lines.every(line=>line.left>=box.left-.5&&line.right<=box.right+.5&&line.top>=box.top-.5&&line.bottom<=box.bottom+.5)};
         }),
         bracket:getComputedStyle(strip.querySelector('[data-period-band]')!).borderBottomWidth,
@@ -41,10 +42,11 @@ for(const locale of ['ru','en']) test(`complete epoch names remain readable in $
     expect(reading.labels).toHaveLength(8);expect(reading.overflow).toBeLessThanOrEqual(0);
     expect(reading.loaded).toBe(true);
     expect(reading.labels.every(label=>!label.hidden&&label.font.includes('Roboto Condensed Epochs')&&label.bottom<=reading.bottom+.5)).toBe(true);
+    expect(reading.labels.every(label=>label.writingMode==='horizontal-tb'&&label.size>=11)).toBe(true);
     expect(reading.labels[6].text).toBe(locale==='ru'?'Средние века':'Medieval');
     expect(reading.labels[7].text).toBe(locale==='ru'?'Новое и Новейшее время':'Modern era');
     expect(reading.inset).toHaveLength(2);
-    expect(reading.inset.every(label=>label.contained&&!label.callout&&(label.vertical||label.lines<=2)),`${width}px ${JSON.stringify(reading.inset)}`).toBe(true);
+    expect(reading.inset.every(label=>label.callout||(label.contained&&label.lines<=2)),`${width}px ${JSON.stringify(reading.inset)}`).toBe(true);
     expect(Number.parseFloat(reading.bracket)).toBeGreaterThan(0);
     expect(Number.parseFloat(reading.bracket)).toBeLessThanOrEqual(2);
     expect(reading.hatch).toContain('repeating-linear-gradient');
