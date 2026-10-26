@@ -97,7 +97,8 @@ not a synchronization verdict. Preserve the attribution in [NOTICE.md](NOTICE.md
 and the matching shipped `public/legal/NOTICE.txt`.
 
 After schema/content changes, run app and semantic/data contracts plus build and
-affected consumers. `.github/workflows/update-data.yml` performs weekly checks and
+affected consumers. `.github/workflows/update-data.yml` checks on the first day of
+each month at 03:17 UTC (or when started manually) and
 opens/updates a PR on `automation/update-hras-index`; it does not publish directly
 to the default branch. `.github/workflows/build.yml` validates pushes and pull requests.
 
