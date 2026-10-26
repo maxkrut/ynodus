@@ -15,7 +15,7 @@ async function start(page: Page, multiple: boolean) {
       return (send as any).call(this,message,...args);
     };
   });
-  await page.goto(`/?lang=ru&target=6600&window=300&min=${multiple?5:6}&presence=all&crossing=1&countries=${multiple?"PNG,AUS":"PNG"}`);
+  await page.goto(`/?lang=ru&target=6600&window=300&min=${multiple?11:13}&presence=all&crossing=1&countries=${multiple?"PNG,AUS":"PNG"}`);
 }
 
 for(const width of [390,1440]) for(const multiple of [false,true]) {

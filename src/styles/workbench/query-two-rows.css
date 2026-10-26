@@ -1,10 +1,10 @@
 /* Countries | samples | date/window | step + sync | grid | minimum | mode | Crossing. */
 .query-zone { --query-control-height: 38px; --query-label-height: 32px; }
 .query-zone .query-parameters {
-  display: grid; grid-template-columns: minmax(260px, 2.6fr) minmax(210px, .95fr)
-    minmax(410px, 2fr) minmax(150px, 1fr) minmax(170px, 1.15fr)
-    minmax(115px, .7fr) minmax(230px, 1.4fr) minmax(210px, 1.3fr);
-  grid-template-rows: var(--query-label-height) minmax(var(--query-control-height), max-content) auto;
+  display: grid; grid-template-columns: minmax(410px, 2.6fr) minmax(190px, .95fr)
+    minmax(400px, 2fr) minmax(150px, 1fr) minmax(170px, 1.15fr)
+    minmax(190px, 1.15fr) minmax(230px, 1.4fr) minmax(210px, 1.3fr);
+  grid-template-rows: minmax(var(--query-label-height), auto) minmax(var(--query-control-height), max-content) auto;
   gap: 5px 0; align-items: start; padding: 0;
 }
 .query-zone .query-panel-block {

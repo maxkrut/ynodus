@@ -39,7 +39,7 @@ export function checkCsv(api, query, actual, expected) {
     assert.equal(Number(row.max_delta_ybp), query.maxDeltaYbp);
     assert.equal(Number(row.min_result_samples), query.minSamples);
     assert.equal(row.min_samples_basis, query.presenceMode === "any" ? "not_applied_in_all_branches_mode"
-      : query.minSamples === 0 ? "all_selected_countries_at_zero_minimum" : "per_selected_country_in_temporal_candidate_pool");
+      : query.minSamples === 0 ? "all_selected_countries_at_zero_minimum" : "per_selected_country_in_dataset_sample_scope");
     assert.deepEqual(JSON.parse(row.below_minimum_country_counts), Object.fromEntries(result.below));
     assert.equal(row.presence_mode, query.presenceMode);
     assert.match(row.calendar_basis_note, /source calendar epoch is not verified/);

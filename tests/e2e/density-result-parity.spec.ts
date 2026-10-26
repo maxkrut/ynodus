@@ -74,6 +74,8 @@ async function checkUI(page:Page) {
     snapshot.anchor==='target'?snapshot.query.target:undefined);
   const bins=intervals.map(()=>({count:0,current:0,groups:new Map<string,number>()}));
   const members=new Set(snapshot.members);
+  const inWindow=snapshot.density.filter((node:any)=>Math.abs(node.age-snapshot.query.target)<=snapshot.query.maxDeltaYbp).map((node:any)=>node.id);
+  expect([...members].sort()).toEqual([...new Set(inWindow)].sort());
   for(const node of snapshot.density){
     const i=intervals.findIndex((bin,index)=>node.age<=bin.older&&(node.age>bin.younger||index===intervals.length-1&&node.age===bin.younger));
     expect(i).toBeGreaterThanOrEqual(0);

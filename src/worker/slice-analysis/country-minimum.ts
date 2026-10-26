@@ -1,17 +1,13 @@
-import type { PresenceMode, ResultRow } from "../types";
+import type { PresenceMode, ResultRow, TreeIndex } from "../types";
 import type { SampleEvidence } from "./evidence";
 import { hasCountryMatch, matchingCountryCodes } from "../../shared/country-matching";
 
-/** Count each aggregate sample once across all time candidates, before country matching. */
-export function countriesForTimeEvidence(
-  selectedCodes: string[], samples: SampleEvidence[], presence: PresenceMode, minimum: number,
+/** Snapshot totals already count each sample once within the active sample scope. */
+export function countriesForDataset(
+  index: TreeIndex, selectedCodes: string[], presence: PresenceMode, minimum: number,
 ): string[] {
   if (presence === "any") return selectedCodes;
-  const counts = new Map<string, number>();
-  for (const sample of samples) if (sample.resultKeys.length) {
-    counts.set(sample.country, (counts.get(sample.country) ?? 0) + sample.count);
-  }
-  return matchingCountryCodes(selectedCodes, counts, minimum);
+  return matchingCountryCodes(selectedCodes, index.countries, minimum);
 }
 
 /** Match common branches of eligible countries; retain other selected countries as context. */

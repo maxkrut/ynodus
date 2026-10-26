@@ -7,8 +7,8 @@ export function assertResultNeighbors(buildIndex, collect, resetCaches) {
     sliceMode: "formed", maxDeltaYbp: 0, minSamples: 5, anchorId: null, scopeAllCountries: false };
   const skipped = buildIndex(compact([-1,-1,-1,-1], [490,510,400,600],
     [[0,0,1],[1,1,1],[2,0,7],[3,1,8]]));
-  assert.deepEqual(collect(skipped,input).suggestions, {older:600,younger:400},
-    "skip empty nearest dates on both sides instead of dropping their suggestions");
+  assert.deepEqual(collect(skipped,input).suggestions, {older:null,younger:null},
+    "countries meeting the dataset threshold cannot disappear at proposed dates");
   const none = collect(skipped,{...input,minSamples:99});
   assert.deepEqual(none.suggestions,{older:null,younger:null}, "never propose an implicit All-branches reset");
   const strictQuery = { ...input, minSamples: 0 };
@@ -32,11 +32,12 @@ export function assertResultNeighbors(buildIndex, collect, resetCaches) {
   assert.deepEqual(collect(many,manyQuery).rows,[],"180 of 181 countries is not a strict match");
   assert.deepEqual(collect(many,manyQuery).suggestions,{older:650,younger:null},
     "nearest-date country masks retain all 181 selected countries");
-  assert.equal(collect(many,{...manyQuery,minSamples:1}).rows.length,1);
+  assert.equal(collect(many,{...manyQuery,minSamples:1}).rows.length,0);
+  assert.equal(collect(many,{...manyQuery,minSamples:2}).rows.length,1);
 
   // Independent oracle: execute the full production query at every supported
   // source date, then compare with the compact sweep. Includes age inversions,
-  // equal ages, unknown ages, anchor scope, nested support and changing pools.
+  // equal ages, unknown ages, anchor scope, nested support and fixed dataset coverage.
   let seed = 12345, checked = 0;
   const random = limit => { seed = (Math.imul(seed,1664525)+1013904223) >>> 0; return seed % limit; };
   for (let fixture=0; fixture<18; fixture++) {

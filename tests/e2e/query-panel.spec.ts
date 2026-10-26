@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { compact } from "../../scripts/semantic-audit/fixtures.mjs";
 
-test("query panel applies temporal-pool country thresholds across locales and widths", async ({ page }) => {
+test("query panel applies dataset country thresholds across locales and widths", async ({ page }) => {
   test.setTimeout(60000);
   const data = compact([-1, 0, 0], [18000, 8600, 8600], [[1, 0, 8], [1, 1, 3], [2, 0, 2]]);
   data.countryCodes = ["RUS", "POL", "FRA"];

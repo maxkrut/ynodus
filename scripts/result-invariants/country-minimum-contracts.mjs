@@ -5,16 +5,7 @@ export function eligibleCountries(index, input) {
   if (input.presenceMode === "any" || input.minSamples === 0) return input.selectedCountries;
   return input.selectedCountries.filter(code => {
     let count = 0;
-    for (const sample of index.samplesByCountry.get(code) ?? []) {
-      const candidate = sample.path.some((node, i) => {
-        if (node.formedKnown === false) return false;
-        if (input.sliceMode === "formed") return Math.abs(node.formed - input.target) <= input.maxDeltaYbp;
-        const child = sample.path[i + 1];
-        return child && child.formedKnown !== false
-          && input.target >= Math.min(node.formed, child.formed) && input.target <= Math.max(node.formed, child.formed);
-      });
-      if (candidate) count += sample.count;
-    }
+    for (const sample of index.samplesByCountry.get(code) ?? []) count += sample.count;
     return count >= Math.max(1, input.minSamples);
   });
 }
@@ -64,7 +55,7 @@ export function assertCountryMinimum(buildIndex, collect, combined) {
   assert.deepEqual(strict.densityRows, [], "density follows the same strict country condition");
   assert.equal(strict.countryMinimumNotMet, false, "zero does not request a threshold change");
   const relaxed = collect(example, { ...exampleQuery, minSamples: 1, knownDensityKey: strict.densityKey });
-  assert.equal(relaxed.rows.length, 2, "positive thresholds retain the temporal-pool rule");
+  assert.equal(relaxed.rows.length, 2, "positive thresholds retain the dataset-scope rule");
   assert.notEqual(relaxed.densityKey, strict.densityKey, "zero and one cannot share cached density");
   assert.notEqual(relaxed.densityRows, null);
   const shown = collect(example, exampleQuery);
@@ -83,7 +74,7 @@ export function assertCountryMinimum(buildIndex, collect, combined) {
   assert.equal(failedSingle.countryMinimumNotMet, true, "the UI can explain the sole country's failed minimum");
   assert.equal(collect(example, { ...single, knownDensityKey: failedSingle.densityKey }).countryMinimumNotMet, true);
   assert.equal(collect(example, { ...single, minSamples: 3 }).countryMinimumNotMet, false,
-    "the exact temporal-pool minimum is retained");
+    "the exact dataset-scope minimum is retained");
   assert.equal(collect(example, { ...single, target: 1000, minSamples: 0 }).countryMinimumNotMet, false,
     "zero keeps the selected country even when its temporal support is absent");
   assert.equal(collect(example, { ...single, presenceMode: "any" }).countryMinimumNotMet, false);
@@ -105,23 +96,27 @@ export function assertCountryMinimum(buildIndex, collect, combined) {
   assert.equal(collect(example, { ...exampleQuery, selectedCountries: ["BBB"], presenceMode: "any" }).rows.length, 2);
   assert.equal(collect(example, { ...exampleQuery, minSamples: 53 }).rows.length, 0);
   assert.equal(collect(index, { ...query, target: 10000, maxDeltaYbp: 3000, minSamples: 6 }).rows.length, 0,
-    "one record supporting several dated ancestors counts only once in the temporal cohort");
+    "one record supporting several dated ancestors counts only once in the dataset");
 
   const spreadData = compact([-1, 0, 0, 0, 0], [18000, 8600, 8600, 8600, 3000],
     [[1, 0, 50], [1, 1, 2], [2, 0, 2], [3, 1, 4], [4, 2, 100]]);
   const spread = buildIndex(spreadData);
-  const spreadResult = collect(spread, exampleQuery);
+  assert.deepEqual(collect(spread, exampleQuery).rows, [],
+    "CCC has enough samples elsewhere in the dataset and cannot disappear from this window");
+  assert.deepEqual(collect(spread, { ...exampleQuery, anchorId: "SYN-001" }).rows, [],
+    "restricting a branch does not reduce dataset coverage or drop required countries");
+  const spreadResult = collect(spread, { ...exampleQuery, selectedCountries: ["AAA", "BBB"] });
   assert.equal(spreadResult.rows.length, 1, "both countries reach 5 across different branches, so their intersection is required");
   assert.equal(spreadResult.rows[0].total, 52);
   assert.equal(spreadResult.rows[0].belowMinimumCountryCounts, undefined,
-    "a country with 2 records in this row stays active when it has 6 in the temporal pool");
-  assert.equal(collect(spread, { ...exampleQuery, target: 3000 }).rows[0].countryCounts.get("CCC"), 100);
+    "a country with 2 records in this row stays active when it has 6 across the dataset");
+  assert.equal(collect(spread, { ...exampleQuery, target: 3000, selectedCountries: ["CCC"] }).rows[0].countryCounts.get("CCC"), 100);
 
   const crossingIndex = buildIndex(compact([-1, 0], [18000, 7000], [[1, 0, 8], [1, 1, 3]]));
   const crossingQuery = { ...query, target: 10000, includeCrossing: true };
   const crossing = combined(crossingIndex, crossingQuery);
-  assert.deepEqual(crossing.formed.participatingCountries, []);
-  assert.deepEqual(crossing.crossing.participatingCountries, ["AAA"], "Crossing has its own temporal country pool");
+  assert.deepEqual(crossing.formed.participatingCountries, ["AAA"]);
+  assert.deepEqual(crossing.crossing.participatingCountries, ["AAA"], "Crossing and Formed use identical dataset coverage");
   assert.deepEqual(crossing.formed.rows, []);
   assert.equal(crossing.crossing.rows[0].total, 11);
   assert.deepEqual([...crossing.crossing.rows[0].belowMinimumCountryCounts], [["BBB", 3]]);
@@ -134,4 +129,27 @@ export function assertCountryMinimum(buildIndex, collect, combined) {
     selectedCountries: ["AAA", "BBB", "CCC"] });
   assert.deepEqual(strictCrossing.crossing.rows, [], "strict country intersection also applies to Crossing");
   assert.deepEqual(strictCrossing.crossing.participatingCountries, ["AAA", "BBB", "CCC"]);
+
+  const scopedData = compact([-1, 0, -1, -1], [18000, 8600, 3000, null],
+    [[1, 0, 2], [1, 1, 2], [2, 0, 8], [3, 1, 2], [3, 2, 1]]);
+  scopedData.ancientCounts = [1, 2, 0, 2, 1];
+  const expectedScopes = { all: ["AAA", "BBB"], ancient: ["BBB"], modern: ["AAA"] };
+  for (const [scope, required] of Object.entries(expectedScopes)) {
+    const scoped = buildIndex(scopedData, scope);
+    const scopedQuery = { ...exampleQuery, minSamples: 3, includeCrossing: true };
+    const answer = combined(scoped, scopedQuery);
+    assert.deepEqual(answer.formed.participatingCountries, required, scope);
+    assert.deepEqual(answer.crossing.participatingCountries, required, scope);
+    const formed = answer.formed.rows[0];
+    assert.equal(formed.total, scope === "all" ? 4 : scope === "ancient" ? 3 : 1);
+    if (scope === "ancient") assert.deepEqual([...formed.belowMinimumCountryCounts], [["AAA", 1]],
+      "ancient-only rare-country evidence remains in flags/counts");
+    for (const target of [100, 3000, 8500, 10000, 18000]) {
+      const moved = collect(scoped, { ...scopedQuery, target, maxDeltaYbp: 10 });
+      assert.deepEqual(moved.participatingCountries, required, "date/window cannot change the dataset rule");
+      assert.ok(moved.densityRows.every(row => JSON.stringify(row.participatingCountries) === JSON.stringify(required)));
+    }
+    assert.deepEqual(collect(scoped, { ...scopedQuery, minSamples: 0 }).rows, [],
+      "zero retains the third selected country even without its dated evidence");
+  }
 }

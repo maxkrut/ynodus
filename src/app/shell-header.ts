@@ -4,7 +4,7 @@ import type { TextKey } from "./i18n";
 import { renderProvenanceNotes, renderProvenanceStrip } from "./source-card";
 
 export function renderHeader(t: (key: TextKey) => string): string {
-  const version = APP_VERSION.replace(/^v/, "").split(".").slice(0, 2).join(".");
+  const version = APP_VERSION.replace(/^v/, "");
   return `<header class="app-header">
     <div class="title-block">
       <div class="brand-head"><span class="brand-logo-text" role="img" aria-label="yNodus"><span class="brand-logo-initial" aria-hidden="true">y</span><span aria-hidden="true">Nodus</span></span><span class="version-pill">${version}</span></div>

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1 - 2026-10-26
+
+- Use whole-dataset country totals for the selected sample type (all, ancient or modern) when applying the Common branches threshold. Date, window and chart bins no longer change required countries.
+- Apply the same country rule to Formed, Crossing, chart subclades and nearest-date suggestions; retain optional countries in sample counts and faded flags. Zero still requires every selected country.
+- Explain the dataset threshold in Russian and English, update CSV `min_samples_basis`, and remove the redundant “Compare with these countries” action.
+
 ## 1.2.0 - 2026-10-25
 
 ### Added

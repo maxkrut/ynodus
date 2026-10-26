@@ -37,9 +37,9 @@ try {
   const outside = handCases().find(test => test.name === "density-outside-empty-search-window");
   const outsideResult = referenceQuery(outside.data, outside.q);
   assert.deepEqual(outsideResult.formed, []);
-  assert.deepEqual(outsideResult.density.map(row => row.id), ["SYN-002"]);
+  assert.deepEqual(outsideResult.density.map(row => row.id), []);
   const intervals = handCases().find(test => test.name === "density-distinct-interval-country-pools");
-  assert.deepEqual(referenceQuery(intervals.data, intervals.q).density.map(row => row.id), ["SYN-000", "SYN-001"]);
+  assert.deepEqual(referenceQuery(intervals.data, intervals.q).density.map(row => row.id), []);
   report.checks.handCases = handCases().length;
   report.checks.csvCases = handCases().length;
   console.log("Hand calculations: passed");

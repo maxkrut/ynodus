@@ -37,23 +37,23 @@ control rather than repeating a large generic disclaimer.
   authored country-code proxies, not ancient-sample sets or cultural assignments.
 - **All branches** (`any`) accepts positive support from any selected country and
   ignores the minimum. **Common branches** (`all`) at minimum 0 requires every
-  selected country, including countries absent from the temporal pool. An empty
+  selected country, including countries absent from the dataset or time window. An empty
   selection or required-country set gives no common results.
-- At a positive minimum, determine participating countries from unique sample
-  evidence across temporal candidates *before* matching: known supported Formed
-  dates inside the window, or dated edges spanning the target for Crossing. Count
-  an aggregate record once even if it supports several candidates. Whole-snapshot
-  totals and per-result counts are not the threshold basis. Each canonical event
-  or edge then needs positive support from every participating country, without
-  applying the threshold again. Formed and Crossing pools are independent.
+- At a positive minimum, determine participating countries from each selected
+  country's unique sample count across the **entire dataset in the active sample
+  scope**: all, ancient or modern. Include undated support. Count each aggregate
+  record once; never sum ancestor totals. Date, window, bins, branch anchor and
+  surviving matches do not change this set. Each canonical event or edge needs
+  positive support from every participating country, without applying the threshold
+  again. Formed, Crossing, density and nearest-date suggestions share this rule.
 - Below-minimum countries remain selected. Positive counts remain in
   `countryCounts`, `total`, unique support and CSV; flags fade with contextual help.
   `belowMinimumCountryCounts` marks a subset, not extra samples. A country passing
-  the pool minimum stays active even with one sample in a row. Do not add countries
+  the dataset minimum stays active even with one sample in a row. Do not add countries
   outside the selection or countries absent from that row. All branches has no
   minimum-related fading or separate mixed-pool participation notice.
 - If a nonempty Common selection has a positive minimum and no country qualifies
-  in the Formed pool, show a yellow explanation and **Show all branches** action.
+  across the active dataset scope, show a yellow explanation and **Show all branches** action.
   Do not automatically change mode, URL or rerun. A click submits the normal full
   query, preserving countries/date/window/minimum; the new mode ignores minimum.
   Pending clears the offer, locale changes translate it, and stale/error replies
@@ -164,7 +164,6 @@ as research `scope`, separate from time countries, through locale/history/reload
 Research reading controls keep calculation and presentation separate:
 
 - Density retains its default subclade count and adds an optional parent-group unit. A group is one known direct parent plus one exact source Formed value. Unrelated equal dates and different dates under one parent stay separate. Each unresolved parent is a singleton. This is a descriptive grouping, never a claim of independent dates or historical events. Parent mode colours the confirmed parent's hierarchy-derived macrogroup. Tooltips expose both counts, unresolved parents and the largest groups. Duration normalization applies to the selected unit; result rows, outlines and CSV still refer to underlying evidence.
-- An explicit comparison action uses the committed Formed window's participating countries as the new selected country set and sets minimum to 0. This intentionally changes evidence scope and totals. All remaining countries are then required throughout the chart, table and Crossing calculation. Ordinary URL/query/CSV state records the operation, without a hidden country policy. Disable the action during pending; offer it only for a nonempty positive-minimum Common pool.
 - Country overviews initially show a compact terminal-assignment macrogroup summary, with disjoint counts. Selecting a group opens the real supported hierarchy from its first matching nodes. Each scope root discloses its actual immediate parent and a collapsible source-ancestry path. Ancestors inside a filtered profile remain context and retain full descendant-inclusive counts. Search covers the full scope when no macrogroup is selected. Comparison countries remain a union, including unique branches. All levels is an explicit opt-in to the paged full hierarchy.
 - Profiles and terminal Details initially open the root and its immediate children. Deeper levels open on demand. Country and macrogroup filters, search, collapse, locale and history preserve scope and real edges. A macrogroup category is never a genealogical parent.
 
@@ -179,19 +178,19 @@ Every adjacent path pair is a real source edge; null roots do not authorize link
 countries, the optional minimum offer, neighbor suggestions and density cache key.
 `densityRows: null` means the main thread already holds that exact key, not empty data.
 
-Density is navigation context, never table/counter/CSV input. Each chart interval
-independently counts unique selected samples supporting known Formed nodes inside
-its own bounds, before matching. A sample supporting several nested nodes counts
-once per interval. In Common mode a positive minimum selects mandatory countries
-from that interval's pool; zero requires all selected countries. Apply those
-requirements to canonical connected same-age groups. Retain each included node,
-its selected-country total and the interval's mandatory countries for the tooltip.
-The table still uses its exact search window, so membership can differ from a bar.
-Outlines count only current result members actually present in the displayed bar.
+Density is navigation context, never table/counter/CSV input. It uses the same
+mandatory countries as Formed, derived from whole-dataset active-scope coverage.
+Apply that set to canonical connected same-age groups; retain each included member,
+its selected-country total and the mandatory countries for the tooltip. In the exact
+search window, density member IDs equal the union of all Formed event members in
+full results, in both directions, before table-only macrogroup filtering/pagination.
+Table rows can group connected events. A chart interval can have different bounds
+from the query window, so an entire bar need not equal the current table. Outlines
+mark result members in their bins. No per-bin or per-window country exclusion.
 
 Density keys include index provenance, sample scope, countries and presence.
 Common keys also include minimum and, above zero, the actual interval boundaries.
-With unchanged interval bounds, the selected date/window and Crossing pool do not
+With unchanged interval bounds, the selected date/window and Crossing option do not
 affect density. Changing the window can change the bins when step sync is enabled.
 All-branches density ignores minimum; strict zero and Any do not depend on binning.
 Raw scope cache holds one scope; density cache is bounded to 16 keys / 100,000 rows
@@ -228,7 +227,7 @@ One outline covers current Formed intervals. Clicking a nonempty bar, Enter or
 Space selects its stated source estimate and updates target, slider, URL and
 results; composition remains in help/accessible description. Neighbor buttons
 search earlier/later source dates with real Formed matches under the same scope,
-presence, minimum and window, recomputing each proposed country pool. Skip empty
+presence, minimum and window, retaining the same dataset-based mandatory countries. Skip empty
 candidates, omit unavailable directions and never relax minimum. Use a bounded
 supported-date/evidence sweep, not a full query per candidate.
 
@@ -277,7 +276,7 @@ counts, spans/deltas, both Crossing endpoints/anomalies, sample scope, countries
 window, presence/minimum, Crossing option and committed source/app provenance.
 Escape formula-like cells. `min_samples_basis` is
 `all_selected_countries_at_zero_minimum`,
-`per_selected_country_in_temporal_candidate_pool`, or
+`per_selected_country_in_dataset_sample_scope`, or
 `not_applied_in_all_branches_mode`; `below_minimum_country_counts` is a subset.
 
 ## 6. Pending and consistency
@@ -326,7 +325,7 @@ Verify applicable clauses, not merely the presence of matching text.
 | 8 | Time search has no hidden branch restriction. |
 | 9 | Always-primary Formed and optional separate Crossing share one committed query. |
 | 10 | Complete, formula-safe CSV with event/member structure and both edge endpoints. |
-| 11 | Secondary density, independent per-bin unique country pools, equal screen bins, valid Formed outline and direct bar activation. |
+| 11 | Secondary density, shared dataset-scope country rule and bidirectional exact-window member parity, equal screen bins, valid Formed outline and direct bar activation. |
 | 12 | Immediate export invalidation and rejection of stale replies. |
 | 13 | No mixing old CSV rows with new provenance/query metadata. |
 | 14 | Visible/announced states survive locale changes. |

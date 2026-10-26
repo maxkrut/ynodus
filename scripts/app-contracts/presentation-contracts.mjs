@@ -113,7 +113,7 @@ export function assertHeaderAndLanguageContracts(renderAppShell, en) {
   assert.equal(constantsSource.match(/APP_VERSION\s*=\s*"v([^"]+)"/)?.[1], version,
     "the runtime and CSV version must match the package version");
   assert.equal(markup.slice(0, mainStart).match(/class="version-pill"[^>]*>([^<]+)<\/span>/)?.[1],
-    version.split(".").slice(0, 2).join("."), "the header must show the current major.minor version");
+    version, "the header must show the complete current release, including patch");
   assert.doesNotMatch(markup, /class="mockup-page-stats"|id="stat-samples"|id="stat-result-support"/,
     "the redundant cohort/result/support counter strip must not compete with the canonical table");
   assert.match(markup, /id="live-status" class="visually-hidden"/,

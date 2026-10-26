@@ -52,7 +52,8 @@ for (const width of [340, 390, 768, 1101, 1280, 1440, 2560]) {
         }
         const countryShare = geometry.blocks[0].width / (geometry.blocks.at(-1)!.right - geometry.blocks[0].x);
         expect(countryShare).toBeGreaterThan(.19); expect(countryShare).toBeLessThan(.28);
-        expect(geometry.blocks[0].width).toBeGreaterThan(geometry.blocks[2].width);
+        expect(geometry.blocks[0].width, JSON.stringify(geometry.blocks.map(block => block.width)))
+          .toBeGreaterThan(geometry.blocks[2].width);
       }
       await page.mouse.move(0, 0);
       await page.locator('#locale-switcher').blur();

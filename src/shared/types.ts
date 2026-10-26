@@ -93,7 +93,7 @@ export type ResultRow = AncientEvidence & {
   delta: number;
   countryCounts: Map<string, number>;
   sliceRelation?: SliceRelation;
-  /** Below the temporal-pool country minimum: local counts retained, flags shown faded. */
+  /** Below the dataset-scope country minimum: local counts retained, flags shown faded. */
   belowMinimumCountryCounts?: Map<string, number>;
   /** Child endpoint when a crossing-mode result represents a real parent -> child edge. */
   crossingChild?: TreeNodeRef;
@@ -107,7 +107,7 @@ export type DensityRow = {
   /** Hierarchy-derived colour for grouping known direct parents in the chart. */
   parentMacroGroup?: string;
   total: number;
-  /** Common-country requirements calculated independently for this row's chart interval. */
+  /** Common-country requirements from whole-dataset coverage in the active sample scope. */
   participatingCountries?: string[];
 };
 
@@ -232,11 +232,11 @@ export type AnalysisResult = {
   densityKey: string;
   /** Unique selected samples supporting at least one primary result row. */
   matchingSamples: number;
-  /** Normalized result-row evidence threshold applied by the worker. */
+  /** Normalized dataset-scope country threshold applied by the worker. */
   minSamples: number;
-  /** No selected country has qualifying temporal-pool evidence. */
+  /** No selected country has qualifying dataset-scope evidence. */
   countryMinimumNotMet?: boolean;
-  /** Countries required by this result kind's temporal pool; all selected in Any mode. */
+  /** Countries required by the full dataset within the active sample scope; all selected in Any mode. */
   participatingCountries: string[];
   suggestions: NeighborSuggestions | null;
 };

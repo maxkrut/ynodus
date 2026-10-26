@@ -19,7 +19,7 @@ test("mixed country pools retain sample evidence without a participation notice"
   const download = page.waitForEvent("download");
   await page.locator("#export-csv").click();
   const csv = await fs.readFile((await (await download).path())!, "utf8");
-  expect(csv).toContain("per_selected_country_in_temporal_candidate_pool");
+  expect(csv).toContain("per_selected_country_in_dataset_sample_scope");
   expect(csv).toContain('""AUS"":2');
   await page.screenshot({path:"output/minimum-reset/without-participation-note.png",fullPage:true});
   await page.locator("#min-result-samples").fill("20");

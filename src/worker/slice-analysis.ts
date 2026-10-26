@@ -12,7 +12,7 @@ import {
 } from "./slice-analysis/formed-groups";
 import { densityScopeIdentity, type DensityBin } from "../shared/density-identity";
 import { collectIntervalDensity } from "./slice-analysis/density";
-import { countriesForTimeEvidence, filterCountryMinimum } from "./slice-analysis/country-minimum";
+import { countriesForDataset, filterCountryMinimum } from "./slice-analysis/country-minimum";
 import { readDensityGroups, writeDensityGroups, resetDensityCache } from "./slice-analysis/density-cache";
 import { findResultNeighbors } from "./slice-analysis/neighbor-suggestions";
 import type { TimeAnalysisResult } from "../shared/types";
@@ -117,7 +117,7 @@ export function collectRowsAtTarget(
     densityGroups = evidenceRows.densityGroups ?? new Map<string, DensityEvidenceRow>();
     writeDensityGroups(rawKey, densityGroups);
   }
-  const matchingCodes = countriesForTimeEvidence(selectedCodes, evidenceRows.sampleEvidence, effectivePresenceMode, minSamples);
+  const matchingCodes = countriesForDataset(value, selectedCodes, effectivePresenceMode, minSamples);
   const { densityKey, densityRows } = collectIntervalDensity(value, selectedCodes, effectivePresenceMode,
     minSamples, anchorId, input.densityIntervals);
   const qualifiedEvidence = filterCountryMinimum(evidenceRows.rows, evidenceRows.sampleEvidence,
@@ -138,8 +138,7 @@ export function collectRowsAtTarget(
     primaryKeys,
   );
   const suggestions = includeSuggestions && sliceMode === "formed" && sortedRows.length === 0
-    ? findResultNeighbors(value, densityGroups, selectedCodes, effectivePresenceMode, minSamples,
-      target, maxDeltaYbp, anchorId) : null;
+    ? findResultNeighbors(densityGroups, matchingCodes, effectivePresenceMode, target, maxDeltaYbp) : null;
   return {
     rows: sortedRows,
     densityRows: knownDensityKey === densityKey ? null : densityRows,

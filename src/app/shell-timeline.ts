@@ -49,7 +49,7 @@ export function renderTimeline(t: (key: TextKey) => string): string {
             <div class="time-axis-periods" aria-hidden="true">
               ${renderPeriodBandsMarkup(t)}
             </div>
-            <div class="timeline-reading-footer"><span class="annotated-label"><span class="density-height-caption" data-i18n="densityHeightShort">${t("densityHeightShort")}</span>${renderAnnotation("density-counts", t)}</span><span data-i18n="densityClickHint">${t("densityClickHint")}</span><span id="country-fixed-scope-note" class="country-fixed-scope" hidden><span class="visually-hidden" data-fixed-scope-copy></span><button type="button" class="small-button" data-freeze-countries data-i18n="freezeCountries">${t("freezeCountries")}</button>${renderAnnotation("freeze-countries",t)}</span>${renderPeriodGuide(t)}</div>
+            <div class="timeline-reading-footer"><span class="annotated-label"><span class="density-height-caption" data-i18n="densityHeightShort">${t("densityHeightShort")}</span>${renderAnnotation("density-counts", t)}</span><span data-i18n="densityClickHint">${t("densityClickHint")}</span>${renderPeriodGuide(t)}</div>
             <div id="target-density-summary" class="time-axis-density-summary" data-i18n="densityAwaitingResults">${t("densityAwaitingResults")}</div>
           </div>
         </div>

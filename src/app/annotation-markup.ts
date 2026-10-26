@@ -12,7 +12,6 @@ export const ANNOTATIONS = {
   "density-sync": { title: "densitySyncLabel", label: "densitySyncLabel", copy: ["densitySyncHint"] },
   "density-measure": { title: "densityMeasureLabel", label: "densityMeasureLabel", copy: ["densityMeasureHint"] },
   "density-unit": { title: "densityUnit", label: "densityUnit", copy: ["densityParentHint"], source: { url: "https://www.yfull.com/faq/how-does-yfull-determine-formed-age-tmrca-and-ci/", label: "formedDefinitionSource" } },
-  "freeze-countries": { title: "freezeCountries", label: "freezeCountries", copy: ["freezeCountriesHint"] },
   "sample-scope": { title: "sampleScopeLabel", label: "sampleScopeLabel", copy: ["sampleScopeHint"] },
   "ancient-samples": { title: "ancientHeaderShort", label: "ancientHeaderShort", copy: ["sampleRegionsHint", "ancientSamplesHint"], source: { url: "https://hras.yseq.net/documentationPage.html", label: "sourceLinkShort" } },
   "snapshot-notes": { title: "sourceDetailsAction", label: "sourceDetailsAction", copy: ["aggregatedPrivacyShort", "sourceLinkage"] },

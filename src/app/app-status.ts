@@ -22,15 +22,6 @@ export function createAppStatusController({
 
   function renderLiveStatus(): void {
     renderLiveStatusState(state.analysisBusy, { t }, state.committedQuery !== null);
-    const fixed = document.getElementById("country-fixed-scope-note");
-    if (fixed) {
-      const codes = state.countryParticipation?.formed ?? [];
-      fixed.hidden = state.presenceMode !== "all" || state.minResultSamples <= 0 || !codes.length;
-      const copy = fixed.querySelector<HTMLElement>("[data-fixed-scope-copy]");
-      if (copy) copy.textContent = t("freezeCountriesScope").replace("{countries}", codes.join(", "));
-      const button = fixed.querySelector<HTMLButtonElement>("[data-freeze-countries]");
-      if (button) { button.disabled = state.analysisBusy || fixed.hidden; button.textContent = t("freezeCountries"); button.dataset.tooltip = `${copy?.textContent}\n\n${t("freezeCountriesHint")}`; }
-    }
     const note = document.getElementById("country-minimum-reset-note");
     if (note) {
       const offer = state.countryMinimumOffer;

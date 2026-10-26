@@ -9,6 +9,19 @@ export function assertIntervalDensity(build, collect, reset, realIndex, interval
   data.formedKnown = [true, false, true, true, true, true];
   check(build(data), [5], ["AAA", "BBB"], intervals, collect, reset);
   check(realIndex, [0, 5], ["DZA", "LBY", "MAR", "MRT", "TUN"], intervals, collect, reset);
+  reset();
+  const selectedCountries = ["ARG", "BRA", "CHL", "COL", "CUB", "MEX", "PER", "PRI", "SLV"];
+  for (const minSamples of [0, 1, 5]) {
+    const result = collect(realIndex, { target: 6600, maxDeltaYbp: 300, minSamples,
+      selectedCountries, presenceMode: "all", sliceMode: "formed", anchorId: null, scopeAllCountries: false });
+    assert.deepEqual(result.participatingCountries, selectedCountries);
+    assert.deepEqual(result.rows.map(row => row.node.id), ["R-L23"]);
+    assert.equal(result.rows[0].total, 221);
+    assert.deepEqual(result.densityRows.filter(row => row.node.formed > 6549 && row.node.formed <= 6849), [],
+      "E/J2 cannot appear in this interval without all nine required countries");
+    assert.deepEqual(result.densityRows.filter(row => Math.abs(row.node.formed - 6600) <= 300).map(row => row.node.id),
+      result.rows.flatMap(row => row.formedEvents.flatMap(event => event.formedMembers.map(member => member.node.id))));
+  }
 }
 
 function check(index, minima, countries, grids, collect, reset) {
@@ -32,6 +45,10 @@ function check(index, minima, countries, grids, collect, reset) {
     }
     for (const target of [3000, 5000, 18500, 50000]) {
       const moved = collect(index, { ...query, target, maxDeltaYbp: 150, knownDensityKey: result.densityKey });
+      const members = moved.rows.flatMap(row => row.formedEvents.flatMap(event => event.formedMembers.map(member => member.node.id)));
+      const densityMembers = result.densityRows.filter(row => Math.abs(row.node.formed - target) <= 150).map(row => row.node.id);
+      assert.deepEqual([...new Set(members)].sort(), [...new Set(densityMembers)].sort(),
+        "every chart member inside the exact window is a result member, and vice versa");
       assert.equal(moved.densityKey, result.densityKey);
       assert.equal(moved.densityRows, null, "moving within linear/log sections retains the chart payload");
     }
@@ -49,7 +66,7 @@ function oracle(index, countries, mode, minimum, bins) {
     const inside = node => node.formedKnown !== false && node.formed <= bin.older
       && (node.formed > bin.younger || i === bins.length - 1 && node.formed === bin.younger);
     const pool = new Map();
-    for (const sample of samples) if (sample.path.some(inside)) {
+    for (const sample of samples) {
       pool.set(sample.country, (pool.get(sample.country) ?? 0) + sample.count);
     }
     const required = mode === "any" || minimum === 0 ? countries

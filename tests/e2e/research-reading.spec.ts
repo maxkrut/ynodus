@@ -47,7 +47,7 @@ test('macrogroup and country changes reconcile the selected inspector',async({pa
   await expect(page.locator('[data-country-tree-node="R-SYN-B-RUS"]')).toHaveCount(0);
 });
 
-test('parent count, committed country freeze and linear/log stability on Maghreb',async({page})=>{
+test('parent count, shared dataset country scope and linear/log stability on Maghreb',async({page})=>{
   test.setTimeout(120000);
   const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
   await mkdir('output/research-reading',{recursive:true});
@@ -62,11 +62,9 @@ test('parent count, committed country freeze and linear/log stability on Maghreb
   expect(await page.locator('#result-body').innerHTML()).toBe(results);
   await page.locator('[data-density-measure="per1000"]').click();
   await expect(page.locator('.density-height-caption')).toContainText('на 1 000 лет');
-  const codes=(await page.locator('[data-fixed-scope-copy]').innerText()).split(':')[1].trim().split(', ');
-  await page.locator('[data-freeze-countries]').click();
-  await ready(page);
-  const url=new URL(page.url());expect(url.searchParams.get('min')).toBe('0');
-  expect(url.searchParams.get('countries')?.split(',').sort()).toEqual(codes.sort());
+  await expect(page.locator('[data-freeze-countries]')).toHaveCount(0);
+  const url=new URL(page.url());expect(url.searchParams.get('min')).toBe('5');
+  expect(url.searchParams.get('countries')?.split(',').sort()).toEqual(['DZA','LBY','MAR','MRT','TUN']);
   const frozen=await bars(page);
   for(const year of ['1051','13951']){
     await page.locator('#target-year').fill(year);await page.locator('#target-year').press('Tab');

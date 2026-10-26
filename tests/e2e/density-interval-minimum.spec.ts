@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('updated minimum notes fit the desktop and disclose interval versus table scope', async ({page}) => {
+test('updated minimum notes fit the desktop and disclose shared dataset scope', async ({page}) => {
   await page.setViewportSize({width:1440,height:900});
   await page.goto('/?lang=ru&countries=DZA,LBY,MAR,MRT,TUN&preset=maghreb&presence=all&min=5&target=15900&window=300');
   await expect(page.locator('#live-status')).toHaveAttribute('data-busy','false');
@@ -9,7 +9,7 @@ test('updated minimum notes fit the desktop and disclose interval versus table s
     await page.locator('[data-annotation="minimum"]').click();
     const note=page.locator('#context-annotation');
     await expect(note).toBeVisible();
-    await expect(note).toContainText(locale==='ru'?'для каждого столбца':'each column');
+    await expect(note).toContainText(locale==='ru'?'во всей базе':'entire dataset');
     const bounds=await note.evaluate(el=>({overflow:el.scrollHeight-el.clientHeight,bottom:el.getBoundingClientRect().bottom,top:el.getBoundingClientRect().top}));
     expect(bounds.overflow).toBeLessThanOrEqual(1);
     expect(bounds.top).toBeGreaterThanOrEqual(0);
@@ -19,7 +19,7 @@ test('updated minimum notes fit the desktop and disclose interval versus table s
   }
 });
 
-test('Maghreb keeps independent interval pools across linear/log dates and chart-only settings', async ({ page }) => {
+test('Maghreb keeps shared dataset requirements across linear/log dates and chart-only settings', async ({ page }) => {
   test.setTimeout(120000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -43,13 +43,13 @@ test('Maghreb keeps independent interval pools across linear/log dates and chart
     bin: (node as HTMLElement).dataset.densityIndex,
     count: (node as HTMLElement).dataset.densityCount,
     fills: node.querySelector('.density-macro-stack')?.innerHTML,
-    countries: (node as HTMLElement).dataset.tooltip?.split('\n').find(line => line.startsWith('Обязательные страны интервала:')),
+    countries: (node as HTMLElement).dataset.tooltip?.split('\n').find(line => line.startsWith('Обязательные страны поиска:')),
   })));
   await ready();
   const baseline = await bars();
   const total = baseline.reduce((sum, bar) => sum + Number(bar.count), 0);
   expect(baseline.some(bar => bar.countries?.includes('MRT'))).toBe(true);
-  expect(baseline.some(bar => bar.countries && !bar.countries.includes('MRT'))).toBe(true);
+  expect(new Set(baseline.map(bar => bar.countries)).size).toBe(1);
   await page.evaluate(() => { (window as any).firstDensityButton = document.querySelector('#target-density button'); });
   const results: {date: number; rows: number}[] = [];
   for (const date of [1051, 3051, 13951, 16551]) {

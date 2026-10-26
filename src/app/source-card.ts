@@ -65,7 +65,7 @@ export function renderProvenanceStrip(
     : missingDate;
   const referenceDate = index?.referenceRelease?.date;
   const referenceDateTime = referenceDate ? ` datetime="${escapeHtml(formatMachineDate(referenceDate) ?? "")}"` : "";
-  const displayVersion = APP_VERSION.replace(/^v/, "").split(".").slice(0, 2).join(".");
+  const displayVersion = APP_VERSION.replace(/^v/, "");
   const hrasMachineDate = index?.computedDate ? formatMachineDate(index.computedDate) : null;
   const generatedMachineDate = index?.generatedAt ? formatMachineDate(index.generatedAt) : null;
   const hrasDateTime = hrasMachineDate ? ` datetime="${escapeHtml(hrasMachineDate)}"` : "";

@@ -16,7 +16,7 @@ type DensityIndexIdentity = Pick<
 
 /**
  * All-branches context is independent of the time query. Common-branches context
- * requires all selected countries at zero, or each interval's own pool above zero.
+ * requires all selected countries at zero, or the active sample scope across the dataset above zero.
  */
 export function densityScopeIdentity(
   index: DensityIndexIdentity,

@@ -188,7 +188,7 @@ export function resultsCsvText(input: ResultsCsvInput): string {
       input.provenance?.sourceManifestUrl ?? "", APP_VERSION, String(YBP_BASE_YEAR),
       "yNodus display convention (1950 baseline; civil BCE/CE with no year zero); source calendar epoch is not verified for this export; YFull ybp is not a 1950 epoch: https://www.yfull.com/faq/definitions/",
       input.presenceMode === "any" ? "not_applied_in_all_branches_mode"
-        : (input.minResultSamples ?? 0) === 0 ? "all_selected_countries_at_zero_minimum" : "per_selected_country_in_temporal_candidate_pool",
+        : (input.minResultSamples ?? 0) === 0 ? "all_selected_countries_at_zero_minimum" : "per_selected_country_in_dataset_sample_scope",
       JSON.stringify(Object.fromEntries(row.belowMinimumCountryCounts ?? [])),
       input.provenance?.sampleScope ?? "all",
       row.ancientTotal === undefined ? (input.provenance?.sampleScope === "ancient" ? String(row.total) : input.provenance?.sampleScope === "modern" ? "0" : "") : String(row.ancientTotal),

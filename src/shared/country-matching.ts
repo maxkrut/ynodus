@@ -1,6 +1,6 @@
 import type { PresenceMode } from "./types";
 
-/** Zero keeps every selected country; positive thresholds use unique temporal-pool support. */
+/** Zero keeps every selected country; positive thresholds use whole-dataset counts in the active sample scope. */
 export function matchingCountryCodes(
   selectedCodes: readonly string[], counts: ReadonlyMap<string, number>, minimum: number,
 ): string[] {

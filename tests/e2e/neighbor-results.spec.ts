@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { compact } from "../../scripts/semantic-audit/fixtures.mjs";
 
 for (const direction of ["older","younger"] as const) test(`nearest ${direction} date skips empty candidates and opens results`,async({page})=>{
-  const data=compact([-1,-1,-1,-1],[490,510,400,600],[[0,0,1],[1,1,1],[2,0,7],[3,1,8]]);
+  const data=compact([-1,-1,-1,-1],[490,510,400,600],[[0,0,1],[1,1,1],[2,0,7],[2,1,2],[3,0,3],[3,1,8]]);
   data.countryCodes=["PNG","AUS","NZL"]; data.projectIds=["R"];
   data.nodeIds=["R-SYN-NEAR-YOUNGER","R-SYN-NEAR-OLDER","R-SYN-VALID-YOUNGER","R-SYN-VALID-OLDER"];
   await page.route("**/data/hras-index.json",route=>route.fulfill({json:data}));
